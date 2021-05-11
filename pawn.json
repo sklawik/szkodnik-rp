@@ -2,7 +2,7 @@
 	"user": "Hype02",
 	"repo": "szkodnik-rp",
 	"entry": "szkodnik-rp2.pwn",
-	"output": "szkodnik-rp2.amx",
+	"output": "gamemodes/szkodnik-rp2.amx",
 	"dependencies": [
 		"sampctl/samp-stdlib",
 		"samp-incognito/samp-streamer-plugin",
