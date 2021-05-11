@@ -11310,7 +11310,7 @@ cmd:p (playerid, params[])
 
 	cache_delete(cache);
 
-	new data[256];
+
 
 	
 
@@ -11661,14 +11661,15 @@ stock UseItem(playerid, itemuid)
 	new groupOwner, status, type, val, val2, val3, val4, owner, active, name[128];
 
 	cache_get_value_name_int(0, "groupOwner", groupOwner);
-	cache_get_value_name_int(0, "status", groupOwner);
-	cache_get_value_name_int(0, "type", groupOwner);
-	cache_get_value_name_int(0, "val", groupOwner);
-	cache_get_value_name_int(0, "val2", groupOwner);
-	cache_get_value_name_int(0, "val3", groupOwner);
-	cache_get_value_name_int(0, "val4", groupOwner);
-	cache_get_value_name_int(0, "owner", groupOwner);
-	cache_get_value_name_int(0, "active", groupOwner);
+	cache_get_value_name_int(0, "status", status);
+	cache_get_value_name_int(0, "type", type);
+	cache_get_value_name_int(0, "val", val);
+	cache_get_value_name_int(0, "val2", val2);
+	cache_get_value_name_int(0, "val3", val3);
+	cache_get_value_name_int(0, "val4", val4);
+	cache_get_value_name_int(0, "owner", owner);
+	cache_get_value_name_int(0, "active", active);
+	cache_get_value_name_int(0, "groupOwner", groupOwner);
 	cache_get_value_name(0, "name", name);
 
 	cache_delete(cache);
@@ -12630,7 +12631,7 @@ stock SendMeInRange(playerid, msg[])
 	return SendPlayerMe(playerid, msg);
 }
 
-stock Do(playerid, text[])
+stock Do(playerid, const text[])
 {
 	new msg[128]; format(msg, sizeof(msg), text);
 	new Float:X, Float:Y, Float:Z;
@@ -14192,7 +14193,7 @@ CMD:skin (playerid, params[])
 	}
 
 	format(msg, sizeof(msg), "UPDATE players SET skin = '%d' WHERE uid = '%d'", skinid, PlayerCache[targetid][pUID]);
-	mysql_query(msg);
+	cache_delete(mysql_query(DB_HANDLE, msg));
 	return 1;
 }
 
@@ -15651,7 +15652,7 @@ public OnPlayerInteriorChange(playerid, newinteriorid, oldinteriorid)
 	return KickPlayer(playerid, "System", "Interior change");
 }
 
-stock AddActor(aname[], type, skinid, Float:X, Float:Y, Float:Z, Float:angle, VirtualWorld, animlib[], animname[])
+stock AddActor(const aname[], type, skinid, Float:X, Float:Y, Float:Z, Float:angle, VirtualWorld, const animlib[], const animname[])
 {
 	ActorCache[LastaUID][aUID] = LastaUID;
 	ActorCache[LastaUID][aSkin] = skinid;
@@ -16246,7 +16247,7 @@ stock DestroyGroup(groupuid)
 	return 1;
 }
 
-stock SendMessageToAdmins(message[])
+stock SendMessageToAdmins(const message[])
 {
 	for(new i; i<=GetPlayerPoolSize();i++)
 	{
