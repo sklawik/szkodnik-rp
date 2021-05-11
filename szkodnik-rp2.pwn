@@ -861,7 +861,7 @@ public OnGameModeInit()
 				printf(">>> przenosimy %d.", i);
 				count++;
 			}
-			mysql_free_result();
+			cache_delete(rows);();
 
 			dfile_CloseFile();
 		}
@@ -870,7 +870,7 @@ public OnGameModeInit()
 	mysql_query(DB_HANDLE, "SELECT * FROM textures");
 	mysql_store_result();
 	printf(">>> Textury w bazie danych: %d", mysql_num_rows());
-	mysql_free_result();
+	cache_delete(rows);();
 	printf(">>> Textury z plikow: %d", count);*/
 
 
@@ -923,7 +923,7 @@ public OnGameModeInit()
 	mysql_store_result();
 	printf(">>> Przeniesiono %d obiektow do bazy danych z plikow.", count);
 	printf(">>> W bazie danych znajduje sie %d obiektow.", mysql_num_rows());
-	mysql_free_result();*/
+	cache_delete(rows);();*/
 
 	LoadGroups();
 	LoadDoors();
@@ -1157,7 +1157,7 @@ stock LoadTextures()
 
 	printf(">>> Loaded %d textures.", mysql_num_rows());
 
-	mysql_free_result();*/
+	cache_delete(rows);();*/
 }
 
 stock SaveTextures()
@@ -1295,7 +1295,7 @@ stock LoadObjects()
 
 	printf(">>> Loaded %d objects", mysql_num_rows());
 
-	mysql_free_result();
+	cache_delete(rows);();
 
 	AreObjectsLoaded = true;*/
 }
@@ -1395,7 +1395,7 @@ stock LoadDoors()
 		i++;
 	}
 
-	mysql_free_result();
+	cache_delete(rows);();
 
 	printf(">>> Loaded %d doors.", i);*/
 }
@@ -1444,7 +1444,7 @@ stock LoadZoneFile(zoneid)
 		ZoneData[zoneid][zCostH],
 		ZoneData[zoneid][zCostB],
 		ZoneData[zoneid][zName]);
-		mysql_free_result();
+		cache_delete(rows);();
 	}
 }
 
@@ -1846,7 +1846,7 @@ stock LoadApps()
 		i++;
 	}
 
-	mysql_free_result();
+	cache_delete(rows);();
 
 	printf(">>> Loaded %d group apps.", i);*/
 }
@@ -1875,7 +1875,7 @@ stock LoadContacts()
 		i++;
 	}
 
-	mysql_free_result();
+	cache_delete(rows);();
 
 	printf(">>> Loaded %d phone contacts.", i);*/
 }
@@ -2331,7 +2331,7 @@ public OnPlayerConnect(playerid)
 			PlayerCache[playerid][pObjectEditor],
 			PlayerCache[playerid][pGymBoostTime]);
 
-			mysql_free_result();
+			cache_delete(rows);();
 
 			ShowDialogLogin(playerid);
 		}
@@ -2427,7 +2427,7 @@ stock LoadPlayerData(playerid)
 			PlayerCache[playerid][pObjectEditor],
 			PlayerCache[playerid][pGymBoostTime]);
 
-			mysql_free_result();
+			cache_delete(rows);();
 		}
 	}
 
@@ -3434,7 +3434,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 				{
 					mysql_fetch_string(gname);
 
-					mysql_free_result();
+					cache_delete(rows);();
 				}
 				else
 				return SendClientMessage(playerid, COLOR_GRAY, "Wybrana grupa została usunięta.");
@@ -7553,7 +7553,7 @@ public OnPlayerKeyStateChange(playerid, newkeys, oldkeys)
 				new Float:RX, Float:RY, Float:RZ;
 				GetDynamicObjectRot(objid, RX, RY, RZ);
 				sscanf(data, "p<|>ffffffiiiffffff", x, y, z, rx, ry, rz, gate, owner, ownerType, db_x, db_y, db_z, db_rx, db_ry, db_rz);
-				mysql_free_result();
+				cache_delete(rows);();
 				if(gate)
 				{
 					if(ownerType == 1)
@@ -11004,7 +11004,7 @@ public OnPlayerPickUpDynamicPickup(playerid, pickupid)
 	mysql_fetch_row(str);
 	sscanf(str, "p<|>iiiis[32]", pPickupUID[playerid], open, cost, insvw, name);
 
-	mysql_free_result();
+	cache_delete(rows);();
 
 	if(open)
 	{
@@ -11265,7 +11265,7 @@ stock LoadItems()
 		i++;
 	}
 
-	mysql_free_result();
+	cache_delete(rows);();
 
 	printf(">>> Loaded %d items.", i);*/
 	new query[128];
@@ -11395,7 +11395,7 @@ cmd:p (playerid, params[])
 
 	
 
-	mysql_free_result();
+	cache_delete(rows);();
 
 	if(!strlen(list))
 	ShowDialogInfo(playerid, ""HEX_WHITE"Nie posiadasz żadnych przedmiotów.\nMożesz rozejrzeć się po okolicy korzystając z komendy: /p podnies.");
@@ -11857,7 +11857,7 @@ stock UseItem(playerid, itemuid)
 			if(cache_num_rows())
 			{
 				SendClientMessage(playerid, COLOR_GRAY, "Masz już na sobie założone jakieś ubranie.");
-				mysql_free_result();
+				cache_delete(rows);();
 			}
 			else
 			{
@@ -13256,7 +13256,7 @@ stock LoadGroups()
 		i++;
 	}
 
-	mysql_free_result();
+	cache_delete(rows);();
 
 	printf(">>> Loaded %d groups.", i);
 }
@@ -13554,7 +13554,7 @@ CMD:mc (playerid, params[])
 	if(mysql_fetch_row(str))
 	{
 		sscanf(str, "p<|>ii", playerUID, groupUID);
-		mysql_free_result();
+		cache_delete(rows);();
 		if(playerUID)
 		{
 			if(PlayerCache[playerid][pUID] != playerUID)
@@ -13626,7 +13626,7 @@ CMD:mc (playerid, params[])
 	mysql_fetch_row(str);
 	sscanf(str, "p<|>i", object_uid);
 
-	mysql_free_result();
+	cache_delete(rows);();
 
 	ObjectCache[playerid][oUID] = object_uid;
 	ObjectCache[playerid][oID] = objectid;
@@ -13651,7 +13651,7 @@ stock SetPlayerEditObject(playerid, objectid, objectuid)
 	mysql_query(str);
 	mysql_store_result();
 	ObjectCache[playerid][oGate] = mysql_fetch_int();
-	mysql_free_result();
+	cache_delete(rows);();
 
 	format(str, sizeof(str), "UPDATE objects SET timer = '%d' WHERE ID = '%d' LIMIT 1", SetTimerEx("ObjectMoving", 125, true, "i", playerid), objectid);
 	mysql_query(str);
@@ -13670,7 +13670,7 @@ CMD:mcopy (playerid, params[])
 	mysql_fetch_row(data);
 	new timerid;
 	sscanf(data, "p<|>i", timerid);
-	mysql_free_result();
+	cache_delete(rows);();
 	KillTimer(timerid);
 	format(query, sizeof(query), "UPDATE objects SET timer = '0' WHERE timer = '%d'", timerid);
 	mysql_query(DB_HANDLE, query);
@@ -13748,7 +13748,7 @@ CMD:msave (playerid, params[])
 	mysql_fetch_row(query);
 	sscanf(query, "p<|>i", timer);
 
-	mysql_free_result();
+	cache_delete(rows);();
 
 	KillTimer(timer);
 
@@ -13791,7 +13791,7 @@ CMD:msel (playerid, params[])
 		{
 			return GameTextForPlayer(playerid, "~r~~h~brak uprawnien.", 3000, 4);
 		}
-		mysql_free_result();
+		cache_delete(rows);();
 
 		if(playerUID)
 		{
@@ -13867,7 +13867,7 @@ CMD:mpick (playerid, params[])
 		mysql_fetch_row(query);
 		sscanf(query, "p<|>ii", groupUID, playerUID);
 
-		mysql_free_result();
+		cache_delete(rows);();
 
 		if(playerUID)
 		{
@@ -13906,7 +13906,7 @@ CMD:mpick (playerid, params[])
 	mysql_fetch_row(data);
 	sscanf(data, "p<|>iii", model, uid, timer);
 		
-	mysql_free_result();
+	cache_delete(rows);();
 
 	if(timer != 0)
 	return TextDrawForPlayerEx(playerid, 1, "Ten obiekt jest juz przez kogos edytowany.", 3000);
@@ -13936,7 +13936,7 @@ CMD:md (playerid, params[])
 
 	mysql_fetch_row(str);
 	sscanf(str, "p<|>i", timer);
-	mysql_free_result();
+	cache_delete(rows);();
 
 	KillTimer(timer);
 
@@ -14149,7 +14149,7 @@ stock ReturnObjectUID(objectid)
 
 	objectuid = mysql_fetch_int();
 
-	mysql_free_result();
+	cache_delete(rows);();
 	return objectuid;
 }
 
@@ -14390,7 +14390,7 @@ CMD:ap(playerid, params[])
 		mysql_fetch_row(query);
 		sscanf(query, "p<|>i", uid);
 
-		mysql_free_result();
+		cache_delete(rows);();
 
 		PutPlayerInVehicle(playerid, vid, 0);
 	}
@@ -14680,7 +14680,7 @@ stock LoadVehicles()
 		i++;
 	}
 
-	mysql_free_result();
+	cache_delete(rows);();
 
 	printf(">>> Loaded %d vehicles.", i);
 }
@@ -15439,7 +15439,7 @@ CMD:brama (playerid, params[])
 					new Float:RX, Float:RY, Float:RZ;
 					GetDynamicObjectRot(i, RX, RY, RZ);
 					sscanf(data, "p<|>ffffffiiiffffff", x, y, z, rx, ry, rz, gate, owner, ownerType, db_x, db_y, db_z, db_rx, db_ry, db_rz);
-					mysql_free_result();
+					cache_delete(rows);();
 
 					if(gate)
 					{
