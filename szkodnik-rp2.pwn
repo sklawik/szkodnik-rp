@@ -34,7 +34,7 @@ main(){}
 #define MYSQL_HOST "127.0.0.1"
 #define MYSQL_USER "www"
 #define MYSQL_PASSWORD "123"
-#define MYSQL_DB "szkodnik-rp"
+#define MYSQL_DB "szkodnikrp"
 
 #define COL_AC_CHAT 0x42D95EFF
 
@@ -822,12 +822,12 @@ new MySQL:DB_HANDLE;
 public OnGameModeInit()
 {
 	print("Rozpoczynam ³adowanie Szkodnik-RP");
-	DB_HANDLE = mysql_connect("127.0.0.1", "www", "123", "szkodnikrp");
+	DB_HANDLE = mysql_connect(MYSQL_HOST, MYSQL_USER, MYSQL_PASSWORD, MYSQL_DB);
 	if(mysql_errno() != 0) 
 		return !printf(">>> Wystapil blad w probie polaczenia z baza danych, kod bledu: %d", mysql_errno());
 	else{
 		print(">>> Pomyslnie nawiazano polaczenie z baza danych.");
-		cache_delete(mysql_query(DB_HANDLE, "CREATE DATABASE IF NOT EXISTS szkodnik-rp"));
+		EnsureCreated();
 	}
 		
 
@@ -839,99 +839,52 @@ public OnGameModeInit()
 	gettime(ghour, gmin, gsec);
 	SetWorldTime(ghour);
 	
-	/*print(">>> Rozpoczynam przenoszenie textur do bazy danych...\n\n\n");
-
-	new str[1024], count;
-	for(new i=1; i<=17167; i++)
-	{
-		format(str, sizeof(str), "/Textures/%d.ini", i);
-		if(dfile_FileExists(str))
-		{
-			dfile_Open(str);
-
-			new query[128];
-			format(query, sizeof(query), "SELECT * FROM objects WHERE uid = '%d'", dfile_ReadInt("ObjectUID"));
-			mysql_query(DB_HANDLE, query);
-
-			mysql_store_result();
-			if(mysql_num_rows())
-			{
-				format(str, sizeof(str), "INSERT INTO textures (txdname, texturename, color, modelid, objectUID, textureindex, type, bold, materialsize, fontsize, alignment, backcolor) VALUES ('%s', '%s', '%d', '%d', '%d', '%d', '%d', '%d', '%d', '%d', '%d', '%d')",
-				dfile_ReadString("Txdname"), dfile_ReadString("Texturename"), dfile_ReadInt("Color"), dfile_ReadInt("Modelid"), dfile_ReadInt("ObjectUID"), dfile_ReadInt("Index"), dfile_ReadInt("Type"), dfile_ReadInt("Bold"), dfile_ReadInt("Materialsize"), dfile_ReadInt("Fontsize"), dfile_ReadInt("Alignment"), dfile_ReadInt("Backcolor"));
-				mysql_query(str);
-				printf(">>> przenosimy %d.", i);
-				count++;
-			}
-			cache_delete(cache);
-
-			dfile_CloseFile();
-		}
-	}
-
-	mysql_query(DB_HANDLE, "SELECT * FROM textures");
-	mysql_store_result();
-	printf(">>> Textury w bazie danych: %d", mysql_num_rows());
-	cache_delete(cache);
-	printf(">>> Textury z plikow: %d", count);*/
-
-
-	/*print("[SYSTEM] Rozpoczynam przenoszenie plikow do bazy danych...");
-	new str[1024], count;
-
-	for(new i=1; i<=13042; i++)
-	{
-		printf(">>> Ladowanie %d.", i);
-		format(str, sizeof(str), "/Objects/%d.ini", i);
-		if(dfile_FileExists(str))
-		{
-			dfile_Open(str);
-
-			if(dfile_ReadInt("State") == 0)
-			{
-				format(str, sizeof(str),
-				"INSERT INTO objects (name, owner, ownerType, uid, timer, X, Y, Z, rX, rY, rZ, VW, model, gaterX, gaterY, gaterZ, gateX, gateY, gateZ, gate) VALUES ('%s', '%d', '%d', '%d', '%d', '%f', '%f', '%f', '%f', '%f', '%f', '%d', '%d', '%f', '%f', '%f', '%f', '%f', '%f', '%d')",
-				dfile_ReadString("Name"),
-				dfile_ReadInt("Owner"),
-				dfile_ReadInt("OwnerType"),
-				dfile_ReadInt("UID"),
-				0,
-				dfile_ReadFloat("X"),
-				dfile_ReadFloat("Y"),
-				dfile_ReadFloat("Z"),
-				dfile_ReadFloat("rX"),
-				dfile_ReadFloat("rY"),
-				dfile_ReadFloat("rZ"),
-				dfile_ReadInt("VW"), 
-				dfile_ReadInt("Model"),
-				dfile_ReadFloat("GaterX"),
-				dfile_ReadFloat("GaterY"),
-				dfile_ReadFloat("GaterZ"),
-				dfile_ReadFloat("GateX"),
-				dfile_ReadFloat("GateY"),
-				dfile_ReadFloat("GateZ"),
-				dfile_ReadInt("Gate"));
-
-				mysql_query(str);
-			}
-
-
-			dfile_CloseFile();
-			count++;
-		}
-	}
-
-	mysql_query(DB_HANDLE, "SELECT * FROM objects");
-	mysql_store_result();
-	printf(">>> Przeniesiono %d obiektow do bazy danych z plikow.", count);
-	printf(">>> W bazie danych znajduje sie %d obiektow.", mysql_num_rows());
-	cache_delete(cache);*/
-
+	
 	LoadGroups();
 	LoadDoors();
 	LoadItems();
 	LoadContacts();
 	LoadObjects();
 	return 1;
+}
+
+stock EnsureCreated(){
+	// db schema
+
+	mysql_query(DB_HANDLE, "DROP DATABASE IF EXISTS szkodnikrp;");
+	mysql_query(DB_HANDLE, "CREATE DATABASE szkodnikrp;");
+	mysql_query(DB_HANDLE, "use szkodnikrp;");
+	mysql_query(DB_HANDLE, "CREATE TABLE IF NOT EXISTS actors (\n\
+	aUID INT AUTO_INCREMENT PRIMARY KEY,\n\
+	aType INT NOT NULL,\n\
+	aName VARCHAR(64) NOT NULL,\n\
+	aAnimLib VARCHAR(32) NOT  NULL,\n\
+	aAnimName VARCHAR(32) NOT NULL,\n\
+	aPosX FLOAT not null,\n\
+	aPosY FLOAT not null,\n\
+	aPosZ FLOAT not null,\n\
+	aAng FLOAT NOT NULL,\n\
+	aVW INT NOT NULL,\n\
+	aSkin INT NOT  NULL,\n\
+	aRepeat INT NOT NULL,\n\
+	aText VARCHAR (256) NOT NULL\n\
+	);", false);
+
+	mysql_query(DB_HANDLE, 
+	"CREATE TABLE IF NOT EXISTS groups(\n\
+	gUID INT AUTO_INCREMENT PRIMARY KEY,\n\
+	gType INT NOT NULL,\n\
+	gBank INT NOT NULL,\n\
+	gName VARCHAR(32) NOT NULL,\n\
+	gChatOOC INT NOT NULL,\n\
+	gChatIC INT NOT NULL,\n\
+	gColor VARCHAR(16) NOT NULL,\n\
+	gState INT NOT NULL,\n\
+	gVehicleLimit INT NOT NULL,\n\
+	gPayDay INT NOT NULL);", false);
+
+
+	
 }
 
 public OnGameModeExit()
@@ -1893,22 +1846,7 @@ stock SaveContacts()
 
 stock LoadActors()
 {
-	mysql_query(DB_HANDLE, "CREATE TABLE IF NOT EXISTS actors (\n\
-	aUID INT PRIMARY KEY,\n\
-	aType INT NOT NULL,\n\
-	aName VARCHAR(64) NOT NULL,\n\
-	aAnimLib VARCHAR(32) NOT  NULL,\n\
-	aAnimName VARCHAR(32) NOT NULL,\n\
-	aPosX FLOAT not null,\n\
-	aPosY FLOAT not null,\n\
-	aPosZ FLOAT not null,\n\
-	aAng FLOAT NOT NULL,\n\
-	aVW INT NOT NULL,\n\
-	aSkin INT NOT  NULL,\n\
-	aRepeat INT NOT NULL,\n\
-	aText VARCHAR (256) NOT NULL\n\
-	)"
-	);
+	
 	new Cache:result = mysql_query(DB_HANDLE, "SELECT * FROM actors", true);
 	new rows = 0;
 	cache_get_row_count(rows);
@@ -13153,20 +13091,8 @@ stock GroupPath(id)
 
 stock LoadGroups()
 {
-	new Cache:cache = mysql_query(DB_HANDLE, 
-	"CREATE TABLE IF NOT EXISTS groups(\n\
-	gUID INT AUTO_INCREMENT PRIMARY KEY \n\
-	gType INT NOT NULL \n\
-	gBank INT NOT NULL \n\
-	gName VARCHAR(32) NOT NULL \n\
-	gChatOOC INT NOT NULL \n\
-	gChatIC INT NOT NULL \n\
-	gColor VARCHAR(16) NOT NULL \n\
-	gState INT NOT NULL \n\
-	gVehicleLimit INT NOT NULL \n\
-	gPayDay INT NOT NULL);");
-	cache_delete(cache);
-	cache = mysql_query(DB_HANDLE, "SELECT * FROM groups;");
+	
+	new Cache:cache = mysql_query(DB_HANDLE, "SELECT * FROM groups;");
 
 	new rows = cache_num_rows();
 	for(new i=0; i<rows; i++){
