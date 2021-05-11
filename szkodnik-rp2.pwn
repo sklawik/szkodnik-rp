@@ -861,7 +861,7 @@ public OnGameModeInit()
 				printf(">>> przenosimy %d.", i);
 				count++;
 			}
-			cache_delete(rows);();
+			cache_delete(cache);
 
 			dfile_CloseFile();
 		}
@@ -870,7 +870,7 @@ public OnGameModeInit()
 	mysql_query(DB_HANDLE, "SELECT * FROM textures");
 	mysql_store_result();
 	printf(">>> Textury w bazie danych: %d", mysql_num_rows());
-	cache_delete(rows);();
+	cache_delete(cache);
 	printf(">>> Textury z plikow: %d", count);*/
 
 
@@ -923,7 +923,7 @@ public OnGameModeInit()
 	mysql_store_result();
 	printf(">>> Przeniesiono %d obiektow do bazy danych z plikow.", count);
 	printf(">>> W bazie danych znajduje sie %d obiektow.", mysql_num_rows());
-	cache_delete(rows);();*/
+	cache_delete(cache);*/
 
 	LoadGroups();
 	LoadDoors();
@@ -1157,7 +1157,7 @@ stock LoadTextures()
 
 	printf(">>> Loaded %d textures.", mysql_num_rows());
 
-	cache_delete(rows);();*/
+	cache_delete(cache);*/
 }
 
 stock SaveTextures()
@@ -1230,12 +1230,6 @@ stock SaveObjects()
 	return 1;
 }
 
-public OnMysqlQuery(resultid, spareid)
-{
-	printf("resultid = %d  and spareid = %d", resultid, spareid);
-	return 1;
-}
-
 forward CheckObjectsLoaded();
 public CheckObjectsLoaded()
 {
@@ -1295,7 +1289,7 @@ stock LoadObjects()
 
 	printf(">>> Loaded %d objects", mysql_num_rows());
 
-	cache_delete(rows);();
+	cache_delete(cache);
 
 	AreObjectsLoaded = true;*/
 }
@@ -1395,7 +1389,7 @@ stock LoadDoors()
 		i++;
 	}
 
-	cache_delete(rows);();
+	cache_delete(cache);
 
 	printf(">>> Loaded %d doors.", i);*/
 }
@@ -1444,7 +1438,7 @@ stock LoadZoneFile(zoneid)
 		ZoneData[zoneid][zCostH],
 		ZoneData[zoneid][zCostB],
 		ZoneData[zoneid][zName]);
-		cache_delete(rows);();
+		cache_delete(cache);
 	}
 }
 
@@ -1846,7 +1840,7 @@ stock LoadApps()
 		i++;
 	}
 
-	cache_delete(rows);();
+	cache_delete(cache);
 
 	printf(">>> Loaded %d group apps.", i);*/
 }
@@ -1875,7 +1869,7 @@ stock LoadContacts()
 		i++;
 	}
 
-	cache_delete(rows);();
+	cache_delete(cache);
 
 	printf(">>> Loaded %d phone contacts.", i);*/
 }
@@ -2248,189 +2242,96 @@ public OnPlayerConnect(playerid)
 	SetPlayerColor(playerid, COLOR_BLACK);
 	TextDrawShowForPlayer(playerid, GlobalLogo);
 	RandomCamera(playerid);
+	LoadPlayerData(playerid);
+	
 
-	new query[128];
-	format(query, sizeof(query), "SELECT * FROM players WHERE name = '%s'", ReturnPlayerName(playerid));
-
-	mysql_query(DB_HANDLE, query);
-
-	mysql_store_result();
-
-	if(mysql_num_rows())
-	{
-		new data[1024];
-
-		if(mysql_fetch_row(data))
-		{
-			sscanf(data,
-			"p<|>ds[65]s[11]s[24]ddfddddddddddddddddddddddddddddddddddddddddfffddddddds[16]dfffdddd",
-			PlayerCache[playerid][pUID],
-			PlayerCache[playerid][pHash],
-			PlayerCache[playerid][pSalt],
-			PlayerCache[playerid][pName],
-			PlayerCache[playerid][pGender],
-			PlayerCache[playerid][pSkin],
-			PlayerCache[playerid][pHealth],
-			PlayerCache[playerid][pCash],
-			PlayerCache[playerid][pTutorialLevel],
-			PlayerCache[playerid][pStrenght],
-			PlayerCache[playerid][pLevel],
-			PlayerCache[playerid][pBW_Time],
-			PlayerCache[playerid][pBW_Reason],
-			PlayerCache[playerid][pAJ_Time],
-			PlayerCache[playerid][pGroup],
-			PlayerCache[playerid][pGroup2],
-			PlayerCache[playerid][pGroup3],
-			PlayerCache[playerid][pGroupMapper],
-			PlayerCache[playerid][pGroupMapper2],
-			PlayerCache[playerid][pGroupMapper3],
-			PlayerCache[playerid][pGroupInvite],
-			PlayerCache[playerid][pGroupInvite2],
-			PlayerCache[playerid][pGroupInvite3],
-			PlayerCache[playerid][pGroupAdmin],
-			PlayerCache[playerid][pGroupAdmin2],
-			PlayerCache[playerid][pGroupAdmin3],
-			PlayerCache[playerid][pGroupDoor],
-			PlayerCache[playerid][pGroupDoor2],
-			PlayerCache[playerid][pGroupDoor3],
-			PlayerCache[playerid][pGroupVehicle],
-			PlayerCache[playerid][pGroupVehicle2],
-			PlayerCache[playerid][pGroupVehicle3],
-			PlayerCache[playerid][pGroupProducts],
-			PlayerCache[playerid][pGroupProducts2],
-			PlayerCache[playerid][pGroupProducts3],
-			PlayerCache[playerid][pGroupPayDay],
-			PlayerCache[playerid][pGroupPayDay2],
-			PlayerCache[playerid][pGroupPayDay3],
-			PlayerCache[playerid][pGroupDuty],
-			PlayerCache[playerid][pGroupDuty2],
-			PlayerCache[playerid][pGroupDuty3],
-			PlayerCache[playerid][pPlayTime],
-			PlayerCache[playerid][pScore],
-			PlayerCache[playerid][pHouseSpawn],
-			PlayerCache[playerid][pBank],
-			PlayerCache[playerid][pBornDate],
-			PlayerCache[playerid][pPosVW],
-			PlayerCache[playerid][pPosX],
-			PlayerCache[playerid][pPosY],
-			PlayerCache[playerid][pPosZ],
-			PlayerCache[playerid][pID_Card],
-			PlayerCache[playerid][pDrivingLicense],
-			PlayerCache[playerid][pBankAccount],
-			PlayerCache[playerid][pOOC],
-			PlayerCache[playerid][pGroupReward],
-			PlayerCache[playerid][pGroupReward2],
-			PlayerCache[playerid][pGroupReward3],
-			PlayerCache[playerid][pFavAnim],
-			PlayerCache[playerid][pJailTime],
-			PlayerCache[playerid][pJailX],
-			PlayerCache[playerid][pJailY],
-			PlayerCache[playerid][pJailZ],
-			PlayerCache[playerid][pJailVW],
-			PlayerCache[playerid][pLastTraining],
-			PlayerCache[playerid][pObjectEditor],
-			PlayerCache[playerid][pGymBoostTime]);
-
-			cache_delete(rows);();
-
-			ShowDialogLogin(playerid);
-		}
-	}
-	else
-	{
-		ShowDialogNotFound(playerid);
-	}
-	return 1;
 }
 
 stock LoadPlayerData(playerid)
 {
 	new query[128];
-	format(query, sizeof(query), "SELECT * FROM players WHERE name = '%s'", ReturnPlayerName(playerid));
+	format(query, sizeof(query), "SELECT * FROM players WHERE name = '%s' LIMIT 1;", ReturnPlayerName(playerid));
 
-	mysql_query(DB_HANDLE, query);
+	new Cache:cache = mysql_query(DB_HANDLE, query);
+	
 
-	mysql_store_result();
-
-	if(mysql_num_rows())
+	if(cache_num_rows())
 	{
-		new data[1024];
-
-		if(mysql_fetch_row(data))
-		{
-			sscanf(data,
-			"p<|>ds[65]s[11]s[24]ddfddddddddddddddddddddddddddddddddddddddddfffddddddds[16]dfffdddd",
-			PlayerCache[playerid][pUID],
-			PlayerCache[playerid][pHash],
-			PlayerCache[playerid][pSalt],
-			PlayerCache[playerid][pName],
-			PlayerCache[playerid][pGender],
-			PlayerCache[playerid][pSkin],
-			PlayerCache[playerid][pHealth],
-			PlayerCache[playerid][pCash],
-			PlayerCache[playerid][pTutorialLevel],
-			PlayerCache[playerid][pStrenght],
-			PlayerCache[playerid][pLevel],
-			PlayerCache[playerid][pBW_Time],
-			PlayerCache[playerid][pBW_Reason],
-			PlayerCache[playerid][pAJ_Time],
-			PlayerCache[playerid][pGroup],
-			PlayerCache[playerid][pGroup2],
-			PlayerCache[playerid][pGroup3],
-			PlayerCache[playerid][pGroupMapper],
-			PlayerCache[playerid][pGroupMapper2],
-			PlayerCache[playerid][pGroupMapper3],
-			PlayerCache[playerid][pGroupInvite],
-			PlayerCache[playerid][pGroupInvite2],
-			PlayerCache[playerid][pGroupInvite3],
-			PlayerCache[playerid][pGroupAdmin],
-			PlayerCache[playerid][pGroupAdmin2],
-			PlayerCache[playerid][pGroupAdmin3],
-			PlayerCache[playerid][pGroupDoor],
-			PlayerCache[playerid][pGroupDoor2],
-			PlayerCache[playerid][pGroupDoor3],
-			PlayerCache[playerid][pGroupVehicle],
-			PlayerCache[playerid][pGroupVehicle2],
-			PlayerCache[playerid][pGroupVehicle3],
-			PlayerCache[playerid][pGroupProducts],
-			PlayerCache[playerid][pGroupProducts2],
-			PlayerCache[playerid][pGroupProducts3],
-			PlayerCache[playerid][pGroupPayDay],
-			PlayerCache[playerid][pGroupPayDay2],
-			PlayerCache[playerid][pGroupPayDay3],
-			PlayerCache[playerid][pGroupDuty],
-			PlayerCache[playerid][pGroupDuty2],
-			PlayerCache[playerid][pGroupDuty3],
-			PlayerCache[playerid][pPlayTime],
-			PlayerCache[playerid][pScore],
-			PlayerCache[playerid][pHouseSpawn],
-			PlayerCache[playerid][pBank],
-			PlayerCache[playerid][pBornDate],
-			PlayerCache[playerid][pPosVW],
-			PlayerCache[playerid][pPosX],
-			PlayerCache[playerid][pPosY],
-			PlayerCache[playerid][pPosZ],
-			PlayerCache[playerid][pID_Card],
-			PlayerCache[playerid][pDrivingLicense],
-			PlayerCache[playerid][pBankAccount],
-			PlayerCache[playerid][pOOC],
-			PlayerCache[playerid][pGroupReward],
-			PlayerCache[playerid][pGroupReward2],
-			PlayerCache[playerid][pGroupReward3],
-			PlayerCache[playerid][pFavAnim],
-			PlayerCache[playerid][pJailTime],
-			PlayerCache[playerid][pJailX],
-			PlayerCache[playerid][pJailY],
-			PlayerCache[playerid][pJailZ],
-			PlayerCache[playerid][pJailVW],
-			PlayerCache[playerid][pLastTraining],
-			PlayerCache[playerid][pObjectEditor],
-			PlayerCache[playerid][pGymBoostTime]);
-
-			cache_delete(rows);();
-		}
+		cache_get_value_name_int(0, "pUID", PlayerCache[playerid][pUID]);
+		cache_get_value_name(0, "pHash", PlayerCache[playerid][pHash]);
+		cache_get_value_name(0, "pSalt", PlayerCache[playerid][pSalt]);
+		cache_get_value_name(0, "pName", PlayerCache[playerid][pName]);
+		cache_get_value_name_int(0, "pGender", PlayerCache[playerid][pGender]);
+		cache_get_value_name_int(0, "pSkin", PlayerCache[playerid][pSkin]);
+		cache_get_value_name_float(0, "pHealth", PlayerCache[playerid][pHealth]);
+		cache_get_value_name_int(0, "pCash", PlayerCache[playerid][pCash]);
+		cache_get_value_name_int(0, "pTutorialLevel", PlayerCache[playerid][pTutorialLevel]);
+		cache_get_value_name_int(0, "pStrenght", PlayerCache[playerid][pStrenght]);
+		cache_get_value_name_int(0, "pLevel", PlayerCache[playerid][pLevel]);
+		cache_get_value_name_int(0, "pBW_Time", PlayerCache[playerid][pBW_Time]);
+		cache_get_value_name_int(0, "pBW_Reason", PlayerCache[playerid][pBW_Reason]);
+		cache_get_value_name_int(0, "pAJ_Time", PlayerCache[playerid][pAJ_Time]);
+		cache_get_value_name_int(0, "pGroup", PlayerCache[playerid][pGroup]);
+		cache_get_value_name_int(0, "pGroup2", PlayerCache[playerid][pGroup2]);
+		cache_get_value_name_int(0, "pGroup3", PlayerCache[playerid][pGroup3]);
+		cache_get_value_name_int(0, "pGroupMapper", PlayerCache[playerid][pGroupMapper]);
+		cache_get_value_name_int(0, "pGroupMapper2", PlayerCache[playerid][pGroupMapper2]);
+		cache_get_value_name_int(0, "pGroupMapper3", PlayerCache[playerid][pGroupMapper3]);
+		cache_get_value_name_int(0, "pGroupInvite", PlayerCache[playerid][pGroupInvite]);
+		cache_get_value_name_int(0, "pGroupInvite2", PlayerCache[playerid][pGroupInvite2]);
+		cache_get_value_name_int(0, "pGroupInvite3", PlayerCache[playerid][pGroupInvite3]);
+		cache_get_value_name_int(0, "pGroupAdmin", PlayerCache[playerid][pGroupAdmin]);
+		cache_get_value_name_int(0, "pGroupAdmin2", PlayerCache[playerid][pGroupAdmin2]);
+		cache_get_value_name_int(0, "pGroupAdmin3", PlayerCache[playerid][pGroupAdmin3]);
+		cache_get_value_name_int(0, "pGroupDoor", PlayerCache[playerid][pGroupDoor]);
+		cache_get_value_name_int(0, "pGroupDoor2", PlayerCache[playerid][pGroupDoor2]);
+		cache_get_value_name_int(0, "pGroupDoor3", PlayerCache[playerid][pGroupDoor3]);
+		cache_get_value_name_int(0, "pGroupVehicle", PlayerCache[playerid][pGroupVehicle]);
+		cache_get_value_name_int(0, "pGroupVehicle2", PlayerCache[playerid][pGroupVehicle2]);
+		cache_get_value_name_int(0, "pGroupVehicle3", PlayerCache[playerid][pGroupVehicle3]);
+		cache_get_value_name_int(0, "pGroupProducts", PlayerCache[playerid][pGroupProducts]);
+		cache_get_value_name_int(0, "pGroupProducts2", PlayerCache[playerid][pGroupProducts2]);
+		cache_get_value_name_int(0, "pGroupProducts3", PlayerCache[playerid][pGroupProducts3]);
+		cache_get_value_name_int(0, "pGroupPayDay", PlayerCache[playerid][pGroupPayDay]);
+		cache_get_value_name_int(0, "pGroupPayDay2", PlayerCache[playerid][pGroupPayDay2]);
+		cache_get_value_name_int(0, "pGroupPayDay3", PlayerCache[playerid][pGroupPayDay3]);
+		cache_get_value_name_int(0, "pGroupDuty", PlayerCache[playerid][pGroupDuty]);
+		cache_get_value_name_int(0, "pGroupDuty2", PlayerCache[playerid][pGroupDuty2]);
+		cache_get_value_name_int(0, "pGroupDuty3", PlayerCache[playerid][pGroupDuty3]);
+		cache_get_value_name_int(0, "pPlayTime", PlayerCache[playerid][pPlayTime]);
+		cache_get_value_name_int(0, "pScore", PlayerCache[playerid][pScore]);
+		cache_get_value_name_int(0, "pHouseSpawn", PlayerCache[playerid][pHouseSpawn]);
+		cache_get_value_name_int(0, "pBank", PlayerCache[playerid][pBank]);
+		cache_get_value_name_float(0, "pPosX", PlayerCache[playerid][pPosX]);
+		cache_get_value_name_float(0, "pPosY", PlayerCache[playerid][pPosY]);
+		cache_get_value_name_float(0, "pPosY", PlayerCache[playerid][pPosZ]);
+		cache_get_value_name_int(0, "pPosVW", PlayerCache[playerid][pPosVW]);
+		cache_get_value_name_int(0, "pBornDate", PlayerCache[playerid][pBornDate]);
+		cache_get_value_name_int(0, "pID_Card", PlayerCache[playerid][pID_Card]);
+		cache_get_value_name_int(0, "pDrivingLicense", PlayerCache[playerid][pDrivingLicense]);
+		cache_get_value_name_int(0, "pBankAccount", PlayerCache[playerid][pBankAccount]);
+		cache_get_value_name_int(0, "pOOC", PlayerCache[playerid][pOOC]);
+		cache_get_value_name_int(0, "pGroupReward", PlayerCache[playerid][pGroupReward]);
+		cache_get_value_name_int(0, "pGroupReward2", PlayerCache[playerid][pGroupReward2]);
+		cache_get_value_name_int(0, "pGroupReward3", PlayerCache[playerid][pGroupReward3]);
+		cache_get_value_name_int(0, "pFavAnim", PlayerCache[playerid][pFavAnim]);
+		cache_get_value_name_int(0, "pJailTime", PlayerCache[playerid][pJailTime]);
+		cache_get_value_name_float(0, "pJailX", PlayerCache[playerid][pJailX]);
+		cache_get_value_name_float(0, "pJailY", PlayerCache[playerid][pJailY]);
+		cache_get_value_name_float(0, "pJailZ", PlayerCache[playerid][pJailZ]);
+		cache_get_value_name_int(0, "pJailVW", PlayerCache[playerid][pJailVW]);
+		cache_get_value_name_int(0, "pLastTraining", PlayerCache[playerid][pLastTraining]);
+		cache_get_value_name_int(0, "pObjectEditor", PlayerCache[playerid][pObjectEditor]);
+		cache_get_value_name_int(0, "pGymBoostTime", PlayerCache[playerid][pGymBoostTime]);
+		ShowDialogLogin(playerid);
+	}	
+	else
+	{
+		ShowDialogNotFound(playerid);
 	}
-
+	
+	cache_delete(cache);
+	return 1;
 }
 
 stock ShowDialogChangeDoorName(playerid)
@@ -3429,19 +3330,19 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 				new str[128], guid = strval(inputtext), gname[32];
 
 				format(str, sizeof(str), "SELECT name FROM groups WHERE uid = '%d' LIMIT 1", guid);
-				mysql_query(str);
-				if(mysql_num_rows())
+				new Cache:cache = mysql_query(DB_HANDLE, str);
+				if(cache_num_rows())
 				{
-					mysql_fetch_string(gname);
+					cache_get_value_name(0, "name", gname);
 
-					cache_delete(rows);();
+					cache_delete(cache);
 				}
 				else
 				return SendClientMessage(playerid, COLOR_GRAY, "Wybrana grupa została usunięta.");
 
 
 				format(str, sizeof(str), "UPDATE objects SET owner = '%d' WHERE uid = '%d' LIMIT 1", guid, ObjectCache[playerid][oUID]);
-				mysql_query(str);
+				cache_delete(mysql_query(DB_HANDLE, str));
 
 				format(str, sizeof(str), "Obiekt został pomyślnie podpisany pod grupę: %s", gname);
 				return SendClientMessage(playerid, COLOR_GRAY, str);
@@ -4795,20 +4696,18 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 				}
 				new query[256];
 				format(query, sizeof(query), "SELECT * FROM players WHERE name = '%s'", inputtext);
-				mysql_query(DB_HANDLE, query);
+				new Cache:cache = mysql_query(DB_HANDLE, query);
 
-				mysql_store_result();
-
-				if(mysql_fetch_row_data())
-				{
+				if(cache_num_rows()){
 					SetPlayerName(playerid, inputtext);
 					LoadPlayerData(playerid);
 					ShowDialogLogin(playerid);
+				}else{
+						ShowDialogNotFound(playerid);
 				}
-				else
-				{
-					ShowDialogNotFound(playerid);
-				}
+				cache_delete(cache);
+
+	
 
 				return 1;
 			}
@@ -6348,7 +6247,7 @@ stock ShowDialogGroupPanel(playerid)
 	return ShowPlayerDialog(playerid, D_GROUP_PANEL, DIALOG_STYLE_LIST, header, str, "Wybierz", "Anuluj");
 }
 
-stock AddContact(owner, name[], num)
+stock AddContact(owner, const name[], num)
 {
 	new str[128]; format(str, sizeof(str), name);
 	ContactCache[LastContactUID][cOwner] = owner;
@@ -6528,7 +6427,7 @@ stock UserPath(id)
 	return path;
 }
 
-stock Isnull(string[])
+stock Isnull(const string[])
 return !strlen(string);
 
 stock LoadAccounts()
@@ -7203,8 +7102,11 @@ public RestartServer()
 
 new gcount[MAX_PLAYERS];
 
-public OnPlayerCommandReceived(playerid, cmd[], params[], flags)
+public OnPlayerCommandReceived(playerid,  cmd[],  params[], flags)
 {
+
+
+
 	if(!PlayerCache[playerid][pUID])
 	return 0;
 	if(pTick[playerid] == GetTickCount())
@@ -7546,14 +7448,29 @@ public OnPlayerKeyStateChange(playerid, newkeys, oldkeys)
 			if(IsPlayerInRangeOfPoint(playerid, 10, X, Y, Z))
 			{
 				format(query, sizeof(query), "SELECT X, Y, Z, rX, rY, rZ, gate, owner, ownerType, gateX, gateY, gateZ, gaterX, gaterY, gaterZ FROM objects WHERE ID = '%d' LIMIT 1", objid);
-				mysql_query(DB_HANDLE, query);
-				mysql_store_result();
-				mysql_fetch_row(data);
+				new Cache:cache = mysql_query(DB_HANDLE, query);
 				
 				new Float:RX, Float:RY, Float:RZ;
 				GetDynamicObjectRot(objid, RX, RY, RZ);
+
+
+				cache_get_value_name_float(0, "X", x);
+				cache_get_value_name_float(0, "Y", y);
+				cache_get_value_name_float(0, "Z", z);
+				cache_get_value_name_float(0, "rX", rx);
+				cache_get_value_name_float(0, "rY", ry);
+				cache_get_value_name_float(0, "rZ", rz);
+				cache_get_value_name_int(0, "gate", gate);	
+				cache_get_value_name_int(0, "ownerType", ownerType);	
+				cache_get_value_name_float(0, "gateX", db_x);	
+				cache_get_value_name_float(0, "gateY", db_y);	
+				cache_get_value_name_float(0, "gateZ", db_z);	
+				cache_get_value_name_float(0, "gaterX", db_rx);	
+				cache_get_value_name_float(0, "gaterY", db_ry);	
+				cache_get_value_name_float(0, "gaterZ", db_rz);	
+
 				sscanf(data, "p<|>ffffffiiiffffff", x, y, z, rx, ry, rz, gate, owner, ownerType, db_x, db_y, db_z, db_rx, db_ry, db_rz);
-				cache_delete(rows);();
+				cache_delete(cache);
 				if(gate)
 				{
 					if(ownerType == 1)
@@ -8240,7 +8157,7 @@ stock SendFormattedMessage(playerid, const message[], const hexme[], const  hexn
 	return SendClientMessage(playerid, color, RPFormatText(msg, hexme, hexnormal));
 }
 
-stock RPFormatText(message[], const hexme[],const hexnormal[])
+stock RPFormatText(const message[], const hexme[],const hexnormal[])
 {
 	new hex[128]; format(hex, sizeof(hex), hexme); // hexme
 
@@ -8700,7 +8617,7 @@ public OnPlayerText(playerid, text[])
 	return 0;
 }
 
-stock SendActorMessageInRange(actorid,  msg[])
+stock SendActorMessageInRange(actorid,  const msg[])
 {
 	new Float:X, Float:Y, Float:Z;
 	GetActorPos(actorid, X, Y, Z);
@@ -8740,7 +8657,7 @@ stock SendActorMessageInRange(actorid,  msg[])
 	}
 }
 
-stock SendPlayerMessageInRange(playerid, text[], color, color2, color3, color4, color5, color6, bool:skipPlayerid)
+stock SendPlayerMessageInRange(playerid, const text[], color, color2, color3, color4, color5, color6, bool:skipPlayerid)
 {
 	new msg[128]; format(msg, sizeof(msg), text);
 	new Float:X, Float:Y, Float:Z;
@@ -8859,7 +8776,7 @@ stock SendPlayerMessageInRange(playerid, text[], color, color2, color3, color4, 
 	return 1;
 }
 
-stock strreplace(string[], find, replace)
+stock strreplace(const string[], find, replace)
 {
 	new str[128];
 	format(str, sizeof(str), string);
@@ -8893,7 +8810,7 @@ stock TextDrawForPlayerEx(playerid, textdrawid, const text[], time)
 	return 1;
 }
 
-stock TextDrawForPlayer(playerid, textdrawid, text[])
+stock TextDrawForPlayer(playerid, const textdrawid, const text[])
 {
 	switch(textdrawid)
 	{
@@ -10201,12 +10118,14 @@ stock PlayerFirstName(playerid)
 	return pname;
 }
 
-stock SendPlayerMe(playerid,  action[])
+stock SendPlayerMe(playerid,  const action[])
 {
 	new str[256];
 	format(str, sizeof(str), "* %s %s *", PlayerFirstName(playerid), action);
 	SetPlayerChatBubble(playerid, str, ME_SHADE_1, 15.0, 5000);
-	format(str, sizeof(str), "%s %s", PlayerFirstName(playerid), ReplacePolishSymbols(action));
+	new copy_action[256];
+	format(copy_action, sizeof(copy_action), action);
+	format(str, sizeof(str), "%s %s", PlayerFirstName(playerid), ReplacePolishSymbols(copy_action));
 	return TextDrawForPlayerEx(playerid, 3, str, 5000);
 }
 
@@ -10344,7 +10263,7 @@ cmd:hp (playerid, params[])
 	new msg[128];
 
 	format(msg, sizeof(msg), "UPDATE players SET health = '%f' WHERE uid = '%d'", HP, PlayerCache[playerid][pUID]);
-	mysql_query(msg);
+	cache_delete(mysql_query(DB_HANDLE, msg));
 
 	if(playerid == targetid)
 	{
@@ -10417,7 +10336,7 @@ cmd:say (playerid, params[])
 
 new PenalityTimer;
 
-stock KickPlayer(playerid, adminname[], reason[])
+stock KickPlayer(playerid, const adminname[], const reason[])
 {
 	if(!PlayerCache[playerid][pAJ_Time])
 	{
@@ -10454,7 +10373,7 @@ public HidePenalityTextDraw()
 }
 
 
-stock AJPlayer(playerid, adminname[], reason[], time)
+stock AJPlayer(playerid, const adminname[], const reason[], time)
 {
 	new str[128];
 	format(str, sizeof(str), "~r~AdminJail~w~ (%d min)~n~Gracz: %s~n~Nadal: %s~n~~y~%s", time, ReturnPlayerName(playerid), adminname, reason);
@@ -10492,7 +10411,8 @@ stock AJPlayer(playerid, adminname[], reason[], time)
 	PlayerTextDrawShow(playerid, AJTextDraw[playerid]);
 
 	format(str, sizeof(str), "UPDATE players SET aj_time = '%d' WHERE uid = '%d'", time, PlayerCache[playerid][pUID]);
-	mysql_query(str);
+	new Cache:cache = mysql_query(DB_HANDLE, str);
+	cache_delete(cache);
 	return 1;
 }
 
@@ -10994,17 +10914,18 @@ public OnPlayerPickUpDynamicPickup(playerid, pickupid)
 	PlayerPlaySound(playerid, 1150, 0.0, 0.0, 0.0);
 
 	new str[256];
-	format(str, sizeof(str), "SELECT uid, open, cost, insVW FROM doors WHERE pickupid = '%d' LIMIT 1", pickupid);
-	mysql_query(str);
+	format(str, sizeof(str), "SELECT uid, name, open, cost, insVW FROM doors WHERE pickupid = '%d' LIMIT 1", pickupid);
+	new Cache:cache = mysql_query(DB_HANDLE, str);
 
-	mysql_store_result();
+	new open, cost, insvw, name[64];
+	cache_get_value_name_int(0, "open", open);
+	cache_get_value_name_int(0, "cost", cost);
+	cache_get_value_name_int(0, "insVW", insvw);
+	cache_get_value_name(0, "name", name);
+	cache_get_value_name_int(0, "uid", pPickupUID[playerid]);
 
-	new open, cost, insvw, name;
 
-	mysql_fetch_row(str);
-	sscanf(str, "p<|>iiiis[32]", pPickupUID[playerid], open, cost, insvw, name);
-
-	cache_delete(rows);();
+	cache_delete(cache);
 
 	if(open)
 	{
@@ -11265,7 +11186,7 @@ stock LoadItems()
 		i++;
 	}
 
-	cache_delete(rows);();
+	cache_delete(cache);
 
 	printf(">>> Loaded %d items.", i);*/
 	new query[128];
@@ -11312,7 +11233,7 @@ stock SaveItems()
 	}
 }
 
-stock CreateItem(owneruid, type, val, val2, val3,val4, group, name[])
+stock CreateItem(owneruid, type, val, val2, val3,val4, group, const name[])
 {
 	new item_query[256];
 	format(item_query, sizeof(item_query), "INSERT INTO items (owner, name, type, val, val2, val3, val4, groupOwner) VALUES ('%d', '%s', '%d', '%d', '%d', '%d', '%d', '%d')",
@@ -11395,7 +11316,7 @@ cmd:p (playerid, params[])
 
 	
 
-	cache_delete(rows);();
+	cache_delete(cache);
 
 	if(!strlen(list))
 	ShowDialogInfo(playerid, ""HEX_WHITE"Nie posiadasz żadnych przedmiotów.\nMożesz rozejrzeć się po okolicy korzystając z komendy: /p podnies.");
@@ -11850,21 +11771,21 @@ stock UseItem(playerid, itemuid)
 				seat = GetPlayerVehicleSeat(playerid);
 				id = GetPlayerVehicleID(playerid);
 			}
-			format(itemQuery, sizeof(itemQuery), "SELECT * FROM items WHERE type = '3' AND active = '1' AND uid != '%d' LIMIT 1",
+			format(itemQuery, sizeof(itemQuery), "SELECT type FROM items WHERE type = '3' AND active = '1' AND uid != '%d' LIMIT 1",
 			itemuid);
-			mysql_query(DB_HANDLE, itemQuery);
+			cache = mysql_query(DB_HANDLE, itemQuery);
 
 			if(cache_num_rows())
 			{
 				SendClientMessage(playerid, COLOR_GRAY, "Masz już na sobie założone jakieś ubranie.");
-				cache_delete(rows);();
+				cache_delete(cache);
 			}
 			else
 			{
 				if(active)
 				{
-					format(query, sizeof(query), "UPDATE items SET active = '0' WHERE uid = '%d' LIMIT 1", itemuid);
-					mysql_query(DB_HANDLE, query);
+					format(itemQuery, sizeof(itemQuery), "UPDATE items SET active = '0' WHERE uid = '%d' LIMIT 1", itemuid);
+					mysql_query(DB_HANDLE, itemQuery);
 					ClearAnimations(playerid);
 					SetPlayerSkin(playerid, PlayerCache[playerid][pSkin]);
 				}
@@ -11872,8 +11793,8 @@ stock UseItem(playerid, itemuid)
 				{
 					ClearAnimations(playerid);
 					SetPlayerSkin(playerid, val);
-					format(query, sizeof(query), "UPDATE items SET active = '1' WHERE uid = '%d' LIMIT 1", itemuid);
-					mysql_query(DB_HANDLE, query);
+					format(itemQuery, sizeof(itemQuery), "UPDATE items SET active = '1' WHERE uid = '%d' LIMIT 1", itemuid);
+					mysql_query(DB_HANDLE, itemQuery);
 				}
 				SendPlayerMe(playerid, "przebiera się");
 				if(id)
@@ -11896,9 +11817,9 @@ stock UseItem(playerid, itemuid)
 						SetPlayerHealth(playerid, PlayerCache[playerid][pHealth]);
 						format(str, sizeof(str), "UPDATE players SET health = '%f' WHERE uid = '%d' LIMIT 1", PlayerCache[playerid][pHealth],
 						PlayerCache[playerid][pUID]);
-						mysql_query(str);
+						mysql_query(DB_HANDLE, str);
 						format(str, sizeof(str), "DELETE FROM items WHERE items.uid = '%d' LIMIT 1", itemuid);
-						mysql_query(str);
+						mysql_query(DB_HANDLE,str);
 					}
 					else
 					{
@@ -11908,8 +11829,8 @@ stock UseItem(playerid, itemuid)
 				case 2:
 				{
 					new h,m,s;
-					format(query, sizeof(query), "UPDATE players SET gym_boost_time = '%d' where uid = '%d' LIMIT 1", gettime(h,m,s), PlayerCache[playerid][pUID]);
-					mysql_query(DB_HANDLE, query);
+					format(itemQuery, sizeof(itemQuery), "UPDATE players SET gym_boost_time = '%d' where uid = '%d' LIMIT 1", gettime(h,m,s), PlayerCache[playerid][pUID]);
+					mysql_query(DB_HANDLE, itemQuery);
 
 					SetPlayerDrunkLevel(playerid, 5001);
 
@@ -12108,9 +12029,9 @@ stock UseItem(playerid, itemuid)
 									ItemCache[i][iActive] = 0;
 									if(ItemCache[i][iVal4])
 									{
-										new msg[128];
-										format(msg, sizeof(msg), "zdejmuje %s.", ItemCache[itemuid][iName]);
-										SendPlayerMe(playerid, msg);
+										new hideMsg[128];
+										format(hideMsg, sizeof(hideMsg), "zdejmuje %s.", ItemCache[itemuid][iName]);
+										SendPlayerMe(playerid, hideMsg);
 										SetPlayerName(playerid, PlayerCache[playerid][pName]);
 										UpdatePlayerName(playerid);
 										SetPlayerScore(playerid, PlayerCache[playerid][pScore]);																		
@@ -12609,7 +12530,7 @@ public OnPlayerWeaponShot(playerid, weaponid, hittype, hitid, Float:fX, Float:fY
 	return 1;
 }
 
-public OnPlayerShootDynamicObject(playerid, weaponid, STREAMER_TAG_OBJECT objectid, Float:x, Float:y, Float:z)
+public OnPlayerShootDynamicObject(playerid, weaponid, objectid, Float:x, Float:y, Float:z)
 {
 	if(weaponid != WeaponCache[playerid][wcVal])
 	{
@@ -13232,33 +13153,38 @@ stock GroupPath(id)
 
 stock LoadGroups()
 {
-	new query[256] = "SELECT * FROM groups";
-	mysql_query(DB_HANDLE, query);
+	new Cache:cache = mysql_query(DB_HANDLE, 
+	"CREATE TABLE IF NOT EXISTS groups(\n\
+	gUID INT AUTO_INCREMENT PRIMARY KEY \n\
+	gType INT NOT NULL \n\
+	gBank INT NOT NULL \n\
+	gName VARCHAR(32) NOT NULL \n\
+	gChatOOC INT NOT NULL \n\
+	gChatIC INT NOT NULL \n\
+	gColor VARCHAR(16) NOT NULL \n\
+	gState INT NOT NULL \n\
+	gVehicleLimit INT NOT NULL \n\
+	gPayDay INT NOT NULL);");
+	cache_delete(cache);
+	cache = mysql_query(DB_HANDLE, "SELECT * FROM groups;");
 
-	mysql_store_result();
-
-	new data[256];
-
-	new i;
-	while(mysql_fetch_row(data))
-	{
-		sscanf(data, "p<|>ddds[32]dds[16]ddd",
-		GroupCache[i][gUID],
-		GroupCache[i][gType],
-		GroupCache[i][gBank],
-		GroupCache[i][gName],
-		GroupCache[i][gChatOOC],
-		GroupCache[i][gChatIC],
-		GroupCache[i][gColor],
-		GroupCache[i][gState],
-		GroupCache[i][gVehicleLimit],
-		GroupCache[i][gPayDay]);
-		i++;
+	new rows = cache_num_rows();
+	for(new i=0; i<rows; i++){
+		cache_get_value_name_int(i, "gUID", GroupCache[i][gUID]);
+		cache_get_value_name_int(i, "gType", GroupCache[i][gType]);
+		cache_get_value_name_int(i, "gBank", GroupCache[i][gBank]);
+		cache_get_value_name_int(i, "gName", GroupCache[i][gName]);
+		cache_get_value_name_int(i, "gChatOOC", GroupCache[i][gChatOOC]);
+		cache_get_value_name_int(i, "gChatIC", GroupCache[i][gChatIC]);
+		cache_get_value_name_int(i, "gColor", GroupCache[i][gColor]);
+		cache_get_value_name_int(i, "gState", GroupCache[i][gState]);
+		cache_get_value_name_int(i, "gVehicleLimit", GroupCache[i][gVehicleLimit]);
+		cache_get_value_name_int(i, "gPayDay", GroupCache[i][gPayDay]);
 	}
+	
 
-	cache_delete(rows);();
-
-	printf(">>> Loaded %d groups.", i);
+	printf(">>> Loaded %d groups.", rows);
+	cache_delete(cache);
 }
 
 CMD:agrupa (playerid, params[])
@@ -13335,7 +13261,7 @@ stock HasPlayerFreeSlots(playerid)
 	return 0;
 }
 
-stock CreateGroup(grouptype, gname[], color[], VehicleLimit)
+stock CreateGroup(grouptype, const gname[], const color[], VehicleLimit)
 {
 	new name[32]; format(name, sizeof(name), gname);
 	GroupCache[LastgUID][gUID] = LastgUID;
@@ -13548,19 +13474,19 @@ CMD:mc (playerid, params[])
 	}
 	new str[1024];
 	format(str, sizeof(str), "SELECT playerUID, groupUID FROM doors WHERE uid = '%d' LIMIT 1", pPickupUID[playerid]);
-	mysql_query(str);
-	mysql_store_result();
+	new Cache:cache = mysql_query(DB_HANDLE, str);
+
 	new playerUID, groupUID;
-	if(mysql_fetch_row(str))
-	{
-		sscanf(str, "p<|>ii", playerUID, groupUID);
-		cache_delete(rows);();
-		if(playerUID)
+	cache_get_value_name_int(0, "playerUID", playerUID);
+	cache_get_value_name_int(0, "groupUID", groupUID);
+	cache_delete(cache);
+
+	if(playerUID)
 		{
 			if(PlayerCache[playerid][pUID] != playerUID)
 			return TextDrawForPlayerEx(playerid, 1, "Brak uprawnien.", 3000);
 		}
-		if(groupUID)
+	if(groupUID)
 		{
 			if(PlayerCache[playerid][pGroup] == groupUID)
 			{
@@ -13586,7 +13512,8 @@ CMD:mc (playerid, params[])
 			else
 			return TextDrawForPlayerEx(playerid, 1, "Brak uprawnien.", 3000);
 		}
-	}
+		
+	
 	new modelid;
 
 	if(sscanf(params, "i", modelid))
@@ -13615,24 +13542,21 @@ CMD:mc (playerid, params[])
 	modelid,
 	0);
 
-	mysql_query(str);
+	mysql_query(DB_HANDLE, str);
 
 	// Player Edit object
 	new object_uid;
-	mysql_query(DB_HANDLE, "SELECT Max(uid) FROM objects");
-
-	mysql_store_result();
-
-	mysql_fetch_row(str);
-	sscanf(str, "p<|>i", object_uid);
-
-	cache_delete(rows);();
+	cache = mysql_query(DB_HANDLE, "SELECT Max(uid) FROM objects");
+	cache_get_value_name_int(0, "uid", object_uid);
+	cache_delete(cache);
+	
 
 	ObjectCache[playerid][oUID] = object_uid;
 	ObjectCache[playerid][oID] = objectid;
 
 	format(str, sizeof(str), "UPDATE objects SET timer = '%d' WHERE id = '%d' LIMIT 1", SetTimerEx("ObjectMoving", 125, true, "i", playerid), objectid);
-	mysql_query(str);
+	cache = mysql_query(DB_HANDLE, str);
+	cache_delete(cache);
 	
 	return 1;
 }
@@ -13642,19 +13566,17 @@ stock SetPlayerEditObject(playerid, objectid, objectuid)
 	new str[256];
 
 	ApplyAnimation(playerid, "swat", "gnstwall_injurd", 4.1, 0, 0, 0, 1, 0, 0);
-
-	ObjectCache[playerid][oModel] = GetDynamicObjectModel(objectid);
+	ObjectCache[playerid][oModel] = GetObjectModel(objectid);
 	ObjectCache[playerid][oUID] = objectuid;
 	ObjectCache[playerid][oID] = objectid;
 
 	format(str, sizeof(str), "SELECT gate FROM objects WHERE uid = '%d' LIMIT 1", objectuid);
-	mysql_query(str);
-	mysql_store_result();
-	ObjectCache[playerid][oGate] = mysql_fetch_int();
-	cache_delete(rows);();
+	new Cache:cache = mysql_query(DB_HANDLE, str);
+	cache_get_value_name_int(0, "gate", ObjectCache[playerid][oGate]);
+	cache_delete(cache);
 
 	format(str, sizeof(str), "UPDATE objects SET timer = '%d' WHERE ID = '%d' LIMIT 1", SetTimerEx("ObjectMoving", 125, true, "i", playerid), objectid);
-	mysql_query(str);
+	cache_delete(mysql_query(DB_HANDLE, str));
 }
 
 CMD:mcopy (playerid, params[])
@@ -13670,7 +13592,7 @@ CMD:mcopy (playerid, params[])
 	mysql_fetch_row(data);
 	new timerid;
 	sscanf(data, "p<|>i", timerid);
-	cache_delete(rows);();
+	cache_delete(cache);
 	KillTimer(timerid);
 	format(query, sizeof(query), "UPDATE objects SET timer = '0' WHERE timer = '%d'", timerid);
 	mysql_query(DB_HANDLE, query);
@@ -13741,14 +13663,13 @@ CMD:msave (playerid, params[])
 
 	new query[256];
 	format(query, sizeof(query), "SELECT timer FROM objects WHERE uid = '%d' LIMIT 1", ObjectCache[playerid][oUID]);
-	mysql_query(DB_HANDLE, query);
+	new Cache:cache = mysql_query(DB_HANDLE, query);
 
-	mysql_store_result();
 
 	mysql_fetch_row(query);
 	sscanf(query, "p<|>i", timer);
 
-	cache_delete(rows);();
+	cache_delete(cache);
 
 	KillTimer(timer);
 
@@ -13791,7 +13712,7 @@ CMD:msel (playerid, params[])
 		{
 			return GameTextForPlayer(playerid, "~r~~h~brak uprawnien.", 3000, 4);
 		}
-		cache_delete(rows);();
+		cache_delete(cache);
 
 		if(playerUID)
 		{
@@ -13828,7 +13749,7 @@ CMD:msel (playerid, params[])
 	{
 		if(!IsValidDynamicObject(i))
 		break;
-		if(GetDynamicObjectModel(i) == model)
+		if(GetObjectModel(i) == model)
 		{
 			if(GetPlayerVirtualWorld(playerid) == GetDynamicObjectVirtualWorld(i))
 			{
@@ -13860,14 +13781,12 @@ CMD:mpick (playerid, params[])
 	{
 		new query[128], groupUID, playerUID;
 		format(query, sizeof(query), "SELECT groupUID, playerUID FROM doors WHERE uid = '%d' LIMIT 1", pDoorUID[playerid]);
-		mysql_query(DB_HANDLE, query);
+		new Cache:cache = mysql_query(DB_HANDLE, query);
 
-		mysql_store_result();
+		cache_get_value_name_int(0, "groupUID", groupUID);
+		cache_get_value_name_int(0, "playerUID", playerUID);
 
-		mysql_fetch_row(query);
-		sscanf(query, "p<|>ii", groupUID, playerUID);
-
-		cache_delete(rows);();
+		cache_delete(cache);
 
 		if(playerUID)
 		{
@@ -13897,16 +13816,13 @@ CMD:mpick (playerid, params[])
 
 	new model, str[128], uid, timer;
 	format(str, sizeof(str), "SELECT model, uid, timer FROM objects WHERE ID = '%d' LIMIT 1", objectid);
-	mysql_query(str);
+	new Cache:cache = mysql_query(DB_HANDLE, str);
 
-	mysql_store_result();
+	cache_get_value_name_int(0, "model", model);
+	cache_get_value_name_int(0, "uid", uid);
+	cache_get_value_name_int(0, "timer", timer);
 
-	new data[128];
-
-	mysql_fetch_row(data);
-	sscanf(data, "p<|>iii", model, uid, timer);
-		
-	cache_delete(rows);();
+	cache_delete(cache);
 
 	if(timer != 0)
 	return TextDrawForPlayerEx(playerid, 1, "Ten obiekt jest juz przez kogos edytowany.", 3000);
@@ -13930,20 +13846,17 @@ CMD:md (playerid, params[])
 
 	new str[64];
 	format(str, sizeof(str), "SELECT timer FROM objects WHERE uid = '%d' LIMIT 1", ObjectCache[playerid][oUID]);
-	mysql_query(str);
-
-	mysql_store_result();
-
-	mysql_fetch_row(str);
-	sscanf(str, "p<|>i", timer);
-	cache_delete(rows);();
+	new Cache:cache = mysql_query(DB_HANDLE, str);
+	cache_get_value_name_int(0, "timer", timer);
+	cache_delete(cache);
 
 	KillTimer(timer);
 
 	format(str, sizeof(str), "DELETE FROM objects WHERE objects.uid = '%d' LIMIT 1", ObjectCache[playerid][oUID]);
-	mysql_query(str);
+	cache_delete(mysql_query(DB_HANDLE, str));
 
 	format(str, sizeof(str), "DELETE FROM textures WHERE textures.objectUID = '%d' LIMIT 16", ObjectCache[playerid][oUID]);
+	cache_delete(mysql_query(DB_HANDLE, str));
 
 	ObjectCache[playerid][oUID] = 0;
 
@@ -14143,13 +14056,10 @@ stock ReturnObjectUID(objectid)
 {
 	new objectuid, query[128];
 	format(query, sizeof(query), "SELECT uid FROM objects WHERE ID = '%d' LIMIT 1", objectid);
-	mysql_query(DB_HANDLE, query);
+	new Cache:cache = mysql_query(DB_HANDLE, query);
+	cache_get_value_name_int(0, "uid", objectuid);
 
-	mysql_store_result();
-
-	objectuid = mysql_fetch_int();
-
-	cache_delete(rows);();
+	cache_delete(cache);
 	return objectuid;
 }
 
@@ -14378,19 +14288,16 @@ CMD:ap(playerid, params[])
 		new query[256];
 		format(query, sizeof(query), "INSERT INTO vehicles (owner, model, color, color2, posX, posY, posZ, id, siren, vw) VALUES ('%d', '%d', '%d', '%d', '%f', '%f', '%f', '%d', '%d', '%d')",
 		PlayerCache[playerid][pUID], model, color, color2, PlayerCache[playerid][pPosX], PlayerCache[playerid][pPosY], PlayerCache[playerid][pPosZ], vid, siren, GetPlayerVirtualWorld(playerid));
-		mysql_query(DB_HANDLE, query);
+		cache_delete(mysql_query(DB_HANDLE, query));
 
 		new uid;
 
 		format(query, sizeof(query), "SELECT uid FROM vehicles WHERE id = '%d'", vid);
-		mysql_query(DB_HANDLE, query);
+		new Cache:cache = mysql_query(DB_HANDLE, query);
 
-		mysql_store_result();
+		cache_get_value_name_int(0, "uid", uid);
 
-		mysql_fetch_row(query);
-		sscanf(query, "p<|>i", uid);
-
-		cache_delete(rows);();
+		cache_delete(cache);
 
 		PutPlayerInVehicle(playerid, vid, 0);
 	}
@@ -14680,7 +14587,7 @@ stock LoadVehicles()
 		i++;
 	}
 
-	cache_delete(rows);();
+	cache_delete(cache);
 
 	printf(">>> Loaded %d vehicles.", i);
 }
@@ -15439,7 +15346,7 @@ CMD:brama (playerid, params[])
 					new Float:RX, Float:RY, Float:RZ;
 					GetDynamicObjectRot(i, RX, RY, RZ);
 					sscanf(data, "p<|>ffffffiiiffffff", x, y, z, rx, ry, rz, gate, owner, ownerType, db_x, db_y, db_z, db_rx, db_ry, db_rz);
-					cache_delete(rows);();
+					cache_delete(cache);
 
 					if(gate)
 					{
@@ -16707,9 +16614,9 @@ CMD:gdel (playerid, params[])
 	return SendClientMessage(playerid, COLOR_GRAY, "Nie znajdujesz się w pobliżu celi.");
 }*/
 
-stock ReplacePolishSymbols(str[])
+stock ReplacePolishSymbols(const str[])
 {
-	new string[256]; format(string, sizeof(string), str);
+	new string[256]; format(string, sizeof(string), "%s", str);
 	for(new i=0; i<strlen(string); i++)
 	{
 		if(string[i] == 'ę')
