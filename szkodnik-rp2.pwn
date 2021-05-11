@@ -31,10 +31,10 @@ main(){}
 #define MYSQL_PASSWORD "jFZPtLWZtKAC8WI"
 #define MYSQL_DB "678458_"*/
 
-#define MYSQL_HOST "localhost"
-#define MYSQL_USER "root"
+#define MYSQL_HOST "127.0.0.1"
+#define MYSQL_USER "www"
 #define MYSQL_PASSWORD "123"
-#define MYSQL_DB "samp"
+#define MYSQL_DB "szkodnik-rp"
 
 #define COL_AC_CHAT 0x42D95EFF
 
@@ -821,16 +821,19 @@ new MySQL:DB_HANDLE;
 
 public OnGameModeInit()
 {
-
-	DB_HANDLE = mysql_connect(MYSQL_HOST, MYSQL_USER, MYSQL_PASSWORD, MYSQL_DB);
+	print("Rozpoczynam ³adowanie Szkodnik-RP");
+	DB_HANDLE = mysql_connect("127.0.0.1", "www", "123", "szkodnikrp");
 	if(mysql_errno() != 0) 
 		return !printf(">>> Wystapil blad w probie polaczenia z baza danych, kod bledu: %d", mysql_errno());
-	else
+	else{
 		print(">>> Pomyslnie nawiazano polaczenie z baza danych.");
+		cache_delete(mysql_query(DB_HANDLE, "CREATE DATABASE IF NOT EXISTS szkodnik-rp"));
+	}
+		
 
 	AddAnimations();
 	SendRconCommand("hostname ••• Szkodnik RolePlay •••");
-	SendRconCommand("gamemodetext Szkodnik-RP");
+	SendRconCommand("gamemodetext Szkodnik-RP v2.0");
 	SendRconCommand("mapname Los Santos");
 
 	gettime(ghour, gmin, gsec);
