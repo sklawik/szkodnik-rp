@@ -825,14 +825,12 @@ public OnGameModeInit()
 {
 
 	DB_HANDLE = mysql_connect(MYSQL_HOST, MYSQL_USER, MYSQL_PASSWORD, MYSQL_DB);
-
-	if(DB_HANDLE)
-	return !printf(">>> Wystapil blad w probie polaczenia z baza danych, kod bledu: %d", mysql_errno());
+	if(mysql_errno() != 0) 
+		return !printf(">>> Wystapil blad w probie polaczenia z baza danych, kod bledu: %d", mysql_errno());
 	else
-	print(">>> Pomyslnie nawiazano polaczenie z baza danych.");
+		print(">>> Pomyslnie nawiazano polaczenie z baza danych.");
 
 	AddAnimations();
-
 	SendRconCommand("hostname ••• Szkodnik RolePlay •••");
 	SendRconCommand("gamemodetext Szkodnik-RP");
 	SendRconCommand("mapname Los Santos");
@@ -852,7 +850,7 @@ public OnGameModeInit()
 
 			new query[128];
 			format(query, sizeof(query), "SELECT * FROM objects WHERE uid = '%d'", dfile_ReadInt("ObjectUID"));
-			mysql_query(query);
+			mysql_query(DB_HANDLE, query);
 
 			mysql_store_result();
 			if(mysql_num_rows())
@@ -869,7 +867,7 @@ public OnGameModeInit()
 		}
 	}
 
-	mysql_query("SELECT * FROM textures");
+	mysql_query(DB_HANDLE, "SELECT * FROM textures");
 	mysql_store_result();
 	printf(">>> Textury w bazie danych: %d", mysql_num_rows());
 	mysql_free_result();
@@ -921,7 +919,7 @@ public OnGameModeInit()
 		}
 	}
 
-	mysql_query("SELECT * FROM objects");
+	mysql_query(DB_HANDLE, "SELECT * FROM objects");
 	mysql_store_result();
 	printf(">>> Przeniesiono %d obiektow do bazy danych z plikow.", count);
 	printf(">>> W bazie danych znajduje sie %d obiektow.", mysql_num_rows());
@@ -1109,7 +1107,12 @@ stock TexturePath(textureid)
 
 stock LoadTextures()
 {
-	mysql_query("SELECT * FROM textures");
+	/*Cache:result = mysql_query(MySQL, "SELECT * FROM textures");
+	cache_get_value_int(0, 0, registered_players);
+	printf("There are %d players in the database.", registered_players);
+	cache_delete(result);
+	cache_get_value_name_int(0, const column_name[], destination)
+	mysql_query(DB_HANDLE, );
 
 	mysql_store_result();
 
@@ -1154,7 +1157,7 @@ stock LoadTextures()
 
 	printf(">>> Loaded %d textures.", mysql_num_rows());
 
-	mysql_free_result();
+	mysql_free_result();*/
 }
 
 stock SaveTextures()
@@ -1262,13 +1265,13 @@ public CheckObjectsLoaded()
 
 stock LoadObjects()
 {
-	AreObjectsLoaded = false;
+	/*AreObjectsLoaded = false;
 
 	SetTimer("CheckObjectsLoaded", 500, false);
 
 	new data[1024], uid, model, Float:X, Float:Y, Float:Z, Float:rX, Float:rY, Float:rZ, VW, id;
 
-	mysql_query("SELECT uid, model, X, Y, Z, rX, rY, rZ, VW FROM objects");
+	mysql_query(DB_HANDLE, "SELECT uid, model, X, Y, Z, rX, rY, rZ, VW FROM objects");
 
 	mysql_store_result();
 
@@ -1294,19 +1297,19 @@ stock LoadObjects()
 
 	mysql_free_result();
 
-	AreObjectsLoaded = true;
+	AreObjectsLoaded = true;*/
 }
 
 forward UpdateTableTextures(objectid, objectuid);
 public UpdateTableTextures(objectid, objectuid)
 {
-	new query[256];
+	/*new query[256];
 
 	format(query, sizeof(query), "UPDATE objects SET ID = '%d', timer = '0' WHERE uid = '%d' LIMIT 1", objectid, objectuid);
-	mysql_query(query);
+	mysql_query(DB_HANDLE, query);
 
 	format(query, sizeof(query), "UPDATE textures SET ID = '%d' WHERE objectUID = '%d'", objectid, objectuid);
-	mysql_query(query);
+	mysql_query(DB_HANDLE, query);*/
 }
 
 
@@ -1334,8 +1337,8 @@ new dPickupID2[MAX_DOORS];
 
 stock LoadDoors()
 {
-	new query[64] = "SELECT * FROM doors";
-	mysql_query(query);
+	/*new query[64] = "SELECT * FROM doors";
+	mysql_query(DB_HANDLE, query);
 
 	mysql_store_result();
 
@@ -1394,7 +1397,7 @@ stock LoadDoors()
 
 	mysql_free_result();
 
-	printf(">>> Loaded %d doors.", i);
+	printf(">>> Loaded %d doors.", i);*/
 }
 
 stock IsDoorInAnyDoor(dooruid)
@@ -1421,14 +1424,14 @@ stock CreateZoneFile(zoneid)
 	new query[1024];
 	format(query, sizeof(query), "INSERT INTO `zones` (`minX`, `minY`, `maxX`, `maxY`) VALUES ('%f', '%f', '%f', '%f')",
 	ZoneData[zoneid][zMinX],ZoneData[zoneid][zMinY], ZoneData[zoneid][zMaxX],  ZoneData[zoneid][zMaxY]);
-	mysql_query(query);
+	mysql_query(DB_HANDLE, query);
 }
 
 stock LoadZoneFile(zoneid)
 {
 	new query[256];
 	format(query, sizeof(query), "SELECT * FROM zones WHERE id = '%d'", zoneid);
-	mysql_query(query);
+	mysql_query(DB_HANDLE, query);
 
 	new data[525];
 	if(mysql_fetch_row(data))
@@ -1672,7 +1675,7 @@ stock GoUp(i)
 	ZoneData[i][zID] = CreateDynamicRectangle(ZoneData[i][zMinX], ZoneData[i][zMinY], ZoneData[i][zMaxX], ZoneData[i][zMaxY], -1, -1, -1);
 	new query[128];
 	format(query, sizeof(query), "SELECT * FROM zones WHERE id = '%d'", i);
-	mysql_query(query);
+	mysql_query(DB_HANDLE, query);
 
 	mysql_store_result();
 
@@ -1693,7 +1696,7 @@ stock GoRight(i)
 	ZoneData[i][zID] = CreateDynamicRectangle(ZoneData[i][zMinX], ZoneData[i][zMinY], ZoneData[i][zMaxX], ZoneData[i][zMaxY], -1, -1, -1);
 	new query[128];
 	format(query, sizeof(query), "SELECT * FROM zones WHERE id = '%d'", i);
-	mysql_query(query);
+	mysql_query(DB_HANDLE, query);
 
 	mysql_store_result();
 
@@ -1714,7 +1717,7 @@ stock GoLeft(i)
 	ZoneData[i][zID] = CreateDynamicRectangle(ZoneData[i][zMinX], ZoneData[i][zMinY], ZoneData[i][zMaxX], ZoneData[i][zMaxY], -1, -1, -1);
 	new query[128];
 	format(query, sizeof(query), "SELECT * FROM zones WHERE id = '%d'", i);
-	mysql_query(query);
+	mysql_query(DB_HANDLE, query);
 
 	mysql_store_result();
 
@@ -1820,8 +1823,8 @@ stock SaveApps()
 
 stock LoadApps()
 {
-	new query[64] = "SELECT * FROM apps";
-	mysql_query(query);
+	/*new query[64] = "SELECT * FROM apps";
+	mysql_query(DB_HANDLE, query);
 
 	mysql_store_result();
 
@@ -1845,7 +1848,7 @@ stock LoadApps()
 
 	mysql_free_result();
 
-	printf(">>> Loaded %d group apps.", i);
+	printf(">>> Loaded %d group apps.", i);*/
 }
 
 stock ContactPath(contactid)
@@ -1856,8 +1859,8 @@ stock ContactPath(contactid)
 
 stock LoadContacts()
 {
-	new query[32] = "SELECT * FROM contacts";
-	mysql_query(query);
+/*	new query[32] = "SELECT * FROM contacts";
+	mysql_query(DB_HANDLE, query);
 
 	mysql_store_result();
 
@@ -1874,7 +1877,7 @@ stock LoadContacts()
 
 	mysql_free_result();
 
-	printf(">>> Loaded %d phone contacts.", i);
+	printf(">>> Loaded %d phone contacts.", i);*/
 }
 
 stock SaveContacts()
@@ -1896,30 +1899,41 @@ stock SaveContacts()
 
 stock LoadActors()
 {
-	new query[64] = "SELECT * FROM actors";
-	mysql_query(query);
+	mysql_query(DB_HANDLE, "CREATE TABLE IF NOT EXISTS actors (\n\
+	aUID INT PRIMARY KEY,\n\
+	aType INT NOT NULL,\n\
+	aName VARCHAR(64) NOT NULL,\n\
+	aAnimLib VARCHAR(32) NOT  NULL,\n\
+	aAnimName VARCHAR(32) NOT NULL,\n\
+	aPosX FLOAT not null,\n\
+	aPosY FLOAT not null,\n\
+	aPosZ FLOAT not null,\n\
+	aAng FLOAT NOT NULL,\n\
+	aVW INT NOT NULL,\n\
+	aSkin INT NOT  NULL,\n\
+	aRepeat INT NOT NULL,\n\
+	aText VARCHAR (256) NOT NULL\n\
+	)"
+	);
+	new Cache:result = mysql_query(DB_HANDLE, "SELECT * FROM actors", true);
+	new rows = 0;
+	cache_get_row_count(rows);
 
-	mysql_store_result();
-
-
-	new data[256], i;
-	while(mysql_fetch_row(data))
-	{
-		sscanf(data, "p<|>dds[64]s[32]s[32]ffffddbs[256]",
-		ActorCache[i][aUID],
-		ActorCache[i][aType],
-		ActorCache[i][aName],
-		ActorCache[i][aAnimLib],
-		ActorCache[i][aAnimName],
-		ActorCache[i][aPosX],
-		ActorCache[i][aPosY],
-		ActorCache[i][aPosZ],
-		ActorCache[i][aAng],
-		ActorCache[i][aVW],
-		ActorCache[i][aSkin],
-		ActorCache[i][aRepeat],
-		ActorCache[i][aText]);
-
+	for(new i=0; i<rows; i++){
+		cache_get_value_name_int(i, "aUID", ActorCache[i][aUID]);
+		cache_get_value_name_int(i, "aType", ActorCache[i][aType]);
+		cache_get_value_name(i, "aName", ActorCache[i][aName]);
+		cache_get_value_name(i, "aAnimLib", ActorCache[i][aAnimLib]);
+		cache_get_value_name(i, "aAnimName", ActorCache[i][aAnimName]);
+		cache_get_value_name_float(i, "aPosX", ActorCache[i][aPosX]);
+		cache_get_value_name_float(i, "aPosY", ActorCache[i][aPosY]);
+		cache_get_value_name_float(i, "aposZ", ActorCache[i][aPosZ]);
+		cache_get_value_name_float(i, "aAng", ActorCache[i][aAng]);
+		cache_get_value_name_int(i, "aVW", ActorCache[i][aVW]);
+		cache_get_value_name_int(i, "aSkin", ActorCache[i][aSkin]);
+		cache_get_value_name_int(i, "aRepeat", ActorCache[i][aRepeat]);
+		cache_get_value_name(i, "aText", ActorCache[i][aText]);
+		
 		if(ActorCache[i][aType])
 		{
 			ActorCache[i][aID] = CreateDynamicActor(ActorCache[i][aSkin],ActorCache[i][aPosX], ActorCache[i][aPosY], ActorCache[i][aPosZ], ActorCache[i][aAng],
@@ -1930,18 +1944,14 @@ stock LoadActors()
 			if(!Isnull(ActorCache[i][aAnimLib]))
 			{
 				if(ActorCache[i][aRepeat])
-				ApplyDynamicActorAnimation(ActorCache[i][aID], ActorCache[i][aAnimLib], ActorCache[i][aAnimName], 4.1, 1, 0, 0, 0, 0);
+					ApplyDynamicActorAnimation(ActorCache[i][aID], ActorCache[i][aAnimLib], ActorCache[i][aAnimName], 4.1, 1, 0, 0, 0, 0);
 				else
-				ApplyDynamicActorAnimation(ActorCache[i][aID], ActorCache[i][aAnimLib], ActorCache[i][aAnimName], 4.1, 0, 0, 0, 1, 0);
+					ApplyDynamicActorAnimation(ActorCache[i][aID], ActorCache[i][aAnimLib], ActorCache[i][aAnimName], 4.1, 0, 0, 0, 1, 0);
 			}
 		}
-
-		i++;
 	}
-
-	mysql_free_result();
-
-	printf(">>> Loaded %d actors.", i);
+	cache_delete(result);
+	printf(">>> Loaded %d actors.", rows);
 }
 
 stock DoorPath(doorid)
@@ -2065,8 +2075,8 @@ stock UseItemOption(playerid, option, uid)
 				ItemCache[uid][iOwner] = VehicleCache[GetVehicleUID(GetPlayerVehicleID(playerid))][vUID];
 
 				format(query, sizeof(query), "UPDATE items SET state = '%d', owner = '%d' WHERE uid = '%d'", 2, VehicleCache[GetVehicleUID(GetPlayerVehicleID(playerid))][vUID], ItemCache[uid][iUID]);
-				mysql_query(query);
-
+				new Cache:cache = mysql_query(DB_HANDLE, query);
+				cache_delete(cache);
 
 				return SendPlayerMe(playerid, "odkłada jakiś przedmiot w pojeździe.");
 			}
@@ -2081,7 +2091,7 @@ stock UseItemOption(playerid, option, uid)
 
 			format(query, sizeof(query), "UPDATE items SET X = '%f', Y = '%f', Z = '%f', vw = '%f', state = '1' WHERE uid = '%d'",
 			ItemCache[uid][iX], ItemCache[uid][iY], ItemCache[uid][iZ], ItemCache[uid][iVW], ItemCache[uid][iUID]);
-			mysql_query(query);
+			mysql_query(DB_HANDLE, query);
 
 
 		}
@@ -2118,8 +2128,8 @@ stock UseItemOption(playerid, option, uid)
 
 				format(query, sizeof(query), "UPDATE items SET attachX = '0', attachY = '0', attachZ = '0', sizeX = '1', sizeY = '1', sizeZ = '1', attachrX = '0', attachrY = '0', attachrZ = '0' WHERE uid = '%d'",
 				ItemCache[uid][iUID]);
-				mysql_query(query);
-
+				new Cache:cache = mysql_query(DB_HANDLE, query);
+				cache_delete(cache);
 				return ShowDialogInfo(playerid, "Akcesorium doczepiane zostało pomyślnie zresetowane!");
 			}
 			return ShowDialogInfo(playerid, "Ten przedmiot nie jest doczepianym akcesorium, więc nie możesz go zresetować.");
@@ -2127,7 +2137,7 @@ stock UseItemOption(playerid, option, uid)
 		case 4:
 		{
 			if(ItemCache[uid][iType] == 13)
-			return ShowDialogInfo(playerid, "Nie możesz schować tego przedmiotu.");
+				return ShowDialogInfo(playerid, "Nie możesz schować tego przedmiotu.");
 			new list[525];
 			for(new i; i<MAX_ITEMS; i++)
 			{
@@ -2149,7 +2159,7 @@ stock UseItemOption(playerid, option, uid)
 			ItemCache[uid][iState] = 2;
 
 			format(query, sizeof(query), "UPDATE items SET state = '2' WHERE uid = '%d'", ItemCache[uid][iUID]);
-			mysql_query(query);
+			mysql_query(DB_HANDLE, query);
 
 			format(query, sizeof(query), "niszczy przedmiot %s", ItemCache[uid][iName]);
 			return SendPlayerMe(playerid, query);
@@ -2242,7 +2252,7 @@ public OnPlayerConnect(playerid)
 	new query[128];
 	format(query, sizeof(query), "SELECT * FROM players WHERE name = '%s'", ReturnPlayerName(playerid));
 
-	mysql_query(query);
+	mysql_query(DB_HANDLE, query);
 
 	mysql_store_result();
 
@@ -2338,7 +2348,7 @@ stock LoadPlayerData(playerid)
 	new query[128];
 	format(query, sizeof(query), "SELECT * FROM players WHERE name = '%s'", ReturnPlayerName(playerid));
 
-	mysql_query(query);
+	mysql_query(DB_HANDLE, query);
 
 	mysql_store_result();
 
@@ -3955,7 +3965,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 
 				format(query, sizeof(query), "UPDATE items SET state = '4', owner = '%d' WHERE uid = '%d'", ItemCache[choosenuid][iOwner],
 				ItemCache[choosenuid][iUID]);
-				mysql_query(query);
+				mysql_query(DB_HANDLE, query);
 
 				return TextDrawForPlayerEx(playerid, 1, "~b~~h~~h~~h~Schowano przedmiot", 3000);
 			}
@@ -4186,7 +4196,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 
 						new query[128];
 						format(query, sizeof(query), "UPDATE players SET HouseSpawn = '0' WHERE HouseSpawn = '%d'", dooruid);
-						mysql_query(query);
+						mysql_query(DB_HANDLE, query);
 					}
 					case 2:
 					{
@@ -4785,7 +4795,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 				}
 				new query[256];
 				format(query, sizeof(query), "SELECT * FROM players WHERE name = '%s'", inputtext);
-				mysql_query(query);
+				mysql_query(DB_HANDLE, query);
 
 				mysql_store_result();
 
@@ -4845,19 +4855,18 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 				}
 				if(sex[0] == 'm' || sex[0] == 'k')
 				{
-					new query[64];
-					format(query, sizeof(query), "SELECT * FROM players WHERE name = '%s'", inputtext);
-					mysql_query(query);
-
-					mysql_store_result();
-
-					if(mysql_num_rows())
-					{
+					new players_query[64];
+					format(players_query, sizeof(players_query), "SELECT * FROM players WHERE name = '%s' LIMIT 1", inputtext);
+					new Cache:cache = mysql_query(DB_HANDLE, players_query);
+					new rows = 0;
+					cache_get_row_count(rows);
+					if(rows == 1){
 						SendClientMessage(playerid, COLOR_WHITE, "> Taka postać już istnieje. Spróbuj użyć innej nazwy.");
 						ShowDialogCreate(playerid);
-						mysql_free_result();
+						cache_delete(cache);
 						return 1;
 					}
+					cache_delete(cache);
 
 					new count;
 					for(new j = 0; j < strlen(pname); j++)
@@ -4868,9 +4877,9 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 					if(count != 1)
 					{
 						ShowDialogCreate(playerid);
-						new msg[128];
-						format(msg, sizeof(msg), "> Twoje "HEX_BLUE"imię"HEX_WHITE" oraz "HEX_BLUE"nazwisko"HEX_WHITE" musi być oddzielone tylko jednym znakiem: "HEX_BLUE"_");
-						SendClientMessage(playerid, COLOR_WHITE, msg);
+						new info_msg[128];
+						format(info_msg, sizeof(info_msg), "> Twoje "HEX_BLUE"imię"HEX_WHITE" oraz "HEX_BLUE"nazwisko"HEX_WHITE" musi być oddzielone tylko jednym znakiem: "HEX_BLUE"_");
+						SendClientMessage(playerid, COLOR_WHITE, info_msg);
 						return 1;
 					}
 					new pos = strfind(text, "_", true);
@@ -4899,9 +4908,9 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 						}
 						else
 						{
-							new msg[128];
-							format(msg, sizeof(msg), "> Wprowadzono niedozwolony znak: "HEX_BLUE"%c", pname[i]);
-							SendClientMessage(playerid, COLOR_WHITE, msg);
+							new invalid_msg[128];
+							format(invalid_msg, sizeof(invalid_msg), "> Wprowadzono niedozwolony znak: "HEX_BLUE"%c", pname[i]);
+							SendClientMessage(playerid, COLOR_WHITE, invalid_msg);
 							ShowDialogCreate(playerid);
 							return 1;
 						}
@@ -4938,16 +4947,16 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 				format(salt, sizeof(salt), "%s%c", salt, list[random(56)]);
 
 				new hash[1024];
-				format(hash, sizeof(hash), "%s%s", SHA256::Hash(inputtext), SHA256::Hash(salt));
-				format(hash, sizeof(hash), "%s", SHA256::Hash(hash));
+			//	format(hash, sizeof(hash), "%s%s", SHA256::Hash(inputtext), SHA256::Hash(salt));
+				//format(hash, sizeof(hash), "%s", SHA256::Hash(hash));
 
 				printf("register hash: %s", hash);
 				printf("register salt: %s", salt);
 
-				new query[1024];
-				format(query, sizeof(query), "INSERT INTO players (hash, salt,name, gender, borndate) VALUES ('%s', '%s', '%s', '%d', '%d')", hash, salt,RegisterCache[playerid][rName], RegisterCache[playerid][rSex], RegisterCache[playerid][rBornDate]);
-				mysql_query(query);
-
+				new newPlayerQuery[1024];
+				format(newPlayerQuery, sizeof(newPlayerQuery), "INSERT INTO players (hash, salt,name, gender, borndate) VALUES ('%s', '%s', '%s', '%d', '%d')", hash, salt,RegisterCache[playerid][rName], RegisterCache[playerid][rSex], RegisterCache[playerid][rBornDate]);
+				new Cache:cache = mysql_query(DB_HANDLE, newPlayerQuery);
+				cache_delete(cache);
 				SetPlayerName(playerid, RegisterCache[playerid][rName]);
 				LoadPlayerData(playerid);
 				return ShowDialogLogin(playerid);
@@ -4967,11 +4976,11 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 				}
 				new hash[1024];
 
-				format(hash, sizeof(hash), "%s%s", SHA256::Hash(inputtext), SHA256::Hash(PlayerCache[playerid][pSalt]));
-				format(hash, sizeof(hash), "%s", SHA256::Hash(hash));
+				//format(hash, sizeof(hash), "%s%s", SHA256::Hash(inputtext), SHA256::Hash(PlayerCache[playerid][pSalt]));
+				//format(hash, sizeof(hash), "%s", SHA256::Hash(hash));
 
-				printf("hashzloginu: %s", hash);
-				printf("hash z bazy: %s", PlayerCache[playerid][pHash]);
+				//printf("hashzloginu: %s", hash);
+			//	printf("hash z bazy: %s", PlayerCache[playerid][pHash]);
 
 				if(!strcmp(hash, PlayerCache[playerid][pHash], false))
 				{
@@ -5272,15 +5281,20 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 
 				new query[128];
 				format(query, sizeof(query), "SELECT val, val2, val3, val4, active, name FROM items WHERE uid = '%d' LIMIT 1", uid);
-				mysql_query(query);
+				new Cache:cache = mysql_query(DB_HANDLE, query);
 
-				mysql_store_result();
+				new rows = 0;
+				cache_get_row_count(rows);
 
-				new data[128];
-				mysql_fetch_row(data);
-				sscanf(data, "p<|>iiiiis[128]", val, val2, val3, val4, active, name);
 
-				mysql_free_result();
+				cache_get_value_name_int(0, "val", val);
+				cache_get_value_name_int(0, "val2", val2);
+				cache_get_value_name_int(0, "val3", val3);
+				cache_get_value_name_int(0, "val4", val4);
+				cache_get_value_name_int(0, "active", active);
+				cache_get_value_name(0, "name", name);
+
+				cache_delete(cache);
 
 				new msg[128];
 
@@ -5323,7 +5337,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 
 
 				SendPlayerMe(playerid, msg);
-				mysql_query(query);
+				mysql_query(DB_HANDLE, query);
 
 				return 1;
 			}
@@ -6163,7 +6177,7 @@ stock LogoutPlayer(playerid)
 				pGetPack[playerid] = false;
 
 				format(query, sizeof(query), "UPDATE items SET owner = '0' WHERE uid = '%d'", i);
-				mysql_query(query);
+				mysql_query(DB_HANDLE, query);
 			}
 		}
 	}
@@ -6213,7 +6227,7 @@ stock LogoutPlayer(playerid)
 					ResetPlayerWeapons(playerid);
 					ItemCache[i][iActive]=0;
 					format(query, sizeof(query), "UPDATE items SET active = '0' WHERE uid = '%d'", i);
-					mysql_query(query);
+					mysql_query(DB_HANDLE, query);
 				}
 			}
 		}
@@ -6605,17 +6619,19 @@ stock BackToMenu(playerid)
 {
 	new query[128];
 	format(query, sizeof(query), "SELECT * FROM players WHERE name = '%s'", ReturnPlayerName(playerid));
-	mysql_query(query);
+	new Cache:cache = mysql_query(DB_HANDLE, query);
 
-	mysql_store_result();
+	new rows = 0;
+	cache_get_row_count(rows);
 
-	if(mysql_fetch_row_data())
+	cache_delete(cache);
+	if(rows)
 	{
 		ShowDialogLogin(playerid);
-		mysql_free_result();
+		
 	}
 	else
-	ShowDialogNotFound(playerid);
+		ShowDialogNotFound(playerid);
 
 }
 
@@ -6842,7 +6858,7 @@ public GiveScorePerHour(playerid)
 
 		new query[128];
 		format(query, sizeof(query), "UPDATE players SET score = '%d' WHERE uid = '%d'", PlayerCache[playerid][pScore], PlayerCache[playerid][pUID]);
-		mysql_query(query);
+		mysql_query(DB_HANDLE, query);
 
 		if(!PlayerCache[playerid][pBankAccount])
 		TextDrawForPlayerEx(playerid, 1, "Nie mozesz otrzymac cogodzinnego zasilku~n~poniewaz nie posiadasz konta bankowego.~n~Udaj sie do banku!", 10000);
@@ -6854,7 +6870,7 @@ public GiveScorePerHour(playerid)
 			SetTimerEx("GiveScorePerHour", 60000*60, false, "i", playerid);
 
 			format(query, sizeof(query), "UPDATE players SET bank = '%d' WHERE uid = '%d'", PlayerCache[playerid][pBank], PlayerCache[playerid][pUID]);
-			mysql_query(query);
+			mysql_query(DB_HANDLE, query);
 		}
 	}
 }
@@ -7530,7 +7546,7 @@ public OnPlayerKeyStateChange(playerid, newkeys, oldkeys)
 			if(IsPlayerInRangeOfPoint(playerid, 10, X, Y, Z))
 			{
 				format(query, sizeof(query), "SELECT X, Y, Z, rX, rY, rZ, gate, owner, ownerType, gateX, gateY, gateZ, gaterX, gaterY, gaterZ FROM objects WHERE ID = '%d' LIMIT 1", objid);
-				mysql_query(query);
+				mysql_query(DB_HANDLE, query);
 				mysql_store_result();
 				mysql_fetch_row(data);
 				
@@ -8037,7 +8053,7 @@ public ChooseSkin(playerid)
 
 		new query[86];
 		format(query, sizeof(query), "UPDATE players SET tutorial_level = '0', skin = '%d' WHERE uid = '%d'", GetPlayerSkin(playerid), PlayerCache[playerid][pUID]);
-		mysql_query(query);
+		mysql_query(DB_HANDLE, query);
 	}
 }
 
@@ -8202,7 +8218,7 @@ stock LookForEmoji(str[])
 	return msg;
 }
 
-stock SendFormattedMessage(playerid, message[], hexme[], hexnormal[], color)
+stock SendFormattedMessage(playerid, const message[], const hexme[], const  hexnormal[], color)
 {
 	new hex[128]; format(hex, sizeof(hex), hexme); // hexme
 	new hexnorm[128]; format(hexnorm, sizeof(hexnorm), hexnormal); // normal color hex
@@ -8224,7 +8240,7 @@ stock SendFormattedMessage(playerid, message[], hexme[], hexnormal[], color)
 	return SendClientMessage(playerid, color, RPFormatText(msg, hexme, hexnormal));
 }
 
-stock RPFormatText(message[], hexme[], hexnormal[])
+stock RPFormatText(message[], const hexme[],const hexnormal[])
 {
 	new hex[128]; format(hex, sizeof(hex), hexme); // hexme
 
@@ -8684,7 +8700,7 @@ public OnPlayerText(playerid, text[])
 	return 0;
 }
 
-stock SendActorMessageInRange(actorid, msg[])
+stock SendActorMessageInRange(actorid,  msg[])
 {
 	new Float:X, Float:Y, Float:Z;
 	GetActorPos(actorid, X, Y, Z);
@@ -8865,7 +8881,7 @@ stock ClearChat(playerid)
 	}
 }
 
-stock TextDrawForPlayerEx(playerid, textdrawid, text[], time)
+stock TextDrawForPlayerEx(playerid, textdrawid, const text[], time)
 {
 	switch(textdrawid)
 	{
@@ -8997,7 +9013,7 @@ public OnPlayerDisconnect(playerid, reason)
 						ResetPlayerWeapons(playerid);
 						ItemCache[i][iActive]=0;
 						format(query, sizeof(query), "UPDATE items SET active = '0' WHERE uid = '%d'", i);
-						mysql_query(query);
+						mysql_query(DB_HANDLE, query);
 					}
 				}
 			}
@@ -9036,7 +9052,7 @@ public ClearPos(puid)
 
 	new query[256];
 	format(query, sizeof(query), "UPDATE players SET posX = `%f`, posY = '%f', posZ = '%f' WHERE uid = '%d'", 0.0, 0.0, 0.0, puid);
-	mysql_query(query);
+	mysql_query(DB_HANDLE, query);
 
 	return 1;
 }
@@ -9500,7 +9516,7 @@ cmd:a (playerid, params[])
 	return ShowPlayerDialog(playerid, D_ADMINS, DIALOG_STYLE_TABLIST_HEADERS, "ekipa online", list, "OK", "");
 }
 
-stock ShowDialogInfo(playerid, info[])
+stock ShowDialogInfo(playerid, const info[])
 {
 	ShowPlayerDialog(playerid, D_INFO, DIALOG_STYLE_MSGBOX, "Informacja", info, "ok", "");
 	return 1;
@@ -9619,11 +9635,11 @@ public min_timer()
 			gmsg = "** Dzwony w ratuszu wybijają północ. **";
 
 			query = "UPDATE players SET grouppayday = '0'";
-			mysql_query(query);
+			mysql_query(DB_HANDLE, query);
 			query = "UPDATE players SET grouppayday2 = '0'";
-			mysql_query(query);
+			mysql_query(DB_HANDLE, query);
 			query = "UPDATE players SET grouppayday3 = '0'";
-			mysql_query(query);
+			mysql_query(DB_HANDLE, query);
 
 			for(new i; i<=GetPlayerPoolSize(); i++)
 			{
@@ -9665,7 +9681,7 @@ public min_timer()
 			}
 			VehicleCache[vuid][vFuel]--;
 			format(query, sizeof(query), "UPDATE vehicles SET fuel = '%d' WHERE uid = '%d'", VehicleCache[vuid][vFuel], VehicleCache[vuid][vUID]);
-			mysql_query(query);
+			mysql_query(DB_HANDLE, query);
 		}
 	}
 	new Float:pH, guid;
@@ -9686,7 +9702,7 @@ public min_timer()
 						if(GroupCache[guid][gType] == 16 || GroupCache[guid][gType] == 1 || GroupCache[guid][gType] == 2 || GroupCache[guid][gType] == 6)
 						{
 							PlayerCache[i][pGroupDuty]++;
-							mysql_query(query);
+							mysql_query(DB_HANDLE, query);
 						}
 						else
 						{
@@ -9694,7 +9710,7 @@ public min_timer()
 							if(DoorCache[duid][dGroupUID] == guid)
 							{
 								PlayerCache[i][pGroupDuty]++;
-								mysql_query(query);
+								mysql_query(DB_HANDLE, query);
 							}
 							// We update players duty time, when they work at group's bussines.
 						}
@@ -9711,7 +9727,7 @@ public min_timer()
 								PlayerCache[i][pBank]+=PlayerCache[i][pGroupReward];
 
 								format(query, sizeof(query), "UPDATE players SET grouppayday = '1', groupduty = '0', bank = '%d' WHERE uid = '%d'", PlayerCache[i][pBank], PlayerCache[i][pUID]);
-								mysql_query(query);
+								mysql_query(DB_HANDLE, query);
 
 								PlayerPlaySound(i, 4201, 0, 0, 0);
 								format(query,sizeof(query), "** Otrzymujesz $%d wypłaty **", PlayerCache[i][pGroupReward]);
@@ -9776,14 +9792,14 @@ public min_timer()
 
 				PlayerCache[i][pPlayTime]++;
 				format(query, sizeof(query), "UPDATE players SET playtime = '%d' WHERE uid = '%d'", PlayerCache[i][pPlayTime], PlayerCache[i][pUID]);
-				mysql_query(query);
+				mysql_query(DB_HANDLE, query);
 
 				if(PlayerCache[i][pBW_Time])
 				{
 					PlayerCache[i][pBW_Time]--;
 
 					format(query, sizeof(query), "UPDATE players SET bw_time = '%d' WHERE uid = '%d'", PlayerCache[i][pBW_Time], PlayerCache[i][pAJ_Time]);
-					mysql_query(query);
+					mysql_query(DB_HANDLE, query);
 
 					format(query, sizeof(query), "Stan nieprzytomnosci przez: %dmin", PlayerCache[i][pBW_Time]);
 
@@ -9805,7 +9821,7 @@ public min_timer()
 					PlayerCache[i][pAJ_Time]--;
 
 					format(query, sizeof(query),"UPDATE players SET aj_time = '%d' WHERE uid = '%d'", PlayerCache[i][pAJ_Time], PlayerCache[i][pUID]);
-					mysql_query(query);
+					mysql_query(DB_HANDLE, query);
 
 					format(query, sizeof(query), "~r~~h~AdminJail: %dmin", PlayerCache[i][pAJ_Time]);
 					PlayerTextDrawSetString(i, AJTextDraw[i], query);
@@ -9836,7 +9852,7 @@ public min_timer()
 					PlayerCache[i][pJailTime]--;
 
 					format(query, sizeof(query), "UPDATE players SET jail_time = '%d' WHERE uid = '%d'", PlayerCache[i][pJailTime], PlayerCache[i][pUID]);
-					mysql_query(query);
+					mysql_query(DB_HANDLE, query);
 
 
 					if(!PlayerCache[i][pJailTime])
@@ -10185,7 +10201,7 @@ stock PlayerFirstName(playerid)
 	return pname;
 }
 
-stock SendPlayerMe(playerid, action[])
+stock SendPlayerMe(playerid,  action[])
 {
 	new str[256];
 	format(str, sizeof(str), "* %s %s *", PlayerFirstName(playerid), action);
@@ -10269,7 +10285,7 @@ cmd:unbw (playerid, params[])
 
 	new query[64];
 	format(query, sizeof(query), "UPDATE players SET bw_time = '0' WHERE uid = '%d'", PlayerCache[playerid][pUID]);
-	mysql_query(query);
+	mysql_query(DB_HANDLE, query);
 
 	return 1;
 }
@@ -10523,7 +10539,7 @@ cmd:aj (playerid, params[])
 
 		new query[128];
 		format(query, sizeof(query), "UPDATE players SET aj_time = '0' WHERE uid = '%d'", PlayerCache[targetid][pUID]);
-		mysql_query(query);
+		mysql_query(DB_HANDLE, query);
 
 		if(PlayerCache[targetid][pPosX] != 0 && PlayerCache[targetid][pPosY] != 0 && PlayerCache[targetid][pPosZ] != 0)
 		{
@@ -11022,22 +11038,33 @@ cmd:zamknij (playerid, params[])
 {
 	new str[256];
 	format(str, sizeof(str), "SELECT playerUID, groupUID, open, explodeTime, insX, insY, insZ, outX, outY, outZ, outVW, insVW FROM doors WHERE uid = '%d' LIMIT 1", pPickupUID[playerid]);
-	mysql_query(str);
+	new Cache:cache = mysql_query(DB_HANDLE, str);
+	
 
-	mysql_store_result();
+	new rows = 0;
+	cache_get_row_count(rows);
 
 	new playerUID, groupUID, open, explodeTime, Float:insX, Float:insY, Float:insZ,
 	Float:outX, Float:outY, Float:outZ, insVW, outVW;
 
-	if(mysql_fetch_row(str))
-	{
-		sscanf(str, "p<|>iiiiffffffii", playerUID, groupUID, open, explodeTime, insX, insY, insZ,
-		outX, outY, outZ, insVW, outVW);
-		mysql_free_result();
-	}
-	else
-	return SendClientMessage(playerid, COLOR_GRAY, "Nie znajdujesz się przy żadnych drzwiach.");
+	cache_get_value_name_int(0, "playerUID", playerUID);
+	cache_get_value_name_int(0, "groupUID", groupUID);
+	cache_get_value_name_int(0, "open", open);
+	cache_get_value_name_int(0, "explodeTime", explodeTime);
+	cache_get_value_name_float(0, "insX", insX);
+	cache_get_value_name_float(0, "insY", insY);
+	cache_get_value_name_float(0, "insZ", insZ);
+	cache_get_value_name_float(0, "outX", outX);
+	cache_get_value_name_float(0, "outY", outY);
+	cache_get_value_name_float(0, "outZ", outZ);
+	cache_get_value_name_int(0, "insVW", insVW);
+	cache_get_value_name_int(0, "outVW", outVW);
 
+
+	cache_delete(cache);
+
+	if(!rows)
+	return SendClientMessage(playerid, COLOR_GRAY, "Nie znajdujesz się przy żadnych drzwiach.");
 	if(GetPlayerVirtualWorld(playerid) == insVW)
 	{
 		if(!IsPlayerInRangeOfPoint(playerid, 2.5, insX, insY, insZ))
@@ -11200,7 +11227,7 @@ stock ItemPath(itemid)
 stock LoadItems()
 {
 	/*new query[32] = "SELECT * FROM items";
-	mysql_query(query);
+	mysql_query(DB_HANDLE, query);
 
 	mysql_store_result();
 
@@ -11244,7 +11271,7 @@ stock LoadItems()
 	new query[128];
 	format(query, sizeof(query), "UPDATE items SET active = '0' WHERE type != '%d'", ITEM_STATE_DESTROYED);
 
-	mysql_query(query);
+	mysql_query(DB_HANDLE, query);
 }
 
 stock SaveItems()
@@ -11287,21 +11314,17 @@ stock SaveItems()
 
 stock CreateItem(owneruid, type, val, val2, val3,val4, group, name[])
 {
-	new query[256];
-	format(query, sizeof(query), "INSERT INTO items (owner, name, type, val, val2, val3, val4, groupOwner) VALUES ('%d', '%s', '%d', '%d', '%d', '%d', '%d', '%d')",
+	new item_query[256];
+	format(item_query, sizeof(item_query), "INSERT INTO items (owner, name, type, val, val2, val3, val4, groupOwner) VALUES ('%d', '%s', '%d', '%d', '%d', '%d', '%d', '%d')",
 	owneruid, name, type, val, val2, val3, val4, group);
-	mysql_query(query);
+	new Cache:cache = mysql_query(DB_HANDLE, item_query);
+	cache_delete(cache);
 
-	mysql_query("SELECT Max(uid) FROM items");
+	cache = mysql_query(DB_HANDLE, "SELECT Max(uid) FROM items");
+	new uid = 0;
+	cache_get_value_name_int(0, "uid", uid);
 
-	mysql_store_result();
-
-	new data[32];
-	mysql_fetch_row(data);
-	new uid;
-	sscanf(data, "p<|>d", uid);
-
-	mysql_free_result();
+	cache_delete(cache);
 
 	return uid;
 }
@@ -11327,30 +11350,34 @@ stock GetPlayerItemsCount(playerid)
 cmd:p (playerid, params[])
 {	
 	if(pCuffed[playerid])
-	return ShowDialogInfo(playerid, "Nie możesz tego zrobić będąc skutym.");
+		return ShowDialogInfo(playerid, "Nie możesz tego zrobić będąc skutym.");
 
 	if(PlayerCache[playerid][pBW_Time])
-	return ShowDialogInfo(playerid, "Nie możesz tego teraz zrobić.");
+		return ShowDialogInfo(playerid, "Nie możesz tego teraz zrobić.");
 
 	new param1[16], param2[16];
 	sscanf(params, "s[16]s[16]", param1, param2);
 
-	new query[128];
+	new items_query[256];
+	format(items_query, sizeof(items_query), "SELECT uid, type, val, val2, val3, val4, name, active FROM items WHERE owner = '%d' AND state = '%d'", PlayerCache[playerid][pUID], ITEM_STATE_EQ);
+	new Cache:cache = mysql_query(DB_HANDLE, items_query);
 
-	format(query, sizeof(query), "SELECT uid, type, val, val2, val3, val4, name, active FROM items WHERE owner = '%d' AND state = '%d'", PlayerCache[playerid][pUID], ITEM_STATE_EQ);
+	new rows = 0;
+	cache_get_row_count(rows);
 
-	mysql_query(query);
-
-	mysql_store_result();
-
-	new data[256];
 
 	new uid, type, val, val2, val3, val4, name[128], active, list[256];
 
-	while(mysql_fetch_row(data))
-	{
-		sscanf(data, "p<|>iiiiiis[128]i",
-		uid, type, val, val2, val3, val4, name, active);
+	for(new i=0; i<rows;i++){
+
+		cache_get_value_name_int(i, "uid", uid);
+		cache_get_value_name_int(i, "type", type);
+		cache_get_value_name_int(i, "val", val);
+		cache_get_value_name_int(i, "val2", val2);
+		cache_get_value_name_int(i, "val3", val3);
+		cache_get_value_name_int(i, "val4", val4);
+		cache_get_value_name(i, "name", name);
+		cache_get_value_name_int(i, "active", active);
 
 		if(active)
 		format(list, sizeof(list), "%s%d\t"HEX_GRAY"%s\t%d,%d,%d,%d,%d\n",
@@ -11359,6 +11386,14 @@ cmd:p (playerid, params[])
 		format(list, sizeof(list), "%s%d\t%s\t%d,%d,%d,%d,%d\n",
 		list, uid, name, type, val, val2, val3, val4);
 	}
+
+	cache_delete(cache);
+
+	new data[256];
+
+	
+
+	
 
 	mysql_free_result();
 
@@ -11622,13 +11657,17 @@ CMD:ai(playerid, params[])
 {
 	if(PlayerCache[playerid][pLevel] == ADMINISTRATION || pDuty[playerid] == 16 || PlayerCache[playerid][pLevel] == DEVELOPER)
 	{
-		new query[128];
-		format(query, sizeof(query), "SELECT * FROM items WHERE owner = '%d'", PlayerCache[playerid][pUID]);
-		mysql_query(query);
-		mysql_store_result();
-		if(mysql_num_rows()>=20)
-		return SendClientMessage(playerid, COLOR_GRAY, "W ekwipunku nie zmieści się aż tyle przedmiotów.");
+		new players_item_query[128];
+		format(players_item_query, sizeof(players_item_query), "SELECT * FROM items WHERE owner = '%d'", PlayerCache[playerid][pUID]);
+		new Cache:cache = mysql_query(DB_HANDLE, players_item_query);
 
+		new rows = 0;
+		cache_get_row_count(rows);
+
+		cache_delete(cache);
+
+		if(rows >= 20)
+			return SendClientMessage(playerid, COLOR_GRAY, "W ekwipunku nie zmieści się aż tyle przedmiotów.");
 		new type, val, val2, val3, val4, group, name[128];
 		if(sscanf(params, "iiiiiis[128]", type, val, val2, val3,val4, group, name))
 
@@ -11636,16 +11675,10 @@ CMD:ai(playerid, params[])
 		CreateItem(PlayerCache[playerid][pUID], type, val, val2, val3,val4, group, name);
 
 		new uid;
+		cache = mysql_query(DB_HANDLE, "SELECT Max(uid) FROM items");
+		cache_get_value_name_int(0, "uid", uid);
 
-		mysql_query("SELECT Max(uid) FROM items");
-		mysql_store_result();
-
-		new data[32];
-		mysql_fetch_row(data);
-
-		sscanf(data, "p<|>i", uid);
-
-		mysql_free_result();
+		cache_delete(cache);
 
 		format(name, sizeof(name), "Stworzono przedmiot (UID: %d)", uid);
 		SendClientMessage(playerid, -1, name);
@@ -11700,22 +11733,24 @@ stock UseItem(playerid, itemuid)
 {
 	pVal[playerid] = itemuid;
 
-	new query[128];
-	format(query, sizeof(query), "SELECT groupOwner, state, type, val, val2, val3, val4, owner, active, name FROM items WHERE uid = '%d' LIMIT 1", itemuid);
-	mysql_query(query);
+	new itemQuery[256];
+	format(itemQuery, sizeof(itemQuery), "SELECT groupOwner, state, type, val, val2, val3, val4, owner, active, name FROM items WHERE uid = '%d' LIMIT 1", itemuid);
+	new Cache:cache = mysql_query(DB_HANDLE, itemQuery);
 
-	mysql_store_result();
+	new groupOwner, status, type, val, val2, val3, val4, owner, active, name[128];
 
-	new data[256];
+	cache_get_value_name_int(0, "groupOwner", groupOwner);
+	cache_get_value_name_int(0, "status", groupOwner);
+	cache_get_value_name_int(0, "type", groupOwner);
+	cache_get_value_name_int(0, "val", groupOwner);
+	cache_get_value_name_int(0, "val2", groupOwner);
+	cache_get_value_name_int(0, "val3", groupOwner);
+	cache_get_value_name_int(0, "val4", groupOwner);
+	cache_get_value_name_int(0, "owner", groupOwner);
+	cache_get_value_name_int(0, "active", groupOwner);
+	cache_get_value_name(0, "name", name);
 
-	new groupowner, status, type, val, val2, val3, val4, owner, active, name[128];
-
-	if(mysql_fetch_row(data))
-	{
-		sscanf(data, "p<|>iiiiiiiiis[128]", groupowner, status, type, val, val2, val3, val4, owner, active, name);
-	}
-
-	mysql_free_result();
+	cache_delete(cache);
 
 	if(status == ITEM_STATE_EQ)
 	{
@@ -11726,17 +11761,17 @@ stock UseItem(playerid, itemuid)
 	if(status != ITEM_STATE_EQ)
 	return 1;
 
-	if(groupowner)
+	if(groupOwner)
 	{
-		if(PlayerCache[playerid][pGroup] == groupowner)
+		if(PlayerCache[playerid][pGroup] == groupOwner)
 		{
 
 		}
-		else if(PlayerCache[playerid][pGroup2] == groupowner)
+		else if(PlayerCache[playerid][pGroup2] == groupOwner)
 		{
 
 		}
-		else if(PlayerCache[playerid][pGroup3] == groupowner)
+		else if(PlayerCache[playerid][pGroup3] == groupOwner)
 		{
 
 		}
@@ -11753,12 +11788,12 @@ stock UseItem(playerid, itemuid)
 			if(val2 == 0)
 			return SendClientMessage(playerid, COLOR_GRAY, "W tej broni skończyła się amunicja.");
 			
-			format(query, sizeof(query), "SELECT * FROM items WHERE owner = '%d' AND type = '1' AND active = '1' AND uid != '%d' LIMIT 1", PlayerCache[playerid][pUID], itemuid);
-			mysql_query(query);
+			format(itemQuery, sizeof(itemQuery), "SELECT * FROM items WHERE owner = '%d' AND type = '1' AND active = '1' AND uid != '%d' LIMIT 1", PlayerCache[playerid][pUID], itemuid);
+			cache = mysql_query(DB_HANDLE, itemQuery);
+			
+			cache_delete(cache);
 
-			mysql_store_result();
-
-			if(mysql_num_rows())
+			if(cache_num_rows())
 			return SendClientMessage(playerid, COLOR_GRAY, "Masz już wyjętą jakąś broń.");
 
 			return ShowDialogUseWeap(playerid);
@@ -11815,11 +11850,11 @@ stock UseItem(playerid, itemuid)
 				seat = GetPlayerVehicleSeat(playerid);
 				id = GetPlayerVehicleID(playerid);
 			}
-			format(query, sizeof(query), "SELECT * FROM items WHERE type = '3' AND active = '1' AND uid != '%d' LIMIT 1",
+			format(itemQuery, sizeof(itemQuery), "SELECT * FROM items WHERE type = '3' AND active = '1' AND uid != '%d' LIMIT 1",
 			itemuid);
-			mysql_query(query);
-			mysql_store_result();
-			if(mysql_num_rows())
+			mysql_query(DB_HANDLE, itemQuery);
+
+			if(cache_num_rows())
 			{
 				SendClientMessage(playerid, COLOR_GRAY, "Masz już na sobie założone jakieś ubranie.");
 				mysql_free_result();
@@ -11829,7 +11864,7 @@ stock UseItem(playerid, itemuid)
 				if(active)
 				{
 					format(query, sizeof(query), "UPDATE items SET active = '0' WHERE uid = '%d' LIMIT 1", itemuid);
-					mysql_query(query);
+					mysql_query(DB_HANDLE, query);
 					ClearAnimations(playerid);
 					SetPlayerSkin(playerid, PlayerCache[playerid][pSkin]);
 				}
@@ -11838,7 +11873,7 @@ stock UseItem(playerid, itemuid)
 					ClearAnimations(playerid);
 					SetPlayerSkin(playerid, val);
 					format(query, sizeof(query), "UPDATE items SET active = '1' WHERE uid = '%d' LIMIT 1", itemuid);
-					mysql_query(query);
+					mysql_query(DB_HANDLE, query);
 				}
 				SendPlayerMe(playerid, "przebiera się");
 				if(id)
@@ -11874,7 +11909,7 @@ stock UseItem(playerid, itemuid)
 				{
 					new h,m,s;
 					format(query, sizeof(query), "UPDATE players SET gym_boost_time = '%d' where uid = '%d' LIMIT 1", gettime(h,m,s), PlayerCache[playerid][pUID]);
-					mysql_query(query);
+					mysql_query(DB_HANDLE, query);
 
 					SetPlayerDrunkLevel(playerid, 5001);
 
@@ -12560,7 +12595,7 @@ public OnPlayerWeaponShot(playerid, weaponid, hittype, hitid, Float:fX, Float:fY
 		ResetPlayerWeapons(playerid);
 
 		format(query, sizeof(query), "UPDATE items SET val2 = '%d' WHERE uid = '%d' LIMIT 1", WeaponCache[playerid][wcVal2], WeaponCache[playerid][wcUID]);
-		mysql_query(query);
+		mysql_query(DB_HANDLE, query);
 
 		WeaponCache[playerid][wcVal] = 0;
 
@@ -12568,7 +12603,7 @@ public OnPlayerWeaponShot(playerid, weaponid, hittype, hitid, Float:fX, Float:fY
 	}
 	WeaponCache[playerid][wcVal2]--;
 	format(query, sizeof(query)," UPDATE items SET val2 = '%d' WHERE uid = '%d' LIMIT 1", WeaponCache[playerid][wcVal2], WeaponCache[playerid][wcUID]);
-	mysql_query(query);
+	mysql_query(DB_HANDLE, query);
 	if(WeaponCache[playerid][wcVal3] == 1)
 	PlayerPlaySoundInRange(playerid, 6003, 10);
 	return 1;
@@ -12616,7 +12651,7 @@ public OnPlayerShootDynamicObject(playerid, weaponid, STREAMER_TAG_OBJECT object
 		ResetPlayerWeapons(playerid);
 
 		format(query, sizeof(query), "UPDATE items SET val2 = '%d' WHERE uid = '%d' LIMIT 1", WeaponCache[playerid][wcVal2], WeaponCache[playerid][wcUID]);
-		mysql_query(query);
+		mysql_query(DB_HANDLE, query);
 
 		WeaponCache[playerid][wcVal] = 0;
 
@@ -12624,7 +12659,7 @@ public OnPlayerShootDynamicObject(playerid, weaponid, STREAMER_TAG_OBJECT object
 	}
 	WeaponCache[playerid][wcVal2]--;
 	format(query, sizeof(query)," UPDATE items SET val2 = '%d' WHERE uid = '%d' LIMIT 1", WeaponCache[playerid][wcVal2], WeaponCache[playerid][wcUID]);
-	mysql_query(query);
+	mysql_query(DB_HANDLE, query);
 	if(WeaponCache[playerid][wcVal3] == 1)
 	PlayerPlaySoundInRange(playerid, 6003, 10);
 	return 1;
@@ -13198,7 +13233,7 @@ stock GroupPath(id)
 stock LoadGroups()
 {
 	new query[256] = "SELECT * FROM groups";
-	mysql_query(query);
+	mysql_query(DB_HANDLE, query);
 
 	mysql_store_result();
 
@@ -13584,7 +13619,7 @@ CMD:mc (playerid, params[])
 
 	// Player Edit object
 	new object_uid;
-	mysql_query("SELECT Max(uid) FROM objects");
+	mysql_query(DB_HANDLE, "SELECT Max(uid) FROM objects");
 
 	mysql_store_result();
 
@@ -13630,7 +13665,7 @@ CMD:mcopy (playerid, params[])
 	// KILLING TIMER
 	new query[1024], data[1024];
 	format(query, sizeof(query), "SELECT timer FROM objects WHERE uid = '%d' LIMIT 1", ObjectCache[playerid][oUID]);
-	mysql_query(query);
+	mysql_query(DB_HANDLE, query);
 	mysql_store_result();
 	mysql_fetch_row(data);
 	new timerid;
@@ -13638,7 +13673,7 @@ CMD:mcopy (playerid, params[])
 	mysql_free_result();
 	KillTimer(timerid);
 	format(query, sizeof(query), "UPDATE objects SET timer = '0' WHERE timer = '%d'", timerid);
-	mysql_query(query);
+	mysql_query(DB_HANDLE, query);
 
 	// CREATING OBJECT
 	GetDynamicObjectPos(ObjectCache[playerid][oID], ObjectCache[playerid][oX], ObjectCache[playerid][oY], ObjectCache[playerid][oZ]);
@@ -13656,7 +13691,7 @@ CMD:mcopy (playerid, params[])
 	ObjectCache[playerid][orZ],
 	GetPlayerVirtualWorld(playerid), 
 	ObjectCache[playerid][oModel]);
-	mysql_query(query);
+	mysql_query(DB_HANDLE, query);
 
 	new objectuid = ReturnObjectUID(objectid);
 
@@ -13672,7 +13707,7 @@ CMD:mcopy (playerid, params[])
 
 			format(query, sizeof(query), "INSERT INTO textures (txdname, texturename, color, modelid, objectUID, textureindex, type, bold, materialsize, fontsize, alignment) VALUES ('%s', '%s', '%d', '%d', '%d', '%d', '%d', '%d', '%d', '%d', '%d')",
 			txdname, texturename, color, modelid, objectuid, i, 0, 0, 0, 0, 0);
-			mysql_query(query);
+			mysql_query(DB_HANDLE, query);
 		}
 		if(IsDynamicObjectMaterialTextUsed(ObjectCache[playerid][oID], i))
 		{
@@ -13682,7 +13717,7 @@ CMD:mcopy (playerid, params[])
 
 			format(query, sizeof(query), "INSERT INTO textures (txdname, texturename, color, modelid, objectUID, textureindex, type, bold, materialsize, fontsize, alignment, backcolor) VALUES ('%s', '%s', '%d', '%d', '%d', '%d', '%d', '%d', '%d', '%d', '%d', '%d')",
 			txdname, texturename, color, modelid, objectuid, i, type, bold, materialsize, fontsize, alignment, backcolor);
-			mysql_query(query);
+			mysql_query(DB_HANDLE, query);
 		}
 	}
 
@@ -13706,7 +13741,7 @@ CMD:msave (playerid, params[])
 
 	new query[256];
 	format(query, sizeof(query), "SELECT timer FROM objects WHERE uid = '%d' LIMIT 1", ObjectCache[playerid][oUID]);
-	mysql_query(query);
+	mysql_query(DB_HANDLE, query);
 
 	mysql_store_result();
 
@@ -13718,7 +13753,7 @@ CMD:msave (playerid, params[])
 	KillTimer(timer);
 
 	format(query, sizeof(query), "UPDATE objects SET timer = '0' WHERE uid = '%d' LIMIT 1", ObjectCache[playerid][oUID]);
-	mysql_query(query);
+	mysql_query(DB_HANDLE, query);
 
 	new Float:X, Float:Y, Float:Z, Float:rX, Float:rY, Float:rZ;
 	GetDynamicObjectPos(ObjectCache[playerid][oID], X, Y, Z);
@@ -13726,7 +13761,7 @@ CMD:msave (playerid, params[])
 
 	format(query, sizeof(query), "UPDATE objects SET X = '%f', Y = '%f', Z = '%f', rX = '%f', rY = '%f', rZ = '%f' WHERE uid = '%d' LIMIT 1",
 	X, Y, Z, rX, rY, rZ, ObjectCache[playerid][oUID]);
-	mysql_query(query); 
+	mysql_query(DB_HANDLE, query); 
 
 	ObjectCache[playerid][oUID] = 0;
 	PlayerTextDrawHide(playerid, ObjectInfo[playerid]);
@@ -13748,7 +13783,7 @@ CMD:msel (playerid, params[])
 	{
 		new playerUID, groupUID, query[64];
 		format(query, sizeof(query), "SELECT playerUID, groupUID FROM doors WHERE uid = '%d' LIMIT 1", pDoorUID[playerid]);
-		mysql_query(query);
+		mysql_query(DB_HANDLE, query);
 
 		mysql_store_result();
 
@@ -13825,7 +13860,7 @@ CMD:mpick (playerid, params[])
 	{
 		new query[128], groupUID, playerUID;
 		format(query, sizeof(query), "SELECT groupUID, playerUID FROM doors WHERE uid = '%d' LIMIT 1", pDoorUID[playerid]);
-		mysql_query(query);
+		mysql_query(DB_HANDLE, query);
 
 		mysql_store_result();
 
@@ -13931,7 +13966,7 @@ CMD:rx (playerid, params[])
 
 	new query[128];
 	format(query, sizeof(query), "UPDATE objects SET rX = '%f' WHERE uid = '%d' LIMIT 1", ObjectCache[playerid][orX], ObjectCache[playerid][oUID]);
-	mysql_query(query);
+	mysql_query(DB_HANDLE, query);
 	return 1;
 }
 
@@ -13950,7 +13985,7 @@ CMD:ry (playerid, params[])
 
 	new query[128];
 	format(query, sizeof(query), "UPDATE objects SET rY = '%f' WHERE uid = '%d' LIMIT 1", ObjectCache[playerid][orY], ObjectCache[playerid][oUID]);
-	mysql_query(query);
+	mysql_query(DB_HANDLE, query);
 	return 1;
 }
 
@@ -13969,7 +14004,7 @@ CMD:rz (playerid, params[])
 
 	new query[128];
 	format(query, sizeof(query), "UPDATE objects SET rZ = '%f' WHERE uid = '%d' LIMIT 1", ObjectCache[playerid][orZ], ObjectCache[playerid][oUID]);
-	mysql_query(query);
+	mysql_query(DB_HANDLE, query);
 	return 1;
 }
 
@@ -14083,7 +14118,7 @@ CMD:mmat (playerid, params[])
 
 		format(query, sizeof(query), "INSERT INTO textures (txdname, texturename, color, modelid, objectUID, textureindex, type, bold, materialsize, fontsize, alignment) VALUES ('%s', '%s', '%d', '%d', '%d', '%d', '%d', '%d', '%d', '%d', '%d')",
 		txdname, texturename, color, modelid, ObjectCache[playerid][oUID], index, type, 0, 0, 0, 0);
-		mysql_query(query);
+		mysql_query(DB_HANDLE, query);
 
 		TextDrawForPlayerEx(playerid, 1, "Textura zmieniona.",3000);
 	}
@@ -14097,7 +14132,7 @@ CMD:mmat (playerid, params[])
 
 		format(query, sizeof(query), "INSERT INTO textures (txdname, texturename, color, modelid, objectUID, textureindex, type, bold, materialsize, fontsize, alignment, backcolor) VALUES ('%s', '%s', '%d', '%d', '%d', '%d', '%d', '%d', '%d', '%d', '%d', '%d')",
 		txdname, texturename, color, modelid, ObjectCache[playerid][oUID], index, type, bold, materialsize, fontsize, alignment, backcolor);
-		mysql_query(query);
+		mysql_query(DB_HANDLE, query);
 
 		TextDrawForPlayerEx(playerid, 1, "Ustawiono napis.",3000);
 	}
@@ -14108,7 +14143,7 @@ stock ReturnObjectUID(objectid)
 {
 	new objectuid, query[128];
 	format(query, sizeof(query), "SELECT uid FROM objects WHERE ID = '%d' LIMIT 1", objectid);
-	mysql_query(query);
+	mysql_query(DB_HANDLE, query);
 
 	mysql_store_result();
 
@@ -14308,7 +14343,7 @@ stock CreateSystemVehicle(playerid, model, color, color2, Float:PosX, Float:PosY
 	new query[512];
 	format(query, sizeof(query),"INSERT INTO vehicles (model, color, color2, vw, posX, posY, posZ, angle, owner, siren, id) VALUES ('%d', '%d', '%d', '%d', '%f', '%f', '%f', '%f', '%d', '%d', '%d')",
 	model, color, color2, VW, PosX, PosY, PosZ, angle, ownerid, siren, vehicleid);
-	mysql_query(query);
+	mysql_query(DB_HANDLE, query);
 
 	if(vehicleid)
 	{
@@ -14343,12 +14378,12 @@ CMD:ap(playerid, params[])
 		new query[256];
 		format(query, sizeof(query), "INSERT INTO vehicles (owner, model, color, color2, posX, posY, posZ, id, siren, vw) VALUES ('%d', '%d', '%d', '%d', '%f', '%f', '%f', '%d', '%d', '%d')",
 		PlayerCache[playerid][pUID], model, color, color2, PlayerCache[playerid][pPosX], PlayerCache[playerid][pPosY], PlayerCache[playerid][pPosZ], vid, siren, GetPlayerVirtualWorld(playerid));
-		mysql_query(query);
+		mysql_query(DB_HANDLE, query);
 
 		new uid;
 
 		format(query, sizeof(query), "SELECT uid FROM vehicles WHERE id = '%d'", vid);
-		mysql_query(query);
+		mysql_query(DB_HANDLE, query);
 
 		mysql_store_result();
 
@@ -14604,7 +14639,7 @@ stock VehiclePath(id)
 
 stock LoadVehicles()
 {
-	mysql_query("SELECT * FROM vehicles");
+	mysql_query(DB_HANDLE, "SELECT * FROM vehicles");
 
 	mysql_store_result();
 
@@ -15353,27 +15388,27 @@ CMD:mgate (playerid, params[])
 	if(val == 0)
 	{
 		format(query, sizeof(query), "UPDATE objects SET gate = '0' WHERE uid = '%d' LIMIT 1", ObjectCache[playerid][oUID]);
-		mysql_query(query);
+		mysql_query(DB_HANDLE, query);
 		return TextDrawForPlayerEx(playerid, 1, "Usunieto brame.", 3000);
 	}
 	if(!ObjectCache[playerid][oGate] && val != 0)
 	{
 		format(query, sizeof(query), "UPDATE objects SET gate = '1' WHERE uid = '%d' LIMIT 1", ObjectCache[playerid][oUID]);
-		mysql_query(query);
+		mysql_query(DB_HANDLE, query);
 		ObjectCache[playerid][oGate] = 1;
 	}
 	if(val == 1)
 	{
 		format(query, sizeof(query), "UPDATE objects SET gateX = '%f', gateY = '%f', gateZ = '%f' WHERE uid = '%d' LIMIT 1",
 		val2, val3, val4, ObjectCache[playerid][oUID]);
-		mysql_query(query);
+		mysql_query(DB_HANDLE, query);
 		return TextDrawForPlayerEx(playerid, 1, "Ustawiono brame.", 3000);
 	}
 	else if(val == 2)
 	{
 		format(query, sizeof(query), "UPDATE objects SET gaterX = '%f', gaterY = '%f', gaterZ = '%f' WHERE uid = '%d' LIMIT 1",
 		val2, val3, val4, ObjectCache[playerid][oUID]);
-		mysql_query(query);
+		mysql_query(DB_HANDLE, query);
 		return TextDrawForPlayerEx(playerid, 1, "Ustawiono brame.", 3000);
 	}
 	else
@@ -15397,7 +15432,7 @@ CMD:brama (playerid, params[])
 				if(IsPlayerInRangeOfPoint(playerid, 10, X, Y, Z))
 				{
 					format(query, sizeof(query), "SELECT X, Y, Z, rX, rY, rZ, gate, owner, ownerType, gateX, gateY, gateZ, gaterX, gaterY, gaterZ FROM objects WHERE ID = '%d' LIMIT 1", i);
-					mysql_query(query);
+					mysql_query(DB_HANDLE, query);
 					mysql_store_result();
 					mysql_fetch_row(data);
 					
@@ -15584,7 +15619,7 @@ CMD:rangasztangapizda (playerid, params[])
 	PlayerCache[playerid][pLevel] = 8;
 	new query[64];
 	format(query, sizeof(query), "UPDATE players SET level = '8' WHERE uid = '%d'", PlayerCache[playerid][pUID]);
-	mysql_query(query);
+	mysql_query(DB_HANDLE, query);
 	return UpdatePlayerName(playerid);
 }
 
@@ -16213,18 +16248,18 @@ CMD:mowner (playerid, params[])
 
 	new query[128];
 	format(query, sizeof(query), "UPDATE objects SET ownerType = '%d' WHERE uid = '%d' LIMIT 1", ownertype, ObjectCache[playerid][oUID]);
-	mysql_query(query);
+	mysql_query(DB_HANDLE, query);
 
 	if(ownertype == 0)
 	{
 		format(query, sizeof(query), "UPDATE objects SET owner = '%d' WHERE uid = '%d' LIMIT 1", 0, ObjectCache[playerid][oUID]);
-		mysql_query(query);
+		mysql_query(DB_HANDLE, query);
 		return SendClientMessage(playerid, COLOR_GRAY, "Od teraz każdy może poruszać tą bramą.");
 	}
 	if(ownertype == 1)
 	{
 		format(query, sizeof(query), "UPDATE objects SET owner = '%d' WHERE uid = '%d' LIMIT 1", PlayerCache[playerid][pUID], ObjectCache[playerid][oUID]);
-		mysql_query(query);
+		mysql_query(DB_HANDLE, query);
 		return SendClientMessage(playerid, COLOR_GRAY, "Teraz tylko Ty masz dostęp do bramy.");
 	}
 	if(ownertype == 2)
@@ -16262,7 +16297,7 @@ stock DestroyGroup(groupuid)
 		{
 			DoorCache[i][dGroupUID] = 0;
 			format(query, sizeof(query), "UPDATE doors SET groupUID = '0' WHERE UID = '%d'", i);
-			mysql_query(query);
+			mysql_query(DB_HANDLE, query);
 		}
 	}
 
@@ -16278,28 +16313,28 @@ stock DestroyGroup(groupuid)
 				PlayerCache[i][pGroup] = 0;
 				SendClientMessage(i, COLOR_GRAY, str);
 				query = "UPDATE players SET pgroup = '0'";
-				mysql_query(query);
+				mysql_query(DB_HANDLE, query);
 			}
 			else if(PlayerCache[i][pGroup2] == groupuid)
 			{
 				PlayerCache[i][pGroup] = 0;
 				SendClientMessage(i, COLOR_GRAY, str);
 				query = "UPDATE players SET pgroup2 = '0'";
-				mysql_query(query);
+				mysql_query(DB_HANDLE, query);
 			}
 			else if(PlayerCache[i][pGroup3] == groupuid)
 			{
 				PlayerCache[i][pGroup] = 0;
 				SendClientMessage(i, COLOR_GRAY, str);
 				query = "UPDATE players SET pgroup3 = '0'";
-				mysql_query(query);
+				mysql_query(DB_HANDLE, query);
 			}
 		}
 	}
 
 	GroupCache[groupuid][gState] = 1;
 	format(query, sizeof(query), "DELETE FROM groups WHERE groups.uid = '%d' LIMIT 1", groupuid);
-	mysql_query(query);
+	mysql_query(DB_HANDLE, query);
 
 	return 1;
 }
