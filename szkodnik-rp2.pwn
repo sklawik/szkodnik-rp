@@ -1,10 +1,8 @@
 #include <a_samp>
 #include <streamer>
 #include <sscanf2>
-#include <dfile>
-#include <pawn.cmd>
-#include <SHA256>
-#include <mysql>
+#include <Pawn.CMD>
+#include <a_mysql>
 
 main(){}
 
@@ -24,7 +22,7 @@ main(){}
 #define SERVER_FILE "/Server.ini"
 
 #undef MAX_PLAYERS
-#define MAX_PLAYERS 20
+#define MAX_PLAYERS 10
 
 // mysql settings
 
@@ -825,9 +823,8 @@ new MySQL:DB_HANDLE;
 
 public OnGameModeInit()
 {
-	mysql_init();
 
-	mysql_connect(MYSQL_HOST, MYSQL_USER, MYSQL_PASSWORD, MYSQL_DB, DB_HANDLE);
+	DB_HANDLE = mysql_connect(MYSQL_HOST, MYSQL_USER, MYSQL_PASSWORD, MYSQL_DB);
 
 	if(DB_HANDLE)
 	return !printf(">>> Wystapil blad w probie polaczenia z baza danych, kod bledu: %d", mysql_errno());
