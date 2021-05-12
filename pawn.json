@@ -5,15 +5,11 @@
 	"output": "gamemodes/szkodnik-rp2.amx",
 	"dependencies": [
 		"sampctl/samp-stdlib",
-		"samp-incognito/samp-streamer-plugin",
-		"maddinat0r/sscanf/blob/master/sscanf2.inc",
-		"https://github.com/Nickk888SAMP/TextDraw-Editor/blob/master/filterscripts/ntd/includes/dfile.inc",
-		"Nickk888SAMP/TextDraw-Editor/blob/master/filterscripts/ntd/includes/dfile.inc",
-		"pBlueG/SA-MP-MySQL",
-		"katursis/Pawn.CMD",
-		"https://github.com/katursis/Pawn.CMD/releases/download/3.3.3/pawncmd-3.3.3-linux.tar.gz",
-		"urShadow/Pawn.CMD",
-		"https://github.com.cnpmjs.org/katursis/Pawn.CMD/releases/download/3.3.3/pawncmd-3.3.3-linux.tar.gz"
+		"samp-incognito/samp-streamer-plugin:v2.9.5",
+		"maddinat0r/sscanf:v2.8.3",
+		"pBlueG/SA-MP-MySQL:R41-4",
+		"katursis/Pawn.CMD:3.3.3",
+		"Sreyas-Sreelal/samp-bcrypt:0.3.1"
 	],
 	"local": true,
 	"runtime": {

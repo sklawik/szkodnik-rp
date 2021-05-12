@@ -3,23 +3,10 @@
 #include <sscanf2>
 #include <Pawn.CMD>
 #include <a_mysql>
-
+#include <samp_bcrypt>
 main(){}
 
-#define FOLDER_USERS "/Users/"
-#define FOLDER_ZONES "/Zones/"
-#define FOLDER_DOORS "/Doors/"
-#define FOLDER_ITEMS "/Items/"
-#define FOLDER_GROUPS "/Groups/"
-#define FOLDER_CONTACTS "/Contacts/"
-#define FOLDER_MESSAGES "/Messages/"
-#define FOLDER_OBJECTS "/Objects/"
-#define FOLDER_TEXTURES "/Textures/"
-#define FOLDER_VEHICLES "/Vehicles/"
-#define FOLDER_ACTORS "/Actors/"
-#define UID_FILE "/UID.ini"
-#define APPS_FOLDER "/Apps/"
-#define SERVER_FILE "/Server.ini"
+
 
 #undef MAX_PLAYERS
 #define MAX_PLAYERS 10
@@ -613,8 +600,6 @@ enum E_ITEM
 };
 new ItemCache[MAX_ITEMS][E_ITEM];
 
-new LastMsgUID;
-
 enum E_CALL
 {
 	cCaller,
@@ -675,7 +660,6 @@ new PlayerText:ObjectInfo[MAX_PLAYERS];
 
 new pLast[MAX_PLAYERS];
 
-new LasttUID;
 
 enum E_TEXTURE
 {
@@ -693,7 +677,7 @@ enum E_TEXTURE
 	tType
 };
 
-new TextureCache[MAX_TEXTURES][E_TEXTURE];
+//new TextureCache[MAX_TEXTURES][E_TEXTURE];
 
 new LoginAttempt[MAX_PLAYERS];
 
@@ -829,22 +813,24 @@ public OnGameModeInit()
 		print(">>> Pomyslnie nawiazano polaczenie z baza danych.");
 		EnsureCreated();
 	}
-		
+	CreateTextDraws();
 
 	AddAnimations();
 	SendRconCommand("hostname ••• Szkodnik RolePlay •••");
 	SendRconCommand("gamemodetext Szkodnik-RP v2.0");
 	SendRconCommand("mapname Los Santos");
-
 	gettime(ghour, gmin, gsec);
 	SetWorldTime(ghour);
+	
+	EnableStuntBonusForAll(0);
+	DisableInteriorEnterExits();
+	ManualVehicleEngineAndLights();
+	ShowNameTags(0);
+	
 	
 	
 	LoadGroups();
 	LoadDoors();
-	LoadItems();
-	LoadContacts();
-	LoadObjects();
 	return 1;
 }
 
@@ -883,8 +869,110 @@ stock EnsureCreated(){
 	gVehicleLimit INT NOT NULL,\n\
 	gPayDay INT NOT NULL);", false);
 
+	mysql_query(DB_HANDLE, 
+	"CREATE TABLE IF NOT EXISTS doors(\n\
+	dUID INT AUTO_INCREMENT PRIMARY KEY,\n\
+	dOutVW INT NOT NULL,\n\
+	dInsVW INT NOT NULL,\n\
+	dName VARCHAR(32) NOT NULL,\n\
+	dUrl VARCHAR(256) NOT NULL,\n\
+	dOutX FLOAT NOT NULL,\n\
+	dOutY FLOAT NOT NULL,\n\
+	dOutZ FLOAT NOT NULL,\n\
+	dInsX FLOAT NOT NULL,\n\
+	dInsY FLOAT NOT NULL,\n\
+	dInsZ FLOAT NOT NULL,\n\
+	dPlayerUID INT NOT NULL,\n\
+	dGroupUID INT NOT NULL,\n\
+	dDestroyed INT NOT NULL,\n\
+	dOpen INT NOT NULL,\n\
+	dType INT NOT NULL,\n\
+	dVehicle INT NOT NULL,\n\
+	dAlarm INT NOT NULL,\n\
+	dExplodeTime INT NOT NULL,\n\
+	dFacingAngle FLOAT NOT NULL);"
+	,false);
 
+	mysql_query(DB_HANDLE, 
+	"CREATE TABLE IF NOT EXISTS objects(\n\
+	uid INT AUTO_INCREMENT PRIMARY KEY,\n\
+	X FLOAT NOT NULL,\n\
+	Y FLOAT NOT NULL,\n\
+	Z FLOAT NOT NULL,\n\
+	rX FLOAT NOT NULL,\n\
+	rY FLOAT NOT NULL,\n\
+	rZ FLOAT NOT NULL,\n\
+	VW INT NOT NULL);"
+	, false);
 	
+	mysql_query(DB_HANDLE, 
+	"CREATE TABLE IF NOT EXISTS players(\n\
+	uid INT AUTO_INCREMENT PRIMARY KEY,\n\
+	hash VARCHAR(64) NOT NULL,\n\
+	salt VARCHAR(10) NOT NULL,\n\
+	name VARCHAR(24) NOT NULL,\n\
+	gender INT NOT NULL DEFAULT 1,\n\
+	skin INT NOT NULL DEFAULT 0,\n\
+	health FLOAT NOT NULL DEFAULT 100, \n\
+	cash INT NOT NULL DEFAULT 50,\n\
+	tutorialLevel INT NOT NULL DEFAULT 0,\n\
+	strenght INT NOT NULL DEFAULT 0,\n\
+	level INT NOT NULL DEFAULT 0,\n\
+	BW_Time INT NOT NULL DEFAULT 0,\n\
+	BW_Reason INT NOT NULL DEFAULT 0,\n\
+	AJ_Time INT NOT NULL DEFAULT 0,\n\
+	groupUID INT NOT NULL DEFAULT 0,\n\
+	groupUID2 INT NOT NULL DEFAULT 0,\n\
+	groupUID3 INT NOT NULL DEFAULT 0,\n\
+	groupMapper INT NOT NULL DEFAULT 0,\n\
+	groupMapper2 INT NOT NULL DEFAULT 0,\n\
+	groupMapper3 INT NOT NULL DEFAULT 0,\n\
+	groupInvite INT NOT NULL DEFAULT 0,\n\
+	groupInvite2 INT NOT NULL DEFAULT 0,\n\
+	groupInvite3 INT NOT NULL DEFAULT 0,\n\
+	groupAdmin INT NOT NULL DEFAULT 0,\n\
+	groupAdmin2 INT NOT NULL DEFAULT 0,\n\
+	groupAdmin3 INT NOT NULL DEFAULT 0,\n\
+	groupDoor INT NOT NULL DEFAULT 0,\n\
+	groupDoor2 INT NOT NULL DEFAULT 0,\n\
+	groupDoor3 INT NOT NULL DEFAULT 0,\n\
+	groupVehicle INT NOT NULL DEFAULT 0,\n\
+	groupVehicle2 INT NOT NULL DEFAULT 0,\n\
+	groupVehicle3 INT NOT NULL DEFAULT 0,\n\
+	groupProducts INT NOT NULL DEFAULT 0,\n\
+	groupProducts2 INT NOT NULL DEFAULT 0,\n\
+	groupProducts3 INT NOT NULL DEFAULT 0,\n\
+	groupPayday INT NOT NULL DEFAULT 0,\n\
+	groupPayday2 INT NOT NULL DEFAULT 0,\n\
+	groupPayday3 INT NOT NULL DEFAULT 0,\n\
+	groupDuty INT NOT NULL DEFAULT 0,\n\
+	groupDuty2 INT NOT NULL DEFAULT 0,\n\
+	groupDuty3 INT NOT NULL DEFAULT 0,\n\
+	playTime INT NOT NULL DEFAULT 0,\n\
+	score INT NOT NULL DEFAULT 0,\n\
+	houseSpawn INT NOT NULL DEFAULT 0,\n\
+	bank INT NOT NULL DEFAULT 0,\n\
+	posX FLOAT NOT NULL DEFAULT 0,\n\
+	posY FLOAT NOT NULL DEFAULT 0,\n\
+	posZ FLOAT NOT NULL DEFAULT 0,\n\
+	posVW INT NOT NULL DEFAULT 0,\n\
+	bornDate INT NOT NULL DEFAULT 0,\n\
+	ID_Card INT NOT NULL DEFAULT 0,\n\
+	drivingLicense INT NOT NULL DEFAULT 0,\n\
+	bankAccount INT NOT NULL DEFAULT 0,\n\
+	OOC INT NOT NULL DEFAULT 0,\n\
+	groupReward INT NOT NULL DEFAULT 0,\n\
+	groupReward2 INT NOT NULL DEFAULT 0,\n\
+	groupReward3 INT NOT NULL DEFAULT 0,\n\
+	favAnim INT NOT NULL DEFAULT 0,\n\
+	jailTime INT NOT NULL DEFAULT 0,\n\
+	jailX FLOAT NOT NULL DEFAULT 0,\n\
+	jailY FLOAT NOT NULL DEFAULT 0,\n\
+	jailZ FLOAT NOT NULL DEFAULT 0,\n\
+	jailVW INT NOT NULL DEFAULT 0,\n\
+	lastTraining INT NOT NULL DEFAULT 0,\n\
+	objectEditor INT NOT NULL DEFAULT 0,\n\
+	gymBoostTime INT NOT NULL DEFAULT 0);", false);
 }
 
 public OnGameModeExit()
@@ -1115,7 +1203,7 @@ stock LoadTextures()
 
 stock SaveTextures()
 {
-	new count;
+	/*new count;
 	for(new i; i<LasttUID; i++)
 	{
 		if(TextureCache[i][tObjectUID] == 0 && ObjectCache[TextureCache[i][tObjectUID]][oState] == 0)
@@ -1140,13 +1228,13 @@ stock SaveTextures()
 		dfile_CloseFile();
 		count++;
 	}
-	printf(">>> Saved %d textures.", count);
+	printf(">>> Saved %d textures.", count);*/
 	return 1;
 }
 
 stock SaveObjects()
 {
-	new count;
+	/*new count;
 	for(new i; i<MAX_OBJECTS; i++)
 	{
 		if(ObjectCache[i][oUID] == 0)
@@ -1179,7 +1267,7 @@ stock SaveObjects()
 		if(ObjectCache[i][oState] == 0)
 		count++;
 	}
-	printf(">>> Saved %d objects.", count);
+	printf(">>> Saved %d objects.", count);*/
 	return 1;
 }
 
@@ -1198,12 +1286,6 @@ public CheckObjectsLoaded()
 		LoadApps();
 		// LoadZones();
 	
-		EnableStuntBonusForAll(0);
-		DisableInteriorEnterExits();
-		ManualVehicleEngineAndLights();
-		ShowNameTags(0);
-	
-		CreateTextDraws();
 	
 		SetTimer("min_timer", 1000*60, true);
 		SetTimer("sec_timer", 1000, true);
@@ -1212,7 +1294,7 @@ public CheckObjectsLoaded()
 
 stock LoadObjects()
 {
-	/*AreObjectsLoaded = false;
+	AreObjectsLoaded = false;
 
 	SetTimer("CheckObjectsLoaded", 500, false);
 
@@ -1243,8 +1325,7 @@ stock LoadObjects()
 	printf(">>> Loaded %d objects", mysql_num_rows());
 
 	cache_delete(cache);
-
-	AreObjectsLoaded = true;*/
+	AreObjectsLoaded = true;
 }
 
 forward UpdateTableTextures(objectid, objectuid);
@@ -1284,37 +1365,33 @@ new dPickupID2[MAX_DOORS];
 
 stock LoadDoors()
 {
-	/*new query[64] = "SELECT * FROM doors";
-	mysql_query(DB_HANDLE, query);
-
-	mysql_store_result();
-
-	new data[1025], i;
-	while(mysql_fetch_row(data))
-	{
-		sscanf(data, "p<|>dddffffffs[32]ddbbddbbbdfs[256]",
-		DoorCache[i][dUID],
-		DoorCache[i][dOutVW],
-		DoorCache[i][dInsVW],
-		DoorCache[i][dOutX],
-		DoorCache[i][dOutY],
-		DoorCache[i][dOutZ],
-		DoorCache[i][dInsX],
-		DoorCache[i][dInsY],
-		DoorCache[i][dInsZ],
-		DoorCache[i][dName],
-		DoorCache[i][dPlayerUID],
-		DoorCache[i][dGroupUID],
-		DoorCache[i][dDestroyed],
-		DoorCache[i][dOpen],
-		DoorCache[i][dType],
-		DoorCache[i][dEnterCost],
-		DoorCache[i][dVehicle],
-		DoorCache[i][dConnect],
-		DoorCache[i][dAlarm],
-		DoorCache[i][dExplodeTime],
-		DoorCache[i][dFacingAngle],
-		DoorCache[i][dUrl]);
+	new query[64] = "SELECT * FROM doors;";
+	new Cache:cache = mysql_query(DB_HANDLE, query);
+	
+	new rows = cache_num_rows();
+	for(new i=0; i<rows; i++){
+		cache_get_value_name_int(i, "dUID", DoorCache[i][dUID]);
+		cache_get_value_name_int(i, "dOutVW", DoorCache[i][dOutVW]);
+		cache_get_value_name_int(i, "dInsVW", DoorCache[i][dInsVW]);
+		cache_get_value_name_float(i, "dOutX", DoorCache[i][dOutX]);
+		cache_get_value_name_float(i, "dOutY", DoorCache[i][dOutY]);
+		cache_get_value_name_float(i, "dOutZ", DoorCache[i][dOutZ]);
+		cache_get_value_name_float(i, "dInsX", DoorCache[i][dInsX]);
+		cache_get_value_name_float(i, "dInsY", DoorCache[i][dInsY]);
+		cache_get_value_name_float(i, "dInsZ", DoorCache[i][dInsZ]);
+		cache_get_value_name(i, "dName", DoorCache[i][dName]);
+		cache_get_value_name_int(i, "dPlayerUID", DoorCache[i][dPlayerUID]);
+		cache_get_value_name_int(i, "dGroupUID", DoorCache[i][dGroupUID]);
+		cache_get_value_name_int(i, "dDestroyed", DoorCache[i][dDestroyed]);
+		cache_get_value_name_int(i, "dOpen", DoorCache[i][dOpen]);
+		cache_get_value_name_int(i, "dType", DoorCache[i][dType]);
+		cache_get_value_name_int(i, "dEnterCost", DoorCache[i][dEnterCost]);
+		cache_get_value_name_int(i, "dVehicle", DoorCache[i][dVehicle]);
+		cache_get_value_name_int(i, "dConnect", DoorCache[i][dConnect]);
+		cache_get_value_name_int(i, "dAlarm", DoorCache[i][dAlarm]);
+		cache_get_value_name_int(i, "dExplodeTime", DoorCache[i][dExplodeTime]);
+		cache_get_value_name_float(i, "dFacingAngle", DoorCache[i][dFacingAngle]);
+		cache_get_value_name(i, "dUrl", DoorCache[i][dUrl]);
 
 		if(!DoorCache[i][dDestroyed])
 		{
@@ -1338,13 +1415,12 @@ stock LoadDoors()
 				dPickupID[DoorCache[i][dUID]] = CreateDynamicPickup(1273, 2, DoorCache[i][dOutX],DoorCache[i][dOutY], DoorCache[i][dOutZ], DoorCache[i][dOutVW], 0, -1);
 			}
 		}
-
-		i++;
 	}
+
 
 	cache_delete(cache);
 
-	printf(">>> Loaded %d doors.", i);*/
+	printf(">>> Loaded %d doors.", rows);
 }
 
 stock IsDoorInAnyDoor(dooruid)
@@ -1741,7 +1817,7 @@ stock AppPath(i)
 
 stock SaveApps()
 {
-	new count;
+	/*new count;
 	for(new i; i<MAX_APPS; i++)
 	{
 		if(AppCache[i][appOwner])
@@ -1765,7 +1841,7 @@ stock SaveApps()
 		else
 		break;
 	}
-	printf(">>> Saved %d group applications.", count);
+	printf(">>> Saved %d group applications.", count);*/
 }
 
 stock LoadApps()
@@ -1804,44 +1880,8 @@ stock ContactPath(contactid)
 	return path;
 }
 
-stock LoadContacts()
-{
-/*	new query[32] = "SELECT * FROM contacts";
-	mysql_query(DB_HANDLE, query);
 
-	mysql_store_result();
 
-	new i, data[128];
-	while(mysql_fetch_row(data))
-	{
-		sscanf(data, "p<|>s[128]ddd",
-		ContactCache[i][cName],
-		ContactCache[i][cOwner],
-		ContactCache[i][cNum],
-		ContactCache[i][cState]);
-		i++;
-	}
-
-	cache_delete(cache);
-
-	printf(">>> Loaded %d phone contacts.", i);*/
-}
-
-stock SaveContacts()
-{
-	for(new i; i<LastContactUID; i++)
-	{
-		if(!dfile_FileExists(ContactPath(i)))
-		dfile_Create(ContactPath(i));
-		dfile_Open(ContactPath(i));
-		dfile_WriteInt("Owner", ContactCache[i][cOwner]);
-		dfile_WriteString("Name", ContactCache[i][cName]);
-		dfile_WriteInt("Num", ContactCache[i][cNum]);
-		dfile_WriteInt("State", ContactCache[i][cState]);
-		dfile_SaveFile();
-		dfile_CloseFile();
-	}
-}
 
 
 stock LoadActors()
@@ -1895,7 +1935,7 @@ stock DoorPath(doorid)
 
 stock SaveZones()
 {
-	for(new i; i<MAX_ZONES; i++)
+	/*for(new i; i<MAX_ZONES; i++)
 	{
 		dfile_Open(ZonePath(i));
 		dfile_WriteFloat("MinX", ZoneData[i][zMinX]);
@@ -1908,7 +1948,7 @@ stock SaveZones()
 		dfile_WriteString("Name", ZoneData[i][zName]);
 		dfile_SaveFile();
 		dfile_CloseFile();
-	}
+	}*/
 }
 
 forward RandomAgain(playerid);
@@ -1985,6 +2025,29 @@ stock RandomCamera(playerid)
 	}
 	return SetTimerEx("RandomAgain", 11000, false, "i", playerid);
 }
+
+ forward OnPassswordHash(playerid);
+ public OnPassswordHash(playerid){
+	new salt[11];
+	new list[58] = "ABCDEFGHIJKLMNOPRSTUWXYZ0123456789abcdefghiklmnoprstywxyz";
+
+	for(new i; i<10; i++)
+	format(salt, sizeof(salt), "%s%c", salt, list[random(56)]);
+
+ 	new hash[250];
+	bcrypt_get_hash(hash);
+
+	printf("register hash: %s", hash);
+	printf("register salt: %s", salt);
+
+	new newPlayerQuery[1024];
+	format(newPlayerQuery, sizeof(newPlayerQuery), "INSERT INTO players (hash, salt,name, gender, bornDate) VALUES ('%s', '%s', '%s', '%d', '%d')", hash, salt,RegisterCache[playerid][rName], RegisterCache[playerid][rSex], RegisterCache[playerid][rBornDate]);
+	new Cache:cache = mysql_query(DB_HANDLE, newPlayerQuery);
+	cache_delete(cache);
+	SetPlayerName(playerid, RegisterCache[playerid][rName]);
+	LoadPlayerData(playerid);
+	return ShowDialogLogin(playerid);
+ }
 
 stock UseItemOption(playerid, option, uid)
 {
@@ -2146,6 +2209,8 @@ stock RemoveMapBuildings(playerid)
 
 public OnPlayerConnect(playerid)
 {
+	if(!DB_HANDLE)
+		Kick(playerid);
 	pPriv[playerid] = true;
 	pCalling[playerid] = -1;
 	pTalking[playerid] = -1;
@@ -2195,72 +2260,72 @@ stock LoadPlayerData(playerid)
 
 	if(cache_num_rows())
 	{
-		cache_get_value_name_int(0, "pUID", PlayerCache[playerid][pUID]);
-		cache_get_value_name(0, "pHash", PlayerCache[playerid][pHash]);
-		cache_get_value_name(0, "pSalt", PlayerCache[playerid][pSalt]);
-		cache_get_value_name(0, "pName", PlayerCache[playerid][pName]);
-		cache_get_value_name_int(0, "pGender", PlayerCache[playerid][pGender]);
-		cache_get_value_name_int(0, "pSkin", PlayerCache[playerid][pSkin]);
-		cache_get_value_name_float(0, "pHealth", PlayerCache[playerid][pHealth]);
-		cache_get_value_name_int(0, "pCash", PlayerCache[playerid][pCash]);
-		cache_get_value_name_int(0, "pTutorialLevel", PlayerCache[playerid][pTutorialLevel]);
-		cache_get_value_name_int(0, "pStrenght", PlayerCache[playerid][pStrenght]);
-		cache_get_value_name_int(0, "pLevel", PlayerCache[playerid][pLevel]);
-		cache_get_value_name_int(0, "pBW_Time", PlayerCache[playerid][pBW_Time]);
-		cache_get_value_name_int(0, "pBW_Reason", PlayerCache[playerid][pBW_Reason]);
-		cache_get_value_name_int(0, "pAJ_Time", PlayerCache[playerid][pAJ_Time]);
-		cache_get_value_name_int(0, "pGroup", PlayerCache[playerid][pGroup]);
-		cache_get_value_name_int(0, "pGroup2", PlayerCache[playerid][pGroup2]);
-		cache_get_value_name_int(0, "pGroup3", PlayerCache[playerid][pGroup3]);
-		cache_get_value_name_int(0, "pGroupMapper", PlayerCache[playerid][pGroupMapper]);
-		cache_get_value_name_int(0, "pGroupMapper2", PlayerCache[playerid][pGroupMapper2]);
-		cache_get_value_name_int(0, "pGroupMapper3", PlayerCache[playerid][pGroupMapper3]);
-		cache_get_value_name_int(0, "pGroupInvite", PlayerCache[playerid][pGroupInvite]);
-		cache_get_value_name_int(0, "pGroupInvite2", PlayerCache[playerid][pGroupInvite2]);
-		cache_get_value_name_int(0, "pGroupInvite3", PlayerCache[playerid][pGroupInvite3]);
-		cache_get_value_name_int(0, "pGroupAdmin", PlayerCache[playerid][pGroupAdmin]);
-		cache_get_value_name_int(0, "pGroupAdmin2", PlayerCache[playerid][pGroupAdmin2]);
-		cache_get_value_name_int(0, "pGroupAdmin3", PlayerCache[playerid][pGroupAdmin3]);
-		cache_get_value_name_int(0, "pGroupDoor", PlayerCache[playerid][pGroupDoor]);
-		cache_get_value_name_int(0, "pGroupDoor2", PlayerCache[playerid][pGroupDoor2]);
-		cache_get_value_name_int(0, "pGroupDoor3", PlayerCache[playerid][pGroupDoor3]);
-		cache_get_value_name_int(0, "pGroupVehicle", PlayerCache[playerid][pGroupVehicle]);
-		cache_get_value_name_int(0, "pGroupVehicle2", PlayerCache[playerid][pGroupVehicle2]);
-		cache_get_value_name_int(0, "pGroupVehicle3", PlayerCache[playerid][pGroupVehicle3]);
-		cache_get_value_name_int(0, "pGroupProducts", PlayerCache[playerid][pGroupProducts]);
-		cache_get_value_name_int(0, "pGroupProducts2", PlayerCache[playerid][pGroupProducts2]);
-		cache_get_value_name_int(0, "pGroupProducts3", PlayerCache[playerid][pGroupProducts3]);
-		cache_get_value_name_int(0, "pGroupPayDay", PlayerCache[playerid][pGroupPayDay]);
-		cache_get_value_name_int(0, "pGroupPayDay2", PlayerCache[playerid][pGroupPayDay2]);
-		cache_get_value_name_int(0, "pGroupPayDay3", PlayerCache[playerid][pGroupPayDay3]);
-		cache_get_value_name_int(0, "pGroupDuty", PlayerCache[playerid][pGroupDuty]);
-		cache_get_value_name_int(0, "pGroupDuty2", PlayerCache[playerid][pGroupDuty2]);
-		cache_get_value_name_int(0, "pGroupDuty3", PlayerCache[playerid][pGroupDuty3]);
-		cache_get_value_name_int(0, "pPlayTime", PlayerCache[playerid][pPlayTime]);
-		cache_get_value_name_int(0, "pScore", PlayerCache[playerid][pScore]);
-		cache_get_value_name_int(0, "pHouseSpawn", PlayerCache[playerid][pHouseSpawn]);
-		cache_get_value_name_int(0, "pBank", PlayerCache[playerid][pBank]);
-		cache_get_value_name_float(0, "pPosX", PlayerCache[playerid][pPosX]);
-		cache_get_value_name_float(0, "pPosY", PlayerCache[playerid][pPosY]);
-		cache_get_value_name_float(0, "pPosY", PlayerCache[playerid][pPosZ]);
-		cache_get_value_name_int(0, "pPosVW", PlayerCache[playerid][pPosVW]);
-		cache_get_value_name_int(0, "pBornDate", PlayerCache[playerid][pBornDate]);
-		cache_get_value_name_int(0, "pID_Card", PlayerCache[playerid][pID_Card]);
-		cache_get_value_name_int(0, "pDrivingLicense", PlayerCache[playerid][pDrivingLicense]);
-		cache_get_value_name_int(0, "pBankAccount", PlayerCache[playerid][pBankAccount]);
-		cache_get_value_name_int(0, "pOOC", PlayerCache[playerid][pOOC]);
-		cache_get_value_name_int(0, "pGroupReward", PlayerCache[playerid][pGroupReward]);
-		cache_get_value_name_int(0, "pGroupReward2", PlayerCache[playerid][pGroupReward2]);
-		cache_get_value_name_int(0, "pGroupReward3", PlayerCache[playerid][pGroupReward3]);
-		cache_get_value_name_int(0, "pFavAnim", PlayerCache[playerid][pFavAnim]);
-		cache_get_value_name_int(0, "pJailTime", PlayerCache[playerid][pJailTime]);
-		cache_get_value_name_float(0, "pJailX", PlayerCache[playerid][pJailX]);
-		cache_get_value_name_float(0, "pJailY", PlayerCache[playerid][pJailY]);
-		cache_get_value_name_float(0, "pJailZ", PlayerCache[playerid][pJailZ]);
-		cache_get_value_name_int(0, "pJailVW", PlayerCache[playerid][pJailVW]);
-		cache_get_value_name_int(0, "pLastTraining", PlayerCache[playerid][pLastTraining]);
-		cache_get_value_name_int(0, "pObjectEditor", PlayerCache[playerid][pObjectEditor]);
-		cache_get_value_name_int(0, "pGymBoostTime", PlayerCache[playerid][pGymBoostTime]);
+		cache_get_value_name_int(0, "uid", PlayerCache[playerid][pUID]);
+		cache_get_value_name(0, "hash", PlayerCache[playerid][pHash]);
+		cache_get_value_name(0, "salt", PlayerCache[playerid][pSalt]);
+		cache_get_value_name(0, "name", PlayerCache[playerid][pName]);
+		cache_get_value_name_int(0, "gender", PlayerCache[playerid][pGender]);
+		cache_get_value_name_int(0, "skin", PlayerCache[playerid][pSkin]);
+		cache_get_value_name_float(0, "health", PlayerCache[playerid][pHealth]);
+		cache_get_value_name_int(0, "cash", PlayerCache[playerid][pCash]);
+		cache_get_value_name_int(0, "tutorialLevel", PlayerCache[playerid][pTutorialLevel]);
+		cache_get_value_name_int(0, "strenght", PlayerCache[playerid][pStrenght]);
+		cache_get_value_name_int(0, "level", PlayerCache[playerid][pLevel]);
+		cache_get_value_name_int(0, "BW_Time", PlayerCache[playerid][pBW_Time]);
+		cache_get_value_name_int(0, "BW_Reason", PlayerCache[playerid][pBW_Reason]);
+		cache_get_value_name_int(0, "AJ_Time", PlayerCache[playerid][pAJ_Time]);
+		cache_get_value_name_int(0, "groupUID", PlayerCache[playerid][pGroup]);
+		cache_get_value_name_int(0, "groupUID2", PlayerCache[playerid][pGroup2]);
+		cache_get_value_name_int(0, "groupUID3", PlayerCache[playerid][pGroup3]);
+		cache_get_value_name_int(0, "groupMapper", PlayerCache[playerid][pGroupMapper]);
+		cache_get_value_name_int(0, "groupMapper2", PlayerCache[playerid][pGroupMapper2]);
+		cache_get_value_name_int(0, "groupMapper3", PlayerCache[playerid][pGroupMapper3]);
+		cache_get_value_name_int(0, "groupInvite", PlayerCache[playerid][pGroupInvite]);
+		cache_get_value_name_int(0, "groupInvite2", PlayerCache[playerid][pGroupInvite2]);
+		cache_get_value_name_int(0, "groupInvite3", PlayerCache[playerid][pGroupInvite3]);
+		cache_get_value_name_int(0, "groupAdmin", PlayerCache[playerid][pGroupAdmin]);
+		cache_get_value_name_int(0, "groupAdmin2", PlayerCache[playerid][pGroupAdmin2]);
+		cache_get_value_name_int(0, "groupAdmin3", PlayerCache[playerid][pGroupAdmin3]);
+		cache_get_value_name_int(0, "groupDoor", PlayerCache[playerid][pGroupDoor]);
+		cache_get_value_name_int(0, "groupDoor2", PlayerCache[playerid][pGroupDoor2]);
+		cache_get_value_name_int(0, "groupDoor3", PlayerCache[playerid][pGroupDoor3]);
+		cache_get_value_name_int(0, "groupVehicle", PlayerCache[playerid][pGroupVehicle]);
+		cache_get_value_name_int(0, "groupVehicle2", PlayerCache[playerid][pGroupVehicle2]);
+		cache_get_value_name_int(0, "groupVehicle3", PlayerCache[playerid][pGroupVehicle3]);
+		cache_get_value_name_int(0, "groupProducts", PlayerCache[playerid][pGroupProducts]);
+		cache_get_value_name_int(0, "groupProducts2", PlayerCache[playerid][pGroupProducts2]);
+		cache_get_value_name_int(0, "groupProducts3", PlayerCache[playerid][pGroupProducts3]);
+		cache_get_value_name_int(0, "groupPayDay", PlayerCache[playerid][pGroupPayDay]);
+		cache_get_value_name_int(0, "groupPayDay2", PlayerCache[playerid][pGroupPayDay2]);
+		cache_get_value_name_int(0, "groupPayDay3", PlayerCache[playerid][pGroupPayDay3]);
+		cache_get_value_name_int(0, "groupDuty", PlayerCache[playerid][pGroupDuty]);
+		cache_get_value_name_int(0, "groupDuty2", PlayerCache[playerid][pGroupDuty2]);
+		cache_get_value_name_int(0, "groupDuty3", PlayerCache[playerid][pGroupDuty3]);
+		cache_get_value_name_int(0, "playTime", PlayerCache[playerid][pPlayTime]);
+		cache_get_value_name_int(0, "score", PlayerCache[playerid][pScore]);
+		cache_get_value_name_int(0, "houseSpawn", PlayerCache[playerid][pHouseSpawn]);
+		cache_get_value_name_int(0, "bank", PlayerCache[playerid][pBank]);
+		cache_get_value_name_float(0, "posX", PlayerCache[playerid][pPosX]);
+		cache_get_value_name_float(0, "posY", PlayerCache[playerid][pPosY]);
+		cache_get_value_name_float(0, "posY", PlayerCache[playerid][pPosZ]);
+		cache_get_value_name_int(0, "posVW", PlayerCache[playerid][pPosVW]);
+		cache_get_value_name_int(0, "bornDate", PlayerCache[playerid][pBornDate]);
+		cache_get_value_name_int(0, "ID_Card", PlayerCache[playerid][pID_Card]);
+		cache_get_value_name_int(0, "drivingLicense", PlayerCache[playerid][pDrivingLicense]);
+		cache_get_value_name_int(0, "bankAccount", PlayerCache[playerid][pBankAccount]);
+		cache_get_value_name_int(0, "OOC", PlayerCache[playerid][pOOC]);
+		cache_get_value_name_int(0, "groupReward", PlayerCache[playerid][pGroupReward]);
+		cache_get_value_name_int(0, "groupReward2", PlayerCache[playerid][pGroupReward2]);
+		cache_get_value_name_int(0, "groupReward3", PlayerCache[playerid][pGroupReward3]);
+		cache_get_value_name_int(0, "favAnim", PlayerCache[playerid][pFavAnim]);
+		cache_get_value_name_int(0, "jailTime", PlayerCache[playerid][pJailTime]);
+		cache_get_value_name_float(0, "jailX", PlayerCache[playerid][pJailX]);
+		cache_get_value_name_float(0, "jailY", PlayerCache[playerid][pJailY]);
+		cache_get_value_name_float(0, "jailZ", PlayerCache[playerid][pJailZ]);
+		cache_get_value_name_int(0, "jailVW", PlayerCache[playerid][pJailVW]);
+		cache_get_value_name_int(0, "lastTraining", PlayerCache[playerid][pLastTraining]);
+		cache_get_value_name_int(0, "objectEditor", PlayerCache[playerid][pObjectEditor]);
+		cache_get_value_name_int(0, "gymBoostTime", PlayerCache[playerid][pGymBoostTime]);
 		ShowDialogLogin(playerid);
 	}	
 	else
@@ -2269,6 +2334,7 @@ stock LoadPlayerData(playerid)
 	}
 	
 	cache_delete(cache);
+
 	return 1;
 }
 
@@ -4758,6 +4824,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 					if(sex[0] == 'm')
 					RegisterCache[playerid][rSex] = 0; else RegisterCache[playerid][rSex] = 1;
 					RegisterCache[playerid][rBornDate] = pborndate;
+					
 					ShowDialogPassword(playerid);
 					return 1;
 				}
@@ -4776,27 +4843,11 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 				if(strlen(inputtext) < 8 || strlen(inputtext) > 32)
 				return ShowPlayerDialog(playerid, D_PASS, DIALOG_STYLE_PASSWORD, "Wybór has³a", ""HEX_WHITE"Poni¿ej wprowadŸ has³o za pomoc¹ którego bêdziesz logowaæ siê do swojej postaci.\n\n"HEX_RED"Has³o musi mieæ przynajmniej 8 oraz maksymalnie 32 znaki.\n\n"HEX_PURPLE"Prosimy nie wpisywaæ hase³ zawieraj¹cych polskie znaki, gdy¿ logowanie potem bêdzie nie mo¿liwe.", "Stwórz", "Anuluj");
 
-				new salt[11];
+				
 
-				new list[58] = "ABCDEFGHIJKLMNOPRSTUWXYZ0123456789abcdefghiklmnoprstywxyz";
 
-				for(new i; i<10; i++)
-				format(salt, sizeof(salt), "%s%c", salt, list[random(56)]);
+				bcrypt_hash(playerid,"OnPassswordHash",inputtext,12);
 
-				new hash[1024];
-			//	format(hash, sizeof(hash), "%s%s", SHA256::Hash(inputtext), SHA256::Hash(salt));
-				//format(hash, sizeof(hash), "%s", SHA256::Hash(hash));
-
-				printf("register hash: %s", hash);
-				printf("register salt: %s", salt);
-
-				new newPlayerQuery[1024];
-				format(newPlayerQuery, sizeof(newPlayerQuery), "INSERT INTO players (hash, salt,name, gender, borndate) VALUES ('%s', '%s', '%s', '%d', '%d')", hash, salt,RegisterCache[playerid][rName], RegisterCache[playerid][rSex], RegisterCache[playerid][rBornDate]);
-				new Cache:cache = mysql_query(DB_HANDLE, newPlayerQuery);
-				cache_delete(cache);
-				SetPlayerName(playerid, RegisterCache[playerid][rName]);
-				LoadPlayerData(playerid);
-				return ShowDialogLogin(playerid);
 			}
 			else
 			{
@@ -6368,90 +6419,6 @@ stock UserPath(id)
 stock Isnull(const string[])
 return !strlen(string);
 
-stock LoadAccounts()
-{
-	new pass[32], str[256], smallstr[16];
-	new name[MAX_PLAYER_NAME];
-	new count;
-	for(new i; i < LastUID; i++)
-	{
-		if(!dfile_FileExists(UserPath(i)))
-		continue;
-		dfile_Open(UserPath(i));
-		format(name, sizeof(name), dfile_ReadString("Name"));
-		PlayerCache[i][pName] = name;
-		format(pass, sizeof(pass), dfile_ReadString("Pass"));
-		PlayerCache[i][pBornDate] = dfile_ReadInt("BornDate");
-		PlayerCache[i][pUID] = dfile_ReadInt("UID");
-		PlayerCache[i][pSkin] = dfile_ReadInt("Skin");
-		PlayerCache[i][pHealth] = dfile_ReadFloat("Health");
-		PlayerCache[i][pCash] = dfile_ReadInt("Cash");
-		PlayerCache[i][pTutorialLevel] = dfile_ReadInt("Tutorial");
-		PlayerCache[i][pStrenght] = dfile_ReadInt("Strenght");
-		PlayerCache[i][pLevel] = dfile_ReadInt("Rank");
-		PlayerCache[i][pBW_Time] = dfile_ReadInt("BW");
-		PlayerCache[i][pPosX] = dfile_ReadFloat("SpawnX");
-		PlayerCache[i][pPosY] = dfile_ReadFloat("SpawnY");
-		PlayerCache[i][pPosZ] = dfile_ReadFloat("SpawnZ");
-		PlayerCache[i][pAJ_Time] = dfile_ReadInt("AJ");
-		PlayerCache[i][pBW_Reason] = dfile_ReadInt("BWReason");
-		PlayerCache[i][pGroup] = dfile_ReadInt("Group");
-		PlayerCache[i][pGroup2] = dfile_ReadInt("Group2");
-		PlayerCache[i][pGroup3] = dfile_ReadInt("Group3");
-		PlayerCache[i][pGroupMapper] = dfile_ReadBool("GroupMapper");
-		PlayerCache[i][pGroupMapper2] = dfile_ReadBool("GroupMapper2");
-		PlayerCache[i][pGroupMapper3] = dfile_ReadBool("GroupMapper3");
-		PlayerCache[i][pGroupDoor] = dfile_ReadBool("GroupDoor");
-		PlayerCache[i][pGroupDoor2] = dfile_ReadBool("GroupDoor2");
-		PlayerCache[i][pGroupDoor3] = dfile_ReadBool("GroupDoor3");
-		PlayerCache[i][pGroupInvite] = dfile_ReadBool("GroupInvite");
-		PlayerCache[i][pGroupInvite2] = dfile_ReadBool("GroupInvite2");
-		PlayerCache[i][pGroupInvite3] = dfile_ReadBool("GroupInvite3");
-		PlayerCache[i][pGroupAdmin] = dfile_ReadBool("GroupAdmin");
-		PlayerCache[i][pGroupAdmin2] = dfile_ReadBool("GroupAdmin2");
-		PlayerCache[i][pGroupAdmin3] = dfile_ReadBool("GroupAdmin3");
-		PlayerCache[i][pGroupProducts] = dfile_ReadBool("GroupProducts");
-		PlayerCache[i][pGroupProducts2] = dfile_ReadBool("GroupProducts2");
-		PlayerCache[i][pGroupProducts3] = dfile_ReadBool("GroupProducts3");
-		PlayerCache[i][pGroupVehicle] = dfile_ReadBool("GroupVehicle");
-		PlayerCache[i][pGroupVehicle2] = dfile_ReadBool("GroupVehicle2");
-		PlayerCache[i][pGroupVehicle3] = dfile_ReadBool("GroupVehicle3");
-		PlayerCache[i][pGroupDuty] = dfile_ReadBool("GroupDuty");
-		PlayerCache[i][pGroupDuty2] = dfile_ReadBool("GroupDuty2");
-		PlayerCache[i][pGroupDuty3] = dfile_ReadBool("GroupDuty3");
-		PlayerCache[i][pGroupReward] = dfile_ReadInt("GroupReward");
-		PlayerCache[i][pGroupReward2] = dfile_ReadInt("GroupReward2");
-		PlayerCache[i][pGroupReward3] = dfile_ReadInt("GroupReward3");
-		PlayerCache[i][pScore] = dfile_ReadInt("SP");
-		PlayerCache[i][pHouseSpawn] = dfile_ReadInt("HouseSpawn");
-		PlayerCache[i][pBank] = dfile_ReadInt("Bank");
-		PlayerCache[i][uMapper] = dfile_ReadBool("Mapper");
-		PlayerCache[i][pPosVW] = dfile_ReadInt("SpawnVW");
-		PlayerCache[i][pID_Card] = dfile_ReadInt("ID");
-		PlayerCache[i][uDrivingLicense] = dfile_ReadInt("DrivingLicense");
-		PlayerCache[i][pBankAccount] = dfile_ReadInt("BankAccount");
-		PlayerCache[i][pOOC] = dfile_ReadBool("OOC");
-		PlayerCache[i][uAchievementManDown] = dfile_ReadBool("AchievementManDown");
-		PlayerCache[i][uBlock] = dfile_ReadBool("Block");
-		format(str, sizeof(str), dfile_ReadString("BlockReason"));
-		PlayerCache[i][uBlockReason] = str;
-		format(smallstr, sizeof(smallstr), dfile_ReadString("FavAnim"));
-		PlayerCache[i][pFavAnim] = smallstr;
-		PlayerCache[i][pJailTime] = dfile_ReadInt("JailTime");
-		PlayerCache[i][pJailX] = dfile_ReadFloat("JailX");
-		PlayerCache[i][pJailY] = dfile_ReadFloat("JailY");
-		PlayerCache[i][pJailZ] = dfile_ReadFloat("JailZ");
-		PlayerCache[i][pJailVW] = dfile_ReadInt("JailVW");
-		format(name, sizeof(name), dfile_ReadString("OOCName"));
-		PlayerCache[i][pOOCName] = name;
-		PlayerCache[i][pLastTraining] = dfile_ReadInt("LastTraining");
-		PlayerCache[i][pObjectEditor] = dfile_ReadInt("Editor");
-		dfile_CloseFile();
-		count++;
-	}
-	printf(">>> Loaded %d accounts.", count);
-}
-
 stock BackToMenu(playerid)
 {
 	new query[128];
@@ -6474,7 +6441,7 @@ stock BackToMenu(playerid)
 
 stock SaveAccounts()
 {
-	new count;
+	/*new count;
 	for(new i; i < LastUID; i++)
 	{
 		if(!dfile_FileExists(UserPath(i)))
@@ -6555,12 +6522,12 @@ stock SaveAccounts()
 		dfile_CloseFile();
 		count++;
 	}
-	printf(">>> Saved %d accounts.", count);
+	printf(">>> Saved %d accounts.", count);*/
 }
 
 stock LoadUIDs()
 {
-	if(dfile_FileExists(UID_FILE))
+	/*if(dfile_FileExists(UID_FILE))
 	{
 		dfile_Open(UID_FILE);
 		LastUID = dfile_ReadInt("UID");
@@ -6574,12 +6541,12 @@ stock LoadUIDs()
 		LastvUID = dfile_ReadInt("vUID");
 		LastaUID = dfile_ReadInt("aUID");
 		dfile_CloseFile();
-	}
+	}*/
 }
 
 stock SaveUIDs()
 {
-	if(dfile_FileExists(UID_FILE))
+	/*if(dfile_FileExists(UID_FILE))
 	{
 		dfile_Open(UID_FILE);
 		dfile_WriteInt("UID", LastUID);
@@ -6594,7 +6561,7 @@ stock SaveUIDs()
 		dfile_WriteInt("aUID", LastaUID);
 		dfile_SaveFile();
 		dfile_CloseFile();
-	}
+	}*/
 }
 
 stock ShowDialogLogin(playerid)
@@ -6645,11 +6612,11 @@ stock LoginPlayer(playerid)
 	SetPlayerScore(playerid, PlayerCache[playerid][pScore]);
 	SetPlayerHealth(playerid, PlayerCache[playerid][pHealth]);
 	SetPlayerColor(playerid, LOGGED_COLOR);
-
+	CreatePlayerTextDraws(playerid);
 	CallData[playerid][cCaller] = -1;
 	CallData[playerid][cCalling] = 0;
 
-	CreatePlayerTextDraws(playerid);
+	
 	
 	new str[128];
 	format(str, sizeof(str), "> Witaj, %s! "HEX_GRAY"(UID: %d, ID: %d)"HEX_WHITE". ¯yczymy mi³ej gry!", ReturnPlayerName(playerid), PlayerCache[playerid][pUID], playerid);
@@ -6865,7 +6832,7 @@ stock UpdatePlayerName(playerid)
 	if(aduty[playerid] != 0)
 	{
 		pNick[playerid][nColor] = COLOR_WHITE;
-		format(name, sizeof(name), "%s %s(%s, %d)", strreplace(ReturnPlayerName(playerid), '_', ' '), GetHexRankColor(PlayerCache[uid][pLevel]), GetRankName(PlayerCache[uid][pLevel]), playerid);
+		format(name, sizeof(name), "%s %s(%s, %d)", strreplace(ReturnPlayerName(playerid), '_', ' '), GetHexRankColor(PlayerCache[playerid][pLevel]), GetRankName(PlayerCache[playerid][pLevel]), playerid);
 	}
 	pNick[playerid][nStr] = name;
 
@@ -6909,7 +6876,7 @@ stock GetRankName(rank)
 
 stock GetPlayerStrenghtName(playerid)
 {
-	new name[16], uid = PlayerCache[playerid][pUID], strenght = PlayerCache[uid][pStrenght];
+	new name[16], uid = playerid, strenght = PlayerCache[playerid][pStrenght];
 	if(PlayerCache[uid][pGender])
 	{
 		if(strenght >= 300)
@@ -11082,93 +11049,6 @@ stock ItemPath(itemid)
 	return path;
 }
 
-stock LoadItems()
-{
-	/*new query[32] = "SELECT * FROM items";
-	mysql_query(DB_HANDLE, query);
-
-	mysql_store_result();
-
-	new data[1024], i;
-	while(mysql_fetch_row(data))
-	{
-
-		sscanf(data, "p<|>ddddfffs[128]dddddbfffffffffddd",
-		ItemCache[i][iUID],
-		ItemCache[i][iOwner],
-		ItemCache[i][iState],
-		ItemCache[i][iVW],
-		ItemCache[i][iX],
-		ItemCache[i][iY],
-		ItemCache[i][iZ],
-		ItemCache[i][iName],
-		ItemCache[i][iType],
-		ItemCache[i][iVal],
-		ItemCache[i][iVal2],
-		ItemCache[i][iVal3],
-		ItemCache[i][iVal4],
-		ItemCache[i][iActive],
-		ItemCache[i][iAttachX],
-		ItemCache[i][iAttachY],
-		ItemCache[i][iAttachZ],
-		ItemCache[i][iAttachrX],
-		ItemCache[i][iAttachrY],
-		ItemCache[i][iAttachrZ],
-		ItemCache[i][iSizeX],
-		ItemCache[i][iSizeY],
-		ItemCache[i][iSizeZ],
-		ItemCache[i][iGroup],
-		ItemCache[i][iCost],
-		ItemCache[i][iGroupSender]);
-		i++;
-	}
-
-	cache_delete(cache);
-
-	printf(">>> Loaded %d items.", i);*/
-	new query[128];
-	format(query, sizeof(query), "UPDATE items SET active = '0' WHERE type != '%d'", ITEM_STATE_DESTROYED);
-
-	mysql_query(DB_HANDLE, query);
-}
-
-stock SaveItems()
-{
-	for(new i;i<MAX_ITEMS;i++)
-	{
-		if(!dfile_FileExists(ItemPath(i)))
-		dfile_Create(ItemPath(i));
-		dfile_Open(ItemPath(i));
-		dfile_WriteInt("UID", ItemCache[i][iUID]);
-		dfile_WriteInt("State", ItemCache[i][iState]);
-		dfile_WriteInt("VW", ItemCache[i][iVW]);
-		dfile_WriteInt("Owner", ItemCache[i][iOwner]);
-		dfile_WriteFloat("X", ItemCache[i][iX]);
-		dfile_WriteFloat("Y", ItemCache[i][iY]);
-		dfile_WriteFloat("Z", ItemCache[i][iZ]);
-		dfile_WriteString("Name", ItemCache[i][iName]);
-		dfile_WriteInt("Type", ItemCache[i][iType]);
-		dfile_WriteInt("Val", ItemCache[i][iVal]);
-		dfile_WriteInt("Val2", ItemCache[i][iVal2]);
-		dfile_WriteInt("Val3", ItemCache[i][iVal3]);
-		dfile_WriteInt("Active", ItemCache[i][iActive]);
-		dfile_WriteFloat("AttachX", ItemCache[i][iAttachX]);
-		dfile_WriteFloat("AttachY", ItemCache[i][iAttachY]);
-		dfile_WriteFloat("AttachZ", ItemCache[i][iAttachZ]);
-		dfile_WriteFloat("AttachrX", ItemCache[i][iAttachrX]);
-		dfile_WriteFloat("AttachrY", ItemCache[i][iAttachrY]);
-		dfile_WriteFloat("AttachrZ", ItemCache[i][iAttachrZ]);
-		dfile_WriteFloat("SizeX", ItemCache[i][iSizeX]);
-		dfile_WriteFloat("SizeY", ItemCache[i][iSizeY]);
-		dfile_WriteFloat("SizeZ", ItemCache[i][iSizeZ]);
-		dfile_WriteInt("Group", ItemCache[i][iGroup]);
-		dfile_WriteInt("Cost", ItemCache[i][iCost]);
-		dfile_WriteInt("GroupSender", ItemCache[i][iGroupSender]);
-		dfile_WriteInt("Val4", ItemCache[i][iVal4]);
-		dfile_SaveFile();
-		dfile_CloseFile();
-	}
-}
 
 stock CreateItem(owneruid, type, val, val2, val3,val4, group, const name[])
 {
@@ -14526,7 +14406,7 @@ stock ShowDialogVInfo(playerid, vuid)
 
 stock SaveVehicles()
 {
-	new count;
+	/*new count;
 	for(new i; i<LastvUID; i++)
 	{
 		if(!dfile_FileExists(VehiclePath(i)))
@@ -14557,7 +14437,7 @@ stock SaveVehicles()
 		if(VehicleCache[i][vState] != 1)
 		count++;
 	}
-	printf(">>> Saved %d vehicles.", count);
+	printf(">>> Saved %d vehicles.", count);*/
 }
 
 stock GetVehicleName(vehicleid)
