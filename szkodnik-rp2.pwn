@@ -803,16 +803,34 @@ new pWasInCar[MAX_PLAYERS];
 
 new MySQL:DB_HANDLE;
 
+forward db_timer();
+public db_timer(){
+
+	DB_HANDLE = mysql_connect(MYSQL_HOST, MYSQL_USER, MYSQL_PASSWORD, MYSQL_DB);
+	if(mysql_errno() != 0){
+
+		print(">>> Probuje polaczyc z baza");
+		SetTimer("db_timer", 2000, false);
+	}
+	else{
+			print(">>> Pomyslnie nawiazano polaczenie z baza danych.");
+	}
+}
+
 public OnGameModeInit()
 {
 	print("Rozpoczynam ³adowanie Szkodnik-RP");
 	DB_HANDLE = mysql_connect(MYSQL_HOST, MYSQL_USER, MYSQL_PASSWORD, MYSQL_DB);
-	if(mysql_errno() != 0) 
-		return !printf(">>> Wystapil blad w probie polaczenia z baza danych, kod bledu: %d", mysql_errno());
-	else{
-		print(">>> Pomyslnie nawiazano polaczenie z baza danych.");
-		EnsureCreated();
+	if(mysql_errno() != 0) {
+		SetTimer("db_timer", 2000, false);
+		// return !printf(">>> Wystapil blad w probie polaczenia z baza danych, kod bledu: %d", mysql_errno());
+		
 	}
+	else{
+	print(">>> Pomyslnie nawiazano polaczenie z baza danych.");
+
+	EnsureCreated();
+	
 	CreateTextDraws();
 
 	AddAnimations();
@@ -831,6 +849,10 @@ public OnGameModeInit()
 	
 	LoadGroups();
 	LoadDoors();
+	}
+
+
+	
 	return 1;
 }
 
