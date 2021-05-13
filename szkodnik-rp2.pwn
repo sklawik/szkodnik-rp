@@ -835,7 +835,7 @@ public OnGameModeInit()
 
 	AddAnimations();
 	SendRconCommand("hostname ••• Szkodnik RolePlay •••");
-	SendRconCommand("gamemodetext Szkodnik-RP v2.0");
+	SendRconCommand("gamemodetext Szkodnik-RP v2.2");
 	SendRconCommand("mapname Los Santos");
 	gettime(ghour, gmin, gsec);
 	SetWorldTime(ghour);
