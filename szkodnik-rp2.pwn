@@ -11,12 +11,8 @@ main(){}
 #undef MAX_PLAYERS
 #define MAX_PLAYERS 10
 
-// mysql settings
 
-/*#define MYSQL_HOST "sql.pukawka.pl"
-#define MYSQL_USER "678458"
-#define MYSQL_PASSWORD "jFZPtLWZtKAC8WI"
-#define MYSQL_DB "678458_"*/
+// mysql settings
 
 #define MYSQL_HOST "127.0.0.1"
 #define MYSQL_USER "www"
@@ -24,6 +20,8 @@ main(){}
 #define MYSQL_DB "szkodnikrp"
 
 #define COL_AC_CHAT 0x42D95EFF
+
+new const DEV_MODE = 1;
 
 // defines dialogs
 #define D_LOGIN 0
@@ -133,6 +131,21 @@ main(){}
 #define D_NEARBY_PLAYERS 104
 #define D_ACCEPT_ITEM 105
 #define D_GROUP_AMOUNT_ITEM 106
+#define D_PLAYER_REPORTS 107
+#define D_PLAYER_REPORTS_OPTIONS 108
+#define D_PLAYER_REPORTS_PENALTY 109
+#define D_PLAYER_LOGS 110
+
+#define LOG_TYPE_GAME_CONNECTION 0
+#define LOG_TYPE_GAME_CHAT 1
+#define LOG_TYPE_GAME_DMG 2
+#define LOG_TYPE_GAME_VEHICLE 3
+#define LOG_TYPE_GAME_CMDS 4
+#define LOG_TYPE_GAME_ITEM 5
+#define LOG_TYPE_GAME_CASH 6
+#define LOG_TYPE_GAME_NICK 7
+#define LOG_TYPE_GAME_POSITION 8
+
 
 #undef STREAMER_OBJECT_SD
 #define STREAMER_OBJECT_SD 800
@@ -769,6 +782,10 @@ enum E_DIALOG
 	dialogVal3
 }
 
+new PumpUpTheJam[MAX_PLAYERS];
+
+new dialogCache[MAX_PLAYERS][E_DIALOG];
+
 new pVal[MAX_PLAYERS];
 new pVal2[MAX_PLAYERS];
 
@@ -859,74 +876,12 @@ public OnGameModeInit()
 stock EnsureCreated(){
 	// db schema
 
+	// init
 	mysql_query(DB_HANDLE, "DROP DATABASE IF EXISTS szkodnikrp;");
 	mysql_query(DB_HANDLE, "CREATE DATABASE szkodnikrp;");
 	mysql_query(DB_HANDLE, "use szkodnikrp;");
-	mysql_query(DB_HANDLE, "CREATE TABLE IF NOT EXISTS actors (\n\
-	aUID INT AUTO_INCREMENT PRIMARY KEY,\n\
-	aType INT NOT NULL,\n\
-	aName VARCHAR(64) NOT NULL,\n\
-	aAnimLib VARCHAR(32) NOT  NULL,\n\
-	aAnimName VARCHAR(32) NOT NULL,\n\
-	aPosX FLOAT not null,\n\
-	aPosY FLOAT not null,\n\
-	aPosZ FLOAT not null,\n\
-	aAng FLOAT NOT NULL,\n\
-	aVW INT NOT NULL,\n\
-	aSkin INT NOT  NULL,\n\
-	aRepeat INT NOT NULL,\n\
-	aText VARCHAR (256) NOT NULL\n\
-	);", false);
 
-	mysql_query(DB_HANDLE, 
-	"CREATE TABLE IF NOT EXISTS groups(\n\
-	gUID INT AUTO_INCREMENT PRIMARY KEY,\n\
-	gType INT NOT NULL,\n\
-	gBank INT NOT NULL,\n\
-	gName VARCHAR(32) NOT NULL,\n\
-	gChatOOC INT NOT NULL,\n\
-	gChatIC INT NOT NULL,\n\
-	gColor VARCHAR(16) NOT NULL,\n\
-	gState INT NOT NULL,\n\
-	gVehicleLimit INT NOT NULL,\n\
-	gPayDay INT NOT NULL);", false);
-
-	mysql_query(DB_HANDLE, 
-	"CREATE TABLE IF NOT EXISTS doors(\n\
-	dUID INT AUTO_INCREMENT PRIMARY KEY,\n\
-	dOutVW INT NOT NULL,\n\
-	dInsVW INT NOT NULL,\n\
-	dName VARCHAR(32) NOT NULL,\n\
-	dUrl VARCHAR(256) NOT NULL,\n\
-	dOutX FLOAT NOT NULL,\n\
-	dOutY FLOAT NOT NULL,\n\
-	dOutZ FLOAT NOT NULL,\n\
-	dInsX FLOAT NOT NULL,\n\
-	dInsY FLOAT NOT NULL,\n\
-	dInsZ FLOAT NOT NULL,\n\
-	dPlayerUID INT NOT NULL,\n\
-	dGroupUID INT NOT NULL,\n\
-	dDestroyed INT NOT NULL,\n\
-	dOpen INT NOT NULL,\n\
-	dType INT NOT NULL,\n\
-	dVehicle INT NOT NULL,\n\
-	dAlarm INT NOT NULL,\n\
-	dExplodeTime INT NOT NULL,\n\
-	dFacingAngle FLOAT NOT NULL);"
-	,false);
-
-	mysql_query(DB_HANDLE, 
-	"CREATE TABLE IF NOT EXISTS objects(\n\
-	uid INT AUTO_INCREMENT PRIMARY KEY,\n\
-	X FLOAT NOT NULL,\n\
-	Y FLOAT NOT NULL,\n\
-	Z FLOAT NOT NULL,\n\
-	rX FLOAT NOT NULL,\n\
-	rY FLOAT NOT NULL,\n\
-	rZ FLOAT NOT NULL,\n\
-	VW INT NOT NULL);"
-	, false);
-	
+	// players table
 	mysql_query(DB_HANDLE, 
 	"CREATE TABLE IF NOT EXISTS players(\n\
 	uid INT AUTO_INCREMENT PRIMARY KEY,\n\
@@ -995,6 +950,119 @@ stock EnsureCreated(){
 	lastTraining INT NOT NULL DEFAULT 0,\n\
 	objectEditor INT NOT NULL DEFAULT 0,\n\
 	gymBoostTime INT NOT NULL DEFAULT 0);", false);
+
+	
+
+	// Actors table
+	mysql_query(DB_HANDLE, "CREATE TABLE IF NOT EXISTS actors (\n\
+	aUID INT AUTO_INCREMENT PRIMARY KEY,\n\
+	aType INT NOT NULL,\n\
+	aName VARCHAR(64) NOT NULL,\n\
+	aAnimLib VARCHAR(32) NOT  NULL,\n\
+	aAnimName VARCHAR(32) NOT NULL,\n\
+	aPosX FLOAT not null,\n\
+	aPosY FLOAT not null,\n\
+	aPosZ FLOAT not null,\n\
+	aAng FLOAT NOT NULL,\n\
+	aVW INT NOT NULL,\n\
+	aSkin INT NOT  NULL,\n\
+	aRepeat INT NOT NULL,\n\
+	aText VARCHAR (256) NOT NULL\n\
+	);", false);
+
+	// Groups table
+	mysql_query(DB_HANDLE, 
+	"CREATE TABLE IF NOT EXISTS groups(\n\
+	gUID INT AUTO_INCREMENT PRIMARY KEY,\n\
+	gType INT NOT NULL,\n\
+	gBank INT NOT NULL,\n\
+	gName VARCHAR(32) NOT NULL,\n\
+	gChatOOC INT NOT NULL,\n\
+	gChatIC INT NOT NULL,\n\
+	gColor VARCHAR(16) NOT NULL,\n\
+	gState INT NOT NULL,\n\
+	gVehicleLimit INT NOT NULL,\n\
+	gPayDay INT NOT NULL);", false);
+
+
+	// Doors table
+	mysql_query(DB_HANDLE, 
+	"CREATE TABLE IF NOT EXISTS doors(\n\
+	dUID INT AUTO_INCREMENT PRIMARY KEY,\n\
+	dOutVW INT NOT NULL,\n\
+	dInsVW INT NOT NULL,\n\
+	dName VARCHAR(32) NOT NULL,\n\
+	dUrl VARCHAR(256) NOT NULL,\n\
+	dOutX FLOAT NOT NULL,\n\
+	dOutY FLOAT NOT NULL,\n\
+	dOutZ FLOAT NOT NULL,\n\
+	dInsX FLOAT NOT NULL,\n\
+	dInsY FLOAT NOT NULL,\n\
+	dInsZ FLOAT NOT NULL,\n\
+	dPlayerUID INT NOT NULL,\n\
+	dGroupUID INT NOT NULL,\n\
+	dDestroyed INT NOT NULL,\n\
+	dOpen INT NOT NULL,\n\
+	dType INT NOT NULL,\n\
+	dVehicle INT NOT NULL,\n\
+	dAlarm INT NOT NULL,\n\
+	dExplodeTime INT NOT NULL,\n\
+	dFacingAngle FLOAT NOT NULL);"
+	,false);
+
+	// Objects table
+	mysql_query(DB_HANDLE, 
+	"CREATE TABLE IF NOT EXISTS objects(\n\
+	uid INT AUTO_INCREMENT PRIMARY KEY,\n\
+	X FLOAT NOT NULL,\n\
+	Y FLOAT NOT NULL,\n\
+	Z FLOAT NOT NULL,\n\
+	rX FLOAT NOT NULL,\n\
+	rY FLOAT NOT NULL,\n\
+	rZ FLOAT NOT NULL,\n\
+	VW INT NOT NULL);"
+	, false);
+
+
+	// player reports table
+	mysql_query(DB_HANDLE, 
+	"CREATE TABLE IF NOT EXISTS playerReports(\n\
+	uid INT AUTO_INCREMENT PRIMARY KEY,\n\
+	issuerUID INT NOT NULL,\n\
+	receiverUID FLOAT NOT NULL,\n\
+	reason VARCHAR(128) NOT NULL,\n\
+	createdAt DATETIME DEFAULT CURRENT_TIMESTAMP);"
+	, false);
+
+	// logs table
+	mysql_query(DB_HANDLE, "CREATE TABLE IF NOT EXISTS playerLogs (\n\
+	uid INT PRIMARY KEY AUTO_INCREMENT,\n\
+	message VARCHAR(256) DEFAULT ' ',\n\
+	type TINYINT NOT NULL,\n\
+	playerUID INT, \n\
+	anyUID INT DEFAULT 0,\n\
+	createdAt DATETIME DEFAULT CURRENT_TIMESTAMP\n\
+	);", false);
+
+	// playerPenalties
+	mysql_query(DB_HANDLE, "CREATE TABLE IF NOT EXISTS playerPenalties(\n\
+	uid INT PRIMARY KEY AUTO_INCREMENT,\n\
+	reason VARCHAR(128),\n\
+	adminUID INT DEFAULT 0,\n\
+	receiverUID INT,\n\
+	FOREIGN KEY (adminUID) REFERENCES players(uid),\n\
+	FOREIGN KEY (receiverUID) REFERENCES players(uid),\n\
+	type TINYINT,\n\
+	expiration TIMESTAMP DEFAULT CURRENT_TIMESTAMP,\n\
+	createdAt DATETIME DEFAULT CURRENT_TIMESTAMP);", false);
+	
+
+}
+
+stock CreateLog(logType, playerid, const message[], anyUID=0){
+	new query[256];
+	format(query, sizeof(query), "INSERT INTO playerLogs (type, playerUID, message, anyUID) VALUES (%d, %d, '%s', %d);", logType, PlayerCache[playerid][pUID], message, anyUID);
+	mysql_query(DB_HANDLE, query, false);
 }
 
 public OnGameModeExit()
@@ -2068,6 +2136,9 @@ stock RandomCamera(playerid)
 	cache_delete(cache);
 	SetPlayerName(playerid, RegisterCache[playerid][rName]);
 	LoadPlayerData(playerid);
+	if(DEV_MODE){
+		PlayerCache[playerid][pLevel] = DEVELOPER;
+	}
 	return ShowDialogLogin(playerid);
  }
 
@@ -2233,6 +2304,17 @@ public OnPlayerConnect(playerid)
 {
 	if(!DB_HANDLE)
 		Kick(playerid);
+
+	if(DEV_MODE){
+
+		
+		SetPlayerName(playerid, "Sam_Clappers");
+		GetPlayerName(playerid, RegisterCache[playerid][rName], 24);
+		bcrypt_hash(playerid,"OnPassswordHash","12345678",12);
+		
+		
+	}
+	
 	pPriv[playerid] = true;
 	pCalling[playerid] = -1;
 	pTalking[playerid] = -1;
@@ -2317,9 +2399,9 @@ stock LoadPlayerData(playerid)
 		cache_get_value_name_int(0, "groupProducts", PlayerCache[playerid][pGroupProducts]);
 		cache_get_value_name_int(0, "groupProducts2", PlayerCache[playerid][pGroupProducts2]);
 		cache_get_value_name_int(0, "groupProducts3", PlayerCache[playerid][pGroupProducts3]);
-		cache_get_value_name_int(0, "groupPayDay", PlayerCache[playerid][pGroupPayDay]);
-		cache_get_value_name_int(0, "groupPayDay2", PlayerCache[playerid][pGroupPayDay2]);
-		cache_get_value_name_int(0, "groupPayDay3", PlayerCache[playerid][pGroupPayDay3]);
+		cache_get_value_name_int(0, "groupPayday", PlayerCache[playerid][pGroupPayDay]);
+		cache_get_value_name_int(0, "groupPayday2", PlayerCache[playerid][pGroupPayDay2]);
+		cache_get_value_name_int(0, "groupPayday3", PlayerCache[playerid][pGroupPayDay3]);
 		cache_get_value_name_int(0, "groupDuty", PlayerCache[playerid][pGroupDuty]);
 		cache_get_value_name_int(0, "groupDuty2", PlayerCache[playerid][pGroupDuty2]);
 		cache_get_value_name_int(0, "groupDuty3", PlayerCache[playerid][pGroupDuty3]);
@@ -2356,6 +2438,10 @@ stock LoadPlayerData(playerid)
 	}
 	
 	cache_delete(cache);
+
+	new str[256];
+	format(str, sizeof(str), "[LOG] [JOIN] SAMP_NAME: %s, SAMP_ID: %d, UID: %d, SAMP_IP: %s", ReturnPlayerName(playerid), playerid, PlayerCache[playerid][pUID], PlayerIP(playerid));
+	CreateLog(LOG_TYPE_GAME_CONNECTION, playerid, str);
 
 	return 1;
 }
@@ -2750,7 +2836,64 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 		}
 	}
 	switch(dialogid)
-	{
+	{	
+		case D_PLAYER_LOGS:{
+			if(response){
+				new logUID = 0, playerUID = 0;
+				sscanf(inputtext, "ii", logUID, playerUID);
+				if(logUID == -1){
+					
+					ShowPlayerLogs(playerid, LOG_TYPE_GAME_CHAT, playerUID);
+					return 1;
+				}
+				new query[128];
+				format(query, sizeof(query), "SELECT message, playerUID,type FROM playerLogs WHERE uid=%d LIMIT 1", logUID);
+				new Cache:cache = mysql_query(DB_HANDLE,query);
+
+				new fullMessage[128], type;
+				cache_get_value_name(0, "message", fullMessage);
+				cache_get_value_name_int(0, "playerUID", playerUID);
+				cache_get_value_name_int(0, "type", type);
+
+				
+				new logInfo[256];
+				format(logInfo,sizeof(logInfo), "%s", fullMessage);
+				TextDrawForPlayer(playerid, 2, logInfo);
+
+				cache_delete(cache);
+				ShowPlayerLogs(playerid, LOG_TYPE_GAME_CHAT, playerUID);
+
+			}else{
+				HideTextDrawForPlayer(playerid, 2);
+			}
+		}
+		case D_PLAYER_REPORTS:{
+			if(response){
+				new reportUID = 0;
+				sscanf(inputtext, "i", reportUID);
+			
+				new query[256];
+				format(query, sizeof(query), "SELECT receiverUID FROM playerReports WHERE uid = %d LIMIT 1;", reportUID);
+				new Cache:cache = mysql_query(DB_HANDLE, query);
+				new reportedPlayerUID;
+				cache_get_value_name_int(0, "receiverUID", reportedPlayerUID);
+
+				cache_delete(cache);
+
+				if(reportUID == -1){
+					ShowPlayerLogs(playerid, LOG_TYPE_GAME_CHAT, reportedPlayerUID);
+					return 1;
+				}
+				
+
+				ShowPlayerLogs(playerid, LOG_TYPE_GAME_CHAT, reportedPlayerUID);
+
+			}
+			else{
+
+			}
+			
+		}
 		case D_ACCEPT_ITEM:
 		{
 			new senderuid = tVal[playerid];
@@ -6612,6 +6755,7 @@ stock ShowDialogPassword(playerid)
 	return 1;
 }
 
+
 stock PlayerIP(playerid)
 {
 	new IP[128];
@@ -6627,6 +6771,7 @@ stock SetSpawnInfoFix(playerid, team, skinid, Float:X, Float:Y, Float:Z)
 
 stock LoginPlayer(playerid)
 {
+
 	DestroyDynamic3DTextLabel(pText[playerid]); // description
 
 	TextDrawShowForPlayer(playerid, RadioTextDraw);
@@ -6640,7 +6785,7 @@ stock LoginPlayer(playerid)
 
 	
 	
-	new str[128];
+	new str[256];
 	format(str, sizeof(str), "> Witaj, %s! "HEX_GRAY"(UID: %d, ID: %d)"HEX_WHITE". ¯yczymy mi³ej gry!", ReturnPlayerName(playerid), PlayerCache[playerid][pUID], playerid);
 	ClearChat(playerid);
 	SendClientMessage(playerid, COLOR_WHITE, str);
@@ -6670,6 +6815,8 @@ stock LoginPlayer(playerid)
 	TogglePlayerSpectating(playerid, 0);
 
 	pLogged[playerid] = true;
+	
+	
 
 	return 1;
 }
@@ -7970,13 +8117,14 @@ stock SetPrevFemaleSkin(playerid)
 
 public OnPlayerSpawn(playerid)
 {
+	
 	GetPlayerPos(playerid, pGlobalX[playerid],  pGlobalY[playerid],  pGlobalZ[playerid]);
 	if(!pLogged[playerid])
 	return Kick(playerid);
 	return 1;
 }
 
-stock LookForEmoji(str[])
+stock LookForEmoji(const str[])
 {
 	new msg[258]; format(msg, sizeof(msg), str);
 	new pos;
@@ -8077,10 +8225,10 @@ stock SendFormattedMessage(playerid, const message[], const hexme[], const  hexn
 		strdel(msg2, 0, 100);
 		format(msg1, sizeof(msg1), RPFormatText(msg1, hexme, hexnormal));
 		format(msg2, sizeof(msg2), RPFormatText(msg2, hexme, hexnormal));
-		SendClientMessage(playerid, color, msg1);
-		return SendClientMessage(playerid, color, msg2);
+		SendClientMessage(playerid, color, LookForEmoji(msg1) );
+		return SendClientMessage(playerid, color, LookForEmoji(msg2) );
 	}
-	return SendClientMessage(playerid, color, RPFormatText(msg, hexme, hexnormal));
+	return SendClientMessage(playerid, color, RPFormatText(LookForEmoji(msg), hexme, hexnormal));
 }
 
 stock RPFormatText(const message[], const hexme[],const hexnormal[])
@@ -8131,11 +8279,21 @@ public OnPlayerText(playerid, text[])
 {
 	if(PlayerCache[playerid][pAJ_Time] || !PlayerCache[playerid][pUID])
 	return 0;
+	if(strfind(text, "pump up the jam", true) != -1){
+		
+		PumpUpTheJam[playerid] = true;
+	}
+	
 	if(GetTickCount() - pTick[playerid] <= 250)
 	{
 		return !SendClientMessage(playerid, COLOR_GRAY, "Odczekaj chwilê przed ponownym wys³aniem wiadomoœci.");
 	}
-	pTick[playerid] = GetTickCount();
+	// logs table
+	
+	new log[426];
+	format(log, sizeof(log), "%s: %s", ReturnPlayerName(playerid), text);
+	CreateLog(LOG_TYPE_GAME_CHAT, playerid, log);
+
 	if(ac[playerid])
 	{
 		new msg[256];
@@ -8795,8 +8953,12 @@ public OnPlayerDisconnect(playerid, reason)
 		RemovePlayerAttachedObject(playerid, i);
 	}
 
-	if(!pLogged[playerid])
-	{
+	if(pLogged[playerid])
+	{	
+		new str[128];
+		format(str, sizeof(str), "[LOG] [LEAVE] SAMP_NAME: %s, SAMP_ID: %d, CLIENT_IP: %s", ReturnPlayerName(playerid), playerid, PlayerIP(playerid));
+		CreateLog(LOG_TYPE_GAME_CONNECTION, playerid, str, 0);
+
 		if(pTrainingTimer[playerid])
 		{
 			KillTimer(pTrainingTimer[playerid]);
@@ -10060,6 +10222,72 @@ cmd:raport (playerid, params[])
 	return callcmd::report(playerid, params);
 }
 
+
+
+forward ShowPlayerLogs(playerid, logType, targetUID);
+public ShowPlayerLogs(playerid, logType, targetUID){
+	if(dialogCache[playerid][dialogVal] == 0){
+		new query[256];
+		format(query, sizeof(query), "SELECT Max(uid) FROM playerLogs WHERE playerUID=%d LIMIT 1", targetUID);
+		new Cache:cache = mysql_query(DB_HANDLE, query);
+		cache_get_value_int(0, 0, dialogCache[playerid][dialogVal]);
+		cache_delete(cache);
+	}
+
+	new query[1024];
+	format(query, sizeof(query), "SELECT playerLogs.uid as logUID, playerLogs.message as message, playerLogs.createdAt as createdAt, players1.name as nick FROM playerLogs INNER JOIN players players1 ON players1.uid = playerLogs.playerUID AND playerLogs.uid <= %d AND playerUID=%d AND type = %d ORDER BY createdAt DESC LIMIT 10", dialogCache[playerid][dialogVal], targetUID, logType);
+	new Cache:cache = mysql_query(DB_HANDLE, query);
+
+	new rows = cache_num_rows();
+	new message[256];
+
+	new messagesList[2024];
+	new dateTime[64];
+	new nick[24];
+	new uid=0;
+
+
+
+	for(new i=0; i<rows; i++){
+		cache_get_value_name(i, "message", message);
+		
+		cache_get_value_name(i, "createdAt", dateTime);
+		cache_get_value_name(i, "nick", nick);
+		cache_get_value_name_int(i, "logUID", uid);
+		
+		format(messagesList, sizeof(messagesList), "%s\n"HEX_BLACK"%d "HEX_BLUE"[%s] "HEX_GREEN"(kliknij tutaj aby rozwin¹æ tekst)\n%s", messagesList, uid, dateTime, message);
+	}
+
+	format(messagesList, sizeof(messagesList), "%s\n"HEX_BLACK"-1 %d\t"HEX_BLUE"Nastêpna strona", messagesList, targetUID);
+	printf("logs: %d", rows);
+	cache_delete(cache);
+
+
+	if(rows == 10)
+		dialogCache[playerid][dialogVal] = uid;
+
+	format(message, sizeof(message), "Logi "HEX_BLUE"%s (strona %d)", nick, dialogCache[playerid][dialogVal]);
+	ShowPlayerDialog(playerid, D_PLAYER_LOGS, DIALOG_STYLE_LIST, message, messagesList, "Zamknij", "");
+	return 1;
+}
+
+
+
+cmd:logi (playerid, params[]){
+	if(!PlayerCache[playerid][pLevel])
+	return 1;
+	new logType, targetid;
+	if(sscanf(params, "ri", targetid, logType)){
+		return SendClientMessage(playerid, COLOR_GRAY, "Poprawne u¿ycie: /logi [ID/Czêœæ nazwy gracza] [Typ logów w zakresie 0+]");
+	}
+	if(PlayerCache[targetid][pUID]<=0){
+		return SendClientMessage(playerid, COLOR_GRAY, "Gracz nie jest zalogowany");
+	}
+	dialogCache[playerid][dialogVal] = 0;
+	ShowPlayerLogs(playerid, logType, PlayerCache[targetid][pUID]);
+	return 1;
+}
+
 cmd:report (playerid, params[])
 {
 	new targetid, reason[128];
@@ -10067,17 +10295,30 @@ cmd:report (playerid, params[])
 	{
 		return SendClientMessage(playerid, COLOR_GRAY, "Poprawne u¿ycie: /report [ID/Czêœæ nazwy gracza] [treœæ]");
 	}
-	if(playerid == targetid)
-	return SendClientMessage(playerid, COLOR_GRAY, "Nie mo¿esz zreportowaæ samego siebie!");
+	//if(playerid == targetid)
+	//	return SendClientMessage(playerid, COLOR_GRAY, "Nie mo¿esz zreportowaæ samego siebie!");
 	if(!IsPlayerConnected(targetid))
-	{
 		return SendClientMessage(playerid, COLOR_GRAY, "Takiego gracza nie ma na serwerze.");
-	}
 	if(!pLogged[targetid])
-	{
 		return SendClientMessage(playerid, COLOR_GRAY, "Ten gracz nie jest zalogowany.");
-	}
-	new msg[128]; format(msg, sizeof(msg), ""HEX_RED"%s(%d) wys³a³ raport na gracza %s(%d):", ReturnPlayerName(playerid), playerid, ReturnPlayerName(targetid), targetid);
+	new queryReason[128];
+	mysql_escape_string(reason, queryReason, sizeof(queryReason));
+
+
+
+	new query[256];
+	format(query, sizeof(query), "INSERT INTO playerReports(issuerUID, receiverUID, reason) VALUES (%d, %d, '%s')", PlayerCache[playerid][pUID], PlayerCache[targetid][pUID], queryReason);
+	mysql_query(DB_HANDLE, query, false);
+
+
+
+	new reportUID = 0;
+	new Cache:cache = mysql_query(DB_HANDLE, "SELECT max(uid) FROM playerReports");
+	cache_get_value_int(0, 0, reportUID);
+	cache_delete(cache);
+
+	new msg[128]; 
+	format(msg, sizeof(msg), ""HEX_RED" Nowy raport #%d na gracza %s(%d). Utworzy³: %s(%d). U¿yj "HEX_WHITE"/reporty "HEX_RED" po wiêcej opcji",  reportUID, ReturnPlayerName(targetid), targetid, ReturnPlayerName(playerid), playerid);
 	for(new i; i<=GetPlayerPoolSize(); i++)
 	{
 		if(IsPlayerConnected(i))
@@ -10092,8 +10333,43 @@ cmd:report (playerid, params[])
 			}
 		}
 	}
-	SendClientMessage(playerid, COLOR_RED, "Wys³ano raport.");
+
+	ShowPlayerDialog(playerid, D_INFO, DIALOG_STYLE_MSGBOX, "Raport na gracza zosta³ wys³any.", ""HEX_WHITE"Nie powielaj raportów.\n\
+	Prêdzej czy póŸniej ekipa serwera zweryfikuje wys³ane zg³oszenie, ka¿de jest sprawdzane i zapisywanie, jeœli jesteœ ofiar¹ i straci³eœ/aœ HP, przedmioty itp\n\
+	 - nie martw siê, zadbamy o wszystko.\n\
+	 Skorzystaj te¿ z szybkiej drogi komunikacji jeœli nikt z ekipy (/a) nie jest online.\n\
+	 Discord lub nasze forum (mo¿esz napisaæ skargê).", "Zamknij", "");
+	
+
+	
 	return 1;
+}
+CMD:crash (playerid, params[]){
+
+}
+CMD:reporty(playerid, params[]){
+	if(!PlayerCache[playerid][pLevel]){
+	return;
+	}
+	new Cache:cache = mysql_query(DB_HANDLE, "SELECT players1.name as issuer, players2.name as receiver, createdAt, reason, playerReports.uid FROM playerReports INNER JOIN players players1 ON players1.uid = playerReports.issuerUID INNER JOIN players players2 ON players2.uid = playerReports.receiverUID;");
+	new dialogContent[1024] = ""HEX_GREEN"#\tData\t\tZg³aszaj¹cy\tZg³oszony\tPowód\n";
+	new rows = cache_num_rows();
+	new issuer[24],
+		receiver[24],
+		reason[64], createdAt[32], uid=0;
+
+	for(new i=0; i<rows; i++){
+		cache_get_value_name(i, "issuer", issuer);
+		cache_get_value_name(i, "receiver", receiver);
+		cache_get_value_name(i, "reason", reason);
+		cache_get_value_name(i, "createdAt", createdAt);
+		cache_get_value_name_int(i, "uid", uid);
+		format(dialogContent, sizeof(dialogContent), "%s\n%d\t"HEX_BLUE"%s\t"HEX_WHITE"%s\t"HEX_RED"%s\t"HEX_RED"%s",
+		dialogContent, uid, createdAt, issuer, receiver, reason );
+	}
+	ShowPlayerDialog(playerid, D_PLAYER_REPORTS, DIALOG_STYLE_LIST, ""HEX_RED"Raporty na graczy", dialogContent, "Wybierz", "Anuluj");
+	cache_delete(cache);
+	return;
 }
 
 cmd:unbw (playerid, params[])
@@ -10317,6 +10593,7 @@ stock AJPlayer(playerid, const adminname[], const reason[], time)
 		GetPlayerPos(playerid,PlayerCache[playerid][pPosX],PlayerCache[playerid][pPosY],PlayerCache[playerid][pPosZ]);
 		PlayerCache[playerid][pPosVW] = GetPlayerVirtualWorld(playerid);
 	}
+	
 	for(new i=0; i<=GetPlayerPoolSize();i++)
 	{
 		if(IsPlayerConnected(i))
@@ -13975,7 +14252,11 @@ stock CuffPlayer(playerid, targetid)
 		TogglePlayerControllable(targetid, 1);
 	}
 	else
-	{
+	{	
+		if(PumpUpTheJam[targetid]){
+			SetPlayerSpecialAction(playerid, SPECIAL_ACTION_DANCE1);
+			return SendClientMessage(playerid, COLOR_RED, "Nie mo¿esz skuæ tego gracza gdy¿ zacz¹³ œpiewaæ on pump up the jam.");
+		}
 		pCuffed[targetid] = true;
 		SetPlayerSpecialAction(targetid, SPECIAL_ACTION_CUFFED);
 		format(str, sizeof(str), "skuwa kajdankami %s", RPName(targetid));
