@@ -21,7 +21,7 @@ main(){}
 
 #define COL_AC_CHAT 0x42D95EFF
 
-new const DEV_MODE = 1;
+new const DEV_MODE = 0;
 
 // defines dialogs
 #define D_LOGIN 0
@@ -3299,8 +3299,8 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 		{
 			if(response)
 			{
-				new targetuid = pVal[playerid];
-				new targetid = IsUserConnected(targetuid);
+				
+				new targetid = pVal[playerid];
 				if(targetid == -1)
 				return SendClientMessage(playerid, COLOR_GRAY, "Gracz opuœci³ grê lub wylogowa³ siê.");
 				if(!IsPlayerInRangeOfPlayer(playerid, targetid, 2.5))
@@ -7436,7 +7436,7 @@ public OnPlayerKeyStateChange(playerid, newkeys, oldkeys)
 			}
 		}
 	}
-	else if(newkeys == KEY_WALK)
+	else if(newkeys & KEY_WALK)
 	{
 		if(!Isnull(PlayerCache[playerid][pFavAnim]))
 		{
@@ -7447,6 +7447,7 @@ public OnPlayerKeyStateChange(playerid, newkeys, oldkeys)
 				{
 					if(!strcmp(AnimList[i][aCustomName], str, true))
 					{
+						
 						return ApplyAnimation(playerid, AnimList[i][aLib], AnimList[i][aName], 4.1, AnimList[i][aRepeat], 0, 0, AnimList[i][aFreeze], 0, 0);
 					}
 				}
@@ -8128,6 +8129,13 @@ stock LookForEmoji(const str[])
 {
 	new msg[258]; format(msg, sizeof(msg), str);
 	new pos;
+
+	while(strfind(msg, "?", true) != -1)
+	{
+		pos = strfind(msg, "?", true);
+		strdel(msg, pos, pos+2);
+		strins(msg, "*robi pytaj¹c¹ minê*",pos);
+	}
 	while(strfind(msg, ":d", true) != -1)
 	{
 		pos = strfind(msg, ":d", true);
@@ -8292,6 +8300,7 @@ public OnPlayerText(playerid, text[])
 	
 	new log[426];
 	format(log, sizeof(log), "%s: %s", ReturnPlayerName(playerid), text);
+
 	CreateLog(LOG_TYPE_GAME_CHAT, playerid, log);
 
 	if(ac[playerid])
@@ -9537,7 +9546,7 @@ public OnPlayerDeath(playerid, killerid, reason)
 	ResetPlayerWeapons(playerid);
 	if(IsPlayerInAnyVehicle(playerid))
 	RemovePlayerFromVehicle(playerid);
-	new puid = PlayerCache[playerid][pUID];
+	new puid = playerid;
 	PlayerCache[playerid][pBW_Reason] = reason;
 	PlayerCache[puid][pHealth]=1;
 	GetPlayerPos(playerid, PlayerCache[puid][pPosX], PlayerCache[puid][pPosY], PlayerCache[puid][pPosZ]);
@@ -10254,7 +10263,7 @@ public ShowPlayerLogs(playerid, logType, targetUID){
 		cache_get_value_name(i, "createdAt", dateTime);
 		cache_get_value_name(i, "nick", nick);
 		cache_get_value_name_int(i, "logUID", uid);
-		
+		strdel(message, 100, strlen(message));	
 		format(messagesList, sizeof(messagesList), "%s\n"HEX_BLACK"%d "HEX_BLUE"[%s] "HEX_GREEN"(kliknij tutaj aby rozwin¹æ tekst)\n%s", messagesList, uid, dateTime, message);
 	}
 
