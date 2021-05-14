@@ -10334,11 +10334,12 @@ cmd:report (playerid, params[])
 		}
 	}
 
-	ShowPlayerDialog(playerid, D_INFO, DIALOG_STYLE_MSGBOX, "Raport na gracza zosta³ wys³any.", ""HEX_WHITE"Nie powielaj raportów.\n\
-	Prêdzej czy póŸniej ekipa serwera zweryfikuje wys³ane zg³oszenie, ka¿de jest sprawdzane i zapisywanie, jeœli jesteœ ofiar¹ i straci³eœ/aœ HP, przedmioty itp\n\
+	ShowPlayerDialog(playerid, D_INFO, DIALOG_STYLE_MSGBOX, "Raport na gracza zosta³ wys³any.", ""HEX_RED"Nie powielaj raportów.\n\
+	"HEX_DARKRED"Prêdzej czy póŸniej ekipa serwera zweryfikuje wys³ane zg³oszenie,\n\
+	ka¿de jest sprawdzane i zapisywanie, jeœli jesteœ ofiar¹ i straci³eœ/aœ HP, przedmioty itp\n\
 	 - nie martw siê, zadbamy o wszystko.\n\
 	 Skorzystaj te¿ z szybkiej drogi komunikacji jeœli nikt z ekipy (/a) nie jest online.\n\
-	 Discord lub nasze forum (mo¿esz napisaæ skargê).", "Zamknij", "");
+	 Discord lub nasze forum (mo¿esz napisaæ skargê).", "Rozumiem", "");
 	
 
 	
