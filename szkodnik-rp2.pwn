@@ -8129,7 +8129,358 @@ stock LookForEmoji(const str[])
 {
 	new msg[258]; format(msg, sizeof(msg), str);
 	new pos;
-
+	while(strfind(msg, "?", true) != -1)
+    {
+        pos = strfind(msg, "?", true);
+        strdel(msg, pos, pos+2);
+        strins(msg, "*robi pytaj¹c¹ minê*",pos);
+    }
+	while(strfind(msg, ":)", true) != -1)
+    {
+        pos = strfind(msg, ":)", true);
+        strdel(msg, pos, pos+2);
+        strins(msg, "*uœmiecha siê*",pos);
+    }
+    while(strfind(msg, ":]", true) != -1)
+    {
+        pos = strfind(msg, ":]", true);
+        strdel(msg, pos, pos+2);
+        strins(msg, "*uœmiecha siê*",pos);
+    }
+    while(strfind(msg, "C:", true) != -1)
+    {
+        pos = strfind(msg, "C:", true);
+        strdel(msg, pos, pos+2);
+        strins(msg, "*uœmiecha siê*",pos);
+    }
+    while(strfind(msg, "c:", true) != -1)
+    {
+        pos = strfind(msg, "c:", true);
+        strdel(msg, pos, pos+2);
+        strins(msg, "*uœmiecha siê*",pos);
+    }
+    while(strfind(msg, "=]", true) != -1)
+    {
+        pos = strfind(msg, "=]", true);
+        strdel(msg, pos, pos+2);
+        strins(msg, "*uœmiecha siê*",pos);
+    }
+    while(strfind(msg, "=)", true) != -1)
+    {
+        pos = strfind(msg, "=)", true);
+        strdel(msg, pos, pos+2);
+        strins(msg, "*uœmiecha siê*",pos);
+    }
+    while(strfind(msg, "C=", true) != -1)
+    {
+        pos = strfind(msg, "C=", true);
+        strdel(msg, pos, pos+2);
+        strins(msg, "*uœmiecha siê*",pos);
+    }
+    while(strfind(msg, ":>", true) != -1)
+    {
+        pos = strfind(msg, ":>", true);
+        strdel(msg, pos, pos+2);
+        strins(msg, "*uœmiecha siê*",pos);
+    }
+    while(strfind(msg, "<:", true) != -1)
+    {
+        pos = strfind(msg, "<:", true);
+        strdel(msg, pos, pos+2);
+        strins(msg, "*uœmiecha siê*",pos);
+    }
+	while(strfind(msg, ";)", true) != -1)
+    {
+        pos = strfind(msg, ";)", true);
+        strdel(msg, pos, pos+2);
+        strins(msg, "*puszcza oczko*",pos);
+    }
+    while(strfind(msg, ";]", true) != -1)
+    {
+        pos = strfind(msg, ";]", true);
+        strdel(msg, pos, pos+2);
+        strins(msg, "*puszcza oczko*",pos);
+    }
+    while(strfind(msg, "C;", true) != -1)
+    {
+        pos = strfind(msg, "C;", true);
+        strdel(msg, pos, pos+2);
+        strins(msg, "*puszcza oczko*",pos);
+    }
+    while(strfind(msg, "c;", true) != -1)
+    {
+        pos = strfind(msg, "c;", true);
+        strdel(msg, pos, pos+2);
+        strins(msg, "*puszcza oczko*",pos);
+    }
+    while(strfind(msg, "<;", true) != -1)
+    {
+        pos = strfind(msg, "<;", true);
+        strdel(msg, pos, pos+2);
+        strins(msg, "*puszcza oczko*",pos);
+    }
+    while(strfind(msg, ";>", true) != -1)
+    {
+        pos = strfind(msg, ";>", true);
+        strdel(msg, pos, pos+2);
+        strins(msg, "*puszcza oczko*",pos);
+    }
+	while(strfind(msg, ":(", true) != -1)
+    {
+        pos = strfind(msg, ":(", true);
+        strdel(msg, pos, pos+2);
+        strins(msg, "*smuci siê*",pos);
+    }
+    while(strfind(msg, ":[", true) != -1)
+    {
+        pos = strfind(msg, ":[", true);
+        strdel(msg, pos, pos+2);
+        strins(msg, "*smuci siê*",pos);
+    }
+    while(strfind(msg, ":C", true) != -1)
+    {
+        pos = strfind(msg, ":C", true);
+        strdel(msg, pos, pos+2);
+        strins(msg, "*smuci siê*",pos);
+    }
+    while(strfind(msg, ":c", true) != -1)
+    {
+        pos = strfind(msg, ":c", true);
+        strdel(msg, pos, pos+2);
+        strins(msg, "*smuci siê*",pos);
+    }
+    while(strfind(msg, ":<", true) != -1)
+    {
+        pos = strfind(msg, ":<", true);
+        strdel(msg, pos, pos+2);
+        strins(msg, "*smuci siê*",pos);
+    }
+    while(strfind(msg, ">:", true) != -1)
+    {
+        pos = strfind(msg, ">:", true);
+        strdel(msg, pos, pos+2);
+        strins(msg, "*smuci siê*",pos);
+    }
+	while(strfind(msg, ";(", true) != -1)
+    {
+        pos = strfind(msg, ";(", true);
+        strdel(msg, pos, pos+2);
+        strins(msg, "*p³acze*",pos);
+    }
+    while(strfind(msg, ";[", true) != -1)
+    {
+        pos = strfind(msg, ";[", true);
+        strdel(msg, pos, pos+2);
+        strins(msg, "*p³acze*",pos);
+    }
+    while(strfind(msg, ";C", true) != -1)
+    {
+        pos = strfind(msg, ";C", true);
+        strdel(msg, pos, pos+2);
+        strins(msg, "*p³acze*",pos);
+    }
+    while(strfind(msg, ";c", true) != -1)
+    {
+        pos = strfind(msg, ";c", true);
+        strdel(msg, pos, pos+2);
+        strins(msg, "*p³acze*",pos);
+    }
+    while(strfind(msg, ";<", true) != -1)
+    {
+        pos = strfind(msg, ";<", true);
+        strdel(msg, pos, pos+2);
+        strins(msg, "*p³acze*",pos);
+    }
+    
+    while(strfind(msg, ">;", true) != -1)
+    {
+        pos = strfind(msg, ">;", true);
+        strdel(msg, pos, pos+2);
+        strins(msg, "*p³acze*",pos);
+    }
+	while(strfind(msg, ":O", true) != -1)
+    {
+        pos = strfind(msg, ":O", true);
+        strdel(msg, pos, pos+2);
+        strins(msg, "*robi zdziwion¹ minê*",pos);
+    }
+	while(strfind(msg, ":o", true) != -1)
+    {
+        pos = strfind(msg, ":o", true);
+        strdel(msg, pos, pos+2);
+        strins(msg, "*robi zdziwion¹ minê*",pos);
+    }
+    
+	while(strfind(msg, ";O", true) != -1)
+    {
+        pos = strfind(msg, ";O", true);
+        strdel(msg, pos, pos+2);
+        strins(msg, "*robi zdziwion¹ minê*",pos);
+    }
+    while(strfind(msg, ";o", true) != -1)
+    {
+        pos = strfind(msg, ";o", true);
+        strdel(msg, pos, pos+2);
+        strins(msg, "*robi zdziwion¹ minê*",pos);
+    }
+    while(strfind(msg, "O:", true) != -1)
+    {
+        pos = strfind(msg, "O:", true);
+        strdel(msg, pos, pos+2);
+        strins(msg, "*robi zdziwion¹ minê*",pos);
+    }
+    while(strfind(msg, "o:", true) != -1)
+    {
+        pos = strfind(msg, "o:", true);
+        strdel(msg, pos, pos+2);
+        strins(msg, "*robi zdziwion¹ minê*",pos);
+    }
+	while(strfind(msg, "O;", true) != -1)
+    {
+        pos = strfind(msg, "O;", true);
+        strdel(msg, pos, pos+2);
+        strins(msg, "*robi zdziwion¹ minê*",pos);
+    }
+    while(strfind(msg, "o;", true) != -1)
+    {
+        pos = strfind(msg, "o;", true);
+        strdel(msg, pos, pos+2);
+        strins(msg, "*robi zdziwion¹ minê*",pos);
+    }
+    while(strfind(msg, ":0", true) != -1)
+    {
+        pos = strfind(msg, ":0", true);
+        strdel(msg, pos, pos+2);
+        strins(msg, "*robi zdziwion¹ minê*",pos);
+    }
+	while(strfind(msg, ";0", true) != -1)
+    {
+        pos = strfind(msg, ";0", true);
+        strdel(msg, pos, pos+2);
+        strins(msg, "*robi zdziwion¹ minê*",pos);
+    }
+    while(strfind(msg, "0:", true) != -1)
+    {
+        pos = strfind(msg, "0:", true);
+        strdel(msg, pos, pos+2);
+        strins(msg, "*robi zdziwion¹ minê*",pos);
+    }
+    while(strfind(msg, "0;", true) != -1)
+    {
+        pos = strfind(msg, "0;", true);
+        strdel(msg, pos, pos+2);
+        strins(msg, "*robi zdziwion¹ minê*",pos);
+    }
+	while(strfind(msg, ":P", true) != -1)
+    {
+        pos = strfind(msg, ":P", true);
+        strdel(msg, pos, pos+2);
+        strins(msg, "*wystawia jêzyk*",pos);
+    }
+    while(strfind(msg, ":p", true) != -1)
+    {
+        pos = strfind(msg, ":p", true);
+        strdel(msg, pos, pos+2);
+        strins(msg, "*wystawia jêzyk*",pos);
+    }
+    while(strfind(msg, ";P", true) != -1)
+    {
+        pos = strfind(msg, ";P", true);
+        strdel(msg, pos, pos+2);
+        strins(msg, "*wystawia jêzyk*",pos);
+    }
+    while(strfind(msg, ";p", true) != -1)
+    {
+        pos = strfind(msg, ";p", true);
+        strdel(msg, pos, pos+2);
+        strins(msg, "*wystawia jêzyk*",pos);
+    }
+	while(strfind(msg, ":D", true) != -1)
+    {
+        pos = strfind(msg, ":D", true);
+        strdel(msg, pos, pos+2);
+        strins(msg, "*œmieje siê*",pos);
+    }
+	while(strfind(msg, ";D", true) != -1)
+    {
+        pos = strfind(msg, ";D", true);
+        strdel(msg, pos, pos+2);
+        strins(msg, "*œmieje siê*",pos);
+    }
+    while(strfind(msg, ">:(", true) != -1)
+    {
+        pos = strfind(msg, ">:(", true);
+        strdel(msg, pos, pos+2);
+        strins(msg, "*robi wœciek³¹ minê*",pos);
+    }
+    while(strfind(msg, ">:[", true) != -1)
+    {
+        pos = strfind(msg, ">:[", true);
+        strdel(msg, pos, pos+2);
+        strins(msg, "*robi wœciek³¹ minê*",pos);
+    }
+    while(strfind(msg, ">:c", true) != -1)
+    {
+        pos = strfind(msg, ">:c", true);
+        strdel(msg, pos, pos+2);
+        strins(msg, "*robi wœciek³¹ minê*",pos);
+    }
+    while(strfind(msg, ">;(", true) != -1)
+    {
+        pos = strfind(msg, ">;(", true);
+        strdel(msg, pos, pos+2);
+        strins(msg, "*robi wœciek³¹ minê*",pos);
+    }
+    while(strfind(msg, ">;[", true) != -1)
+    {
+        pos = strfind(msg, ">;[", true);
+        strdel(msg, pos, pos+2);
+        strins(msg, "*robi wœciek³¹ minê*",pos);
+    }
+	while(strfind(msg, ">;c", true) != -1)
+    {
+        pos = strfind(msg, ">;c", true);
+        strdel(msg, pos, pos+2);
+        strins(msg, "*robi wœciek³¹ minê*",pos);
+    }
+    
+    while(strfind(msg, "):<", true) != -1)
+    {
+        pos = strfind(msg, "):<", true);
+        strdel(msg, pos, pos+2);
+        strins(msg, "*robi wœciek³¹ minê*",pos);
+    }
+    
+    while(strfind(msg, "]:<", true) != -1)
+    {
+        pos = strfind(msg, "]:<", true);
+        strdel(msg, pos, pos+2);
+        strins(msg, "*robi wœciek³¹ minê*",pos);
+    }
+    while(strfind(msg, ");<", true) != -1)
+    {
+        pos = strfind(msg, ");<", true);
+        strdel(msg, pos, pos+2);
+        strins(msg, "*robi wœciek³¹ minê*",pos);
+    }
+    while(strfind(msg, "];<", true) != -1)
+    {
+        pos = strfind(msg, "];<", true);
+        strdel(msg, pos, pos+2);
+        strins(msg, "*robi wœciek³¹ minê*",pos);
+    }
+	while(strfind(msg, ":*", true) != -1)
+    {
+        pos = strfind(msg, ":*", true);
+        strdel(msg, pos, pos+2);
+        strins(msg, "*posy³a ca³usa*",pos);
+    }
+    while(strfind(msg, ";*", true) != -1)
+    {
+        pos = strfind(msg, ";*", true);
+        strdel(msg, pos, pos+2);
+        strins(msg, "*posy³a ca³usa*",pos);
+    }
 	while(strfind(msg, "?", true) != -1)
 	{
 		pos = strfind(msg, "?", true);
