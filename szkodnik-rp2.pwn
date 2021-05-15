@@ -21,7 +21,7 @@ main(){}
 
 #define COL_AC_CHAT 0x42D95EFF
 
-new const DEV_MODE = 0;
+new const DEV_MODE = 1;
 
 // defines dialogs
 #define D_LOGIN 0
@@ -844,28 +844,39 @@ public OnGameModeInit()
 		
 	}
 	else{
-	print(">>> Pomyslnie nawiazano polaczenie z baza danych.");
+		print(">>> Pomyslnie nawiazano polaczenie z baza danych.");
 
-	EnsureCreated();
-	
-	CreateTextDraws();
+		EnsureCreated();
+		
+		CreateTextDraws();
 
-	AddAnimations();
-	SendRconCommand("hostname ••• Szkodnik RolePlay •••");
-	SendRconCommand("gamemodetext Szkodnik-RP v2.2");
-	SendRconCommand("mapname Los Santos");
-	gettime(ghour, gmin, gsec);
-	SetWorldTime(ghour);
+		AddAnimations();
+		SendRconCommand("hostname ••• Szkodnik RolePlay •••");
+		SendRconCommand("gamemodetext Szkodnik-RP v2.2");
+		SendRconCommand("mapname Los Santos");
+		gettime(ghour, gmin, gsec);
+		SetWorldTime(ghour);
+		
+		EnableStuntBonusForAll(0);
+		DisableInteriorEnterExits();
+		ManualVehicleEngineAndLights();
+		ShowNameTags(0);
+		
+		
+		
+		LoadGroups();
+		LoadDoors();
+
+		LoadTextures();
+
+		LoadActors();
+		LoadApps();
+		// LoadZones();
 	
-	EnableStuntBonusForAll(0);
-	DisableInteriorEnterExits();
-	ManualVehicleEngineAndLights();
-	ShowNameTags(0);
 	
-	
-	
-	LoadGroups();
-	LoadDoors();
+		SetTimer("min_timer", 1000*60, true);
+		SetTimer("sec_timer", 1000, true);
+
 	}
 
 
@@ -1370,15 +1381,7 @@ public CheckObjectsLoaded()
 	}
 	else
 	{
-		LoadTextures();
-
-		LoadActors();
-		LoadApps();
-		// LoadZones();
-	
-	
-		SetTimer("min_timer", 1000*60, true);
-		SetTimer("sec_timer", 1000, true);
+		
 	}
 }
 
@@ -10157,14 +10160,14 @@ public min_timer()
 
 				PlayerCache[i][pPlayTime]++;
 				format(query, sizeof(query), "UPDATE players SET playtime = '%d' WHERE uid = '%d'", PlayerCache[i][pPlayTime], PlayerCache[i][pUID]);
-				mysql_query(DB_HANDLE, query);
+				mysql_query(DB_HANDLE, query, false);
 
 				if(PlayerCache[i][pBW_Time])
 				{
 					PlayerCache[i][pBW_Time]--;
 
-					format(query, sizeof(query), "UPDATE players SET bw_time = '%d' WHERE uid = '%d'", PlayerCache[i][pBW_Time], PlayerCache[i][pAJ_Time]);
-					mysql_query(DB_HANDLE, query);
+					format(query, sizeof(query), "UPDATE players SET bw_time = '%d' WHERE uid = '%d'", PlayerCache[i][pBW_Time], PlayerCache[i][pUID]);
+					mysql_query(DB_HANDLE, query, false);
 
 					format(query, sizeof(query), "Stan nieprzytomnosci przez: %dmin", PlayerCache[i][pBW_Time]);
 
