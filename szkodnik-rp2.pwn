@@ -21,7 +21,7 @@ main(){}
 
 #define COL_AC_CHAT 0x42D95EFF
 
-new const DEV_MODE = 0;
+new const DEV_MODE = 1;
 
 // defines dialogs
 #define D_LOGIN 0
@@ -4129,6 +4129,37 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 							gender ? ("Kobieta")  : ("Mê¿czyzna"), 
 							bornDate);
 					}
+					case DOC_TYPE_FISHING_RIGHT:{
+							format(info, sizeof(info), ""HEX_WHITE"Licencja na ³owienie ryb\n\nImiê i nazwisko: %s\nP³eæ: %s\nData urodzenia: %d", 
+							strreplace(name, '_', ' '), 
+							gender ? ("Kobieta")  : ("Mê¿czyzna"), 
+							bornDate);
+					}
+					case DOC_TYPE_INSANITY:{
+							format(info, sizeof(info), ""HEX_WHITE"Zaœwiadczenie o niepoczytalnoœci\n\nImiê i nazwisko: %s\nP³eæ: %s\nData urodzenia: %d", 
+							strreplace(name, '_', ' '), 
+							gender ? ("Kobieta")  : ("Mê¿czyzna"), 
+							bornDate);
+					}
+					case DOC_TYPE_SANITY:{
+							format(info, sizeof(info), ""HEX_WHITE"Zaœwiadczenie o poczytalnoœci\n\nImiê i nazwisko: %s\nP³eæ: %s\nData urodzenia: %d", 
+							strreplace(name, '_', ' '), 
+							gender ? ("Kobieta")  : ("Mê¿czyzna"), 
+							bornDate);
+					}
+					case DOC_TYPE_NO_CRIMINAL_RECORD:{
+							format(info, sizeof(info), ""HEX_WHITE"Zaœwiadczenie o niekaralnoœci\n\nImiê i nazwisko: %s\nP³eæ: %s\nData urodzenia: %d", 
+							strreplace(name, '_', ' '), 
+							gender ? ("Kobieta")  : ("Mê¿czyzna"), 
+							bornDate);
+					}
+					case DOC_TYPE_DRIVING_LICENSE:{
+							format(info, sizeof(info), ""HEX_WHITE"Prawo jazdy\n\nImiê i nazwisko: %s\nP³eæ: %s\nData urodzenia: %d", 
+							strreplace(name, '_', ' '), 
+							gender ? ("Kobieta")  : ("Mê¿czyzna"), 
+							bornDate);
+					}
+				
 				}
 					
 				
