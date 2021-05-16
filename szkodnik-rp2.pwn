@@ -909,7 +909,7 @@ stock EnsureCreated(){
 	skin INT NOT NULL DEFAULT 0,\n\
 	health FLOAT NOT NULL DEFAULT 100, \n\
 	cash INT NOT NULL DEFAULT 50,\n\
-	tutorialLevel INT NOT NULL DEFAULT 0,\n\
+	tutorialLevel INT NOT NULL DEFAULT 2,\n\
 	strenght INT NOT NULL DEFAULT 0,\n\
 	level INT NOT NULL DEFAULT 0,\n\
 	BW_Time INT NOT NULL DEFAULT 0,\n\
@@ -7236,6 +7236,7 @@ public OnPlayerRequestClass(playerid, classid)
 		ChooseSkinTimer[playerid] = SetTimerEx("ChooseSkin", 120, true, "i", playerid);
 		PlayerTextDrawSetString(playerid, BottomTextDraw[playerid], "~y~Wybierz skin postaci~w~~n~~n~~b~~h~~h~~h~lewo ~w~poprzedni skin~n~~b~~h~~h~~h~prawo ~w~nastepny skin~n~~n~~b~~h~~h~~h~LALT~w~ ~g~~h~akceptuj");
 		PlayerTextDrawShow(playerid, BottomTextDraw[playerid]);
+		
 	}
 	SpawnPlayer(playerid);
 	return 1;
@@ -8148,7 +8149,7 @@ public ChooseSkin(playerid)
 
 		new query[86];
 		format(query, sizeof(query), "UPDATE players SET tutorial_level = '0', skin = '%d' WHERE uid = '%d'", GetPlayerSkin(playerid), PlayerCache[playerid][pUID]);
-		mysql_query(DB_HANDLE, query);
+		mysql_query(DB_HANDLE, query, false);
 	}
 }
 
@@ -8222,7 +8223,9 @@ stock SetPrevFemaleSkin(playerid)
 
 public OnPlayerSpawn(playerid)
 {
-	
+	if(PlayerCache[playerid][pTutorialLevel]){
+		TogglePlayerControllable(playerid, 0);
+	}
 	GetPlayerPos(playerid, pGlobalX[playerid],  pGlobalY[playerid],  pGlobalZ[playerid]);
 	if(!pLogged[playerid])
 	return Kick(playerid);
@@ -8233,12 +8236,7 @@ stock LookForEmoji(const str[])
 {
 	new msg[258]; format(msg, sizeof(msg), str);
 	new pos;
-	while(strfind(msg, "?", true) != -1)
-    {
-        pos = strfind(msg, "?", true);
-        strdel(msg, pos, pos+2);
-        strins(msg, "*robi pytaj¹c¹ minê*",pos);
-    }
+
 	while(strfind(msg, ":)", true) != -1)
     {
         pos = strfind(msg, ":)", true);
