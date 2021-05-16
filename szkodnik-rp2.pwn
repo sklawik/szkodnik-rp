@@ -6890,7 +6890,7 @@ stock LoginPlayer(playerid)
 	
 	
 	new str[256]; 
-	format(str, sizeof(str), "> Witaj, %s! "HEX_GRAY"(UID: %d, ID: %d)"HEX_WHITE". ¯yczymy mi³ej gry!", strreplace(ReturnPlayerName(playerid), "_", " "), PlayerCache[playerid][pUID], playerid);
+	format(str, sizeof(str), "> Witaj, %s! "HEX_GRAY"(UID: %d, ID: %d)"HEX_WHITE". ¯yczymy mi³ej gry!", ReturnPlayerName(playerid), PlayerCache[playerid][pUID], playerid);
 	ClearChat(playerid);
 	SendClientMessage(playerid, COLOR_WHITE, str);
 
@@ -14791,7 +14791,6 @@ CMD:pokaz (playerid, params[]){
 			SendPlayerMe(playerid, str);
 		}
 		case DOC_TYPE_NO_CRIMINAL_RECORD:{
-			case DOC_TYPE_INSANITY:{
 			new header[64];
 			format(header, sizeof(header) ,"Zaœwiadczenie o niekaralnoœci "HEX_BLUE"%s", ReturnPlayerName(playerid));
 
@@ -14808,7 +14807,6 @@ CMD:pokaz (playerid, params[]){
 			SendPlayerMe(playerid, str);
 		}
 		case DOC_TYPE_FISHING_RIGHT:{
-			case DOC_TYPE_INSANITY:{
 			new header[64];
 			format(header, sizeof(header) ,"Licencja na wêdkarstwo "HEX_BLUE"%s", ReturnPlayerName(playerid));
 
