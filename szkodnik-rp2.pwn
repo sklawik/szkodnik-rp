@@ -9,7 +9,7 @@ main(){}
 
 
 #undef MAX_PLAYERS
-#define MAX_PLAYERS 10
+#define MAX_PLAYERS 1000
 
 
 // mysql settings
@@ -21,7 +21,7 @@ main(){}
 
 #define COL_AC_CHAT 0x42D95EFF
 
-new const DEV_MODE = 1;
+new const DEV_MODE = 0;
 
 // defines dialogs
 #define D_LOGIN 0
@@ -145,6 +145,7 @@ new const DEV_MODE = 1;
 #define LOG_TYPE_GAME_CASH 6
 #define LOG_TYPE_GAME_NICK 7
 #define LOG_TYPE_GAME_POSITION 8
+#define LOG_TYPE_WEAPON 9
 
 
 #undef STREAMER_OBJECT_SD
@@ -379,8 +380,7 @@ new tVal[MAX_PLAYERS];
 new tVal2[MAX_PLAYERS];
 new tVal3[MAX_PLAYERS];
 
-new pList[MAX_PLAYERS][MAX_PLAYERS];
-new pDM[MAX_PLAYERS];
+
 
 new bool:pBus[MAX_PLAYERS];
 
@@ -494,6 +494,8 @@ enum E_PLAYER
 	pObjectEditor,
 	pGymBoostTime
 };
+
+
 
 new bool:AreObjectsLoaded;
 
@@ -631,6 +633,9 @@ enum E_CONTACT
 };
 
 new ContactCache[MAX_CONTACTS][E_CONTACT];
+
+
+
 
 new ghour, gmin, gsec, gmsg[128];
 
@@ -870,6 +875,7 @@ public OnGameModeInit()
 		LoadTextures();
 
 		LoadActors();
+		print("test");
 		LoadApps();
 		// LoadZones();
 	
@@ -891,7 +897,7 @@ stock EnsureCreated(){
 	mysql_query(DB_HANDLE, "DROP DATABASE IF EXISTS szkodnikrp;");
 	mysql_query(DB_HANDLE, "CREATE DATABASE szkodnikrp;");
 	mysql_query(DB_HANDLE, "use szkodnikrp;");
-
+	
 	// players table
 	mysql_query(DB_HANDLE, 
 	"CREATE TABLE IF NOT EXISTS players(\n\
@@ -1066,8 +1072,48 @@ stock EnsureCreated(){
 	type TINYINT,\n\
 	expiration TIMESTAMP DEFAULT CURRENT_TIMESTAMP,\n\
 	createdAt DATETIME DEFAULT CURRENT_TIMESTAMP);", false);
+
+	mysql_query(DB_HANDLE, "CREATE TABLE IF NOT EXISTS playerDocs (\n\
+	uid INT PRIMARY KEY AUTO_INCREMENT,\n\
+	playerUID INT,\n\
+	type INT,\n\
+	createdAt DATETIME DEFAULT CURRENT_TIMESTAMP,\n\
+	FOREIGN KEY (playerUID) REFERENCES players(uid) ON DELETE CASCADE\n\
+	);", false);
 	
 
+}
+
+#define DOC_TYPE_ID 0
+#define DOC_TYPE_DRIVING_LICENSE 1
+#define DOC_TYPE_INSANITY 2
+#define DOC_TYPE_SANITY 3
+#define DOC_TYPE_FISHING_RIGHT 4
+#define DOC_TYPE_NO_CRIMINAL_RECORD 5
+
+forward HasPlayerDoc(playerid, docType);
+public HasPlayerDoc(playerid, docType){
+	new query[128];
+	format(query, sizeof(query), "SELECT playerUID FROM playerDocs WHERE playerUID = %d AND type = %d;", PlayerCache[playerid][pUID], docType);
+	new Cache:cache = mysql_query(DB_HANDLE, query);
+	new rows = cache_num_rows();
+	cache_delete(cache);
+	return rows;
+}
+
+stock GivePlayerDoc(playerid, docType){
+	new query[256];
+	
+	format(query, sizeof(query), "INSERT INTO playerDocs (playerUID, type) VALUES (%d, %d);", PlayerCache[playerid][pUID], docType);
+	mysql_query(DB_HANDLE, query, false);
+}
+
+
+
+stock RemovePlayerDoc(playerid, docType){
+	new query[256];
+	format(query, sizeof(query), "DELETE FROM playerDocs WHERE playerUID=%d AND type=%d",PlayerCache[playerid][pUID], docType);
+	mysql_query(DB_HANDLE, query, false);
 }
 
 stock CreateLog(logType, playerid, const message[], anyUID=0){
@@ -4058,17 +4104,37 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 		case D_DOCUMENTS:
 		{
 			if(response)
-			{
-				switch(listitem)
-				{
-					case 0:
-					{
-						new uid = strval(inputtext);
-						new info[256]; format(info, sizeof(info), "Dowód osobisty:\n\nImiê i nazwisko: %s\nP³eæ: %s\nData urodzenia: %d",
-						strreplace(PlayerCache[uid][pName], '_', ' '), (PlayerCache[uid][pGender]) ? ("Kobieta")  : ("Mê¿czyzna"), PlayerCache[uid][pBornDate]);
-						ShowDialogInfo(playerid, info);
+			{	
+				new docUID;
+				sscanf(inputtext, "i", docUID);
+
+				new query[420];
+				format(query, sizeof(query), "SELECT playerDocs.type, playerDocs.createdAt, players.bornDate, players.gender, players.name FROM playerDocs INNER JOIN players ON playerDocs.playerUID=players.uid AND playerDocs.uid=%d LIMIT 1;", docUID);
+				new Cache:cache = mysql_query(DB_HANDLE, query);
+				
+				new type, createdAt[32], bornDate[32], gender, name[24];
+				cache_get_value_name_int(0, "type", type);
+				cache_get_value_name_int(0, "gender", gender);
+				cache_get_value_name(0, "createdAt", createdAt);
+				cache_get_value_name(0, "name", name);
+				cache_get_value_name(0, "bornDate", bornDate);
+
+				cache_delete(cache);
+
+				new info[256];
+				switch(type){
+					case DOC_TYPE_ID:{
+							format(info, sizeof(info), ""HEX_WHITE"Dowód osobisty\n\nImiê i nazwisko: %s\nP³eæ: %s\nData urodzenia: %d", 
+							strreplace(name, '_', ' '), 
+							gender ? ("Kobieta")  : ("Mê¿czyzna"), 
+							bornDate);
 					}
 				}
+					
+				
+				
+				ShowDialogInfo(playerid, info);
+				
 			}
 		}
 		case D_TRADE_3:
@@ -4927,7 +4993,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 				if(sex[0] == 'm' || sex[0] == 'k')
 				{
 					new players_query[64];
-					format(players_query, sizeof(players_query), "SELECT * FROM players WHERE name = '%s' LIMIT 1", inputtext);
+					format(players_query, sizeof(players_query), "SELECT * FROM players WHERE name = '%s' LIMIT 1", ReturnPlayerName(playerid));
 					new Cache:cache = mysql_query(DB_HANDLE, players_query);
 					new rows = 0;
 					cache_get_row_count(rows);
@@ -5955,15 +6021,50 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 					case 2: return ShowPlayerDialog(playerid, D_SERVICES, DIALOG_STYLE_LIST, "Us³ugi", ""HEX_WHITE"1\tStwórz grupê", "Wybierz", "Anuluj");
 					case 3:
 					{
+						new query[128];
+						format(query, sizeof(query), "SELECT * FROM playerDocs WHERE playerUID=%d;", PlayerCache[playerid][pUID]);
+						new Cache:cache = mysql_query(DB_HANDLE, query);
+
+						new rows = cache_num_rows();
+						
+						if(!rows){
+							return ShowDialogInfo(playerid, "Twoja postaæ nie posiada ¿adnych dokumentów.\n"HEX_YELLOW"Wyrobiæ je mo¿e w urzêdzie miasta jak i w wielu ró¿nych sytuacjach RolePlay.");
+						}
 						new documents[256], info[128];
-						if(PlayerCache[playerid][pID_Card])
-						{
-							format(info, sizeof(info), "%d\tDowód osobisty", PlayerCache[playerid][pUID]);
+
+						new type = 0;
+						new uid = 0;
+
+						for(new i=0; i<rows; i++){
+							
+							cache_get_value_name_int(i, "type", type);
+							cache_get_value_name_int(i, "uid", uid);
+							switch(type){
+								case DOC_TYPE_DRIVING_LICENSE:{
+									format(info, sizeof(info), "%d\tPrawo jazdy\n", uid);
+								}
+								case DOC_TYPE_FISHING_RIGHT:{
+									format(info, sizeof(info), "%d\tLicencja wêdkarska\n", uid);
+								}
+								case DOC_TYPE_ID:{
+									format(info, sizeof(info), "%d\tDowód osobisty\n", uid);
+								}
+								case DOC_TYPE_NO_CRIMINAL_RECORD:{
+									format(info, sizeof(info), "%d\tNiekaralnoœæ\n", uid);
+								}
+								case DOC_TYPE_SANITY:{
+									format(info, sizeof(info), "%d\tPoczytalnoœæ\n", uid);
+								}
+								case DOC_TYPE_INSANITY:{
+									format(info, sizeof(info), "%d\tNiepoczytalnoœæ\n", uid);
+								}
+							}
 							strins(documents, info, strlen(documents));
 						}
+						
+						cache_delete(cache);
 						if(strlen(documents))
 						return ShowPlayerDialog(playerid, D_DOCUMENTS, DIALOG_STYLE_LIST, "Dokumenty Twojej postaci", documents, "Wybierz", "Anuluj");
-						return ShowDialogInfo(playerid, "Twoja postaæ nie posiada jeszcze ¿adnych dokumentów.");
 					}
 					case 4: return ShowDialogConnects(playerid);
 				}
@@ -6788,8 +6889,8 @@ stock LoginPlayer(playerid)
 
 	
 	
-	new str[256];
-	format(str, sizeof(str), "> Witaj, %s! "HEX_GRAY"(UID: %d, ID: %d)"HEX_WHITE". ¯yczymy mi³ej gry!", ReturnPlayerName(playerid), PlayerCache[playerid][pUID], playerid);
+	new str[256]; 
+	format(str, sizeof(str), "> Witaj, %s! "HEX_GRAY"(UID: %d, ID: %d)"HEX_WHITE". ¯yczymy mi³ej gry!", strreplace(ReturnPlayerName(playerid), "_", " "), PlayerCache[playerid][pUID], playerid);
 	ClearChat(playerid);
 	SendClientMessage(playerid, COLOR_WHITE, str);
 
@@ -6877,7 +6978,7 @@ stock ReturnJailText(playerid)
 
 stock UpdatePlayerName(playerid)
 {
-	new name[525], uid = PlayerCache[playerid][pUID];
+	new name[525], uid = playerid;
 	format(name, sizeof(name), "%s, %d", strreplace(ReturnPlayerName(playerid), '_', ' '), playerid);
 	if(PlayerCache[uid][pJailTime])
 	{
@@ -9663,35 +9764,7 @@ public OnPlayerTakeDamage(playerid, issuerid, Float:amount, weaponid, bodypart)
 			}
 			else
 			{
-				if(pList[playerid][issuerid] != -1 && pList[issuerid][playerid] != -1)
-				{
-
-				}
-				else
-				{
-					if(pList[playerid][issuerid] == -1)
-					{
-						pList[playerid][issuerid] = 1;
-						return TextDrawForPlayerEx(playerid, 0, "Nie martw sie - Ten gracz nie jest w stanie Cie skrzywdzic~n~poki nie wykonasz ~r~kontrataku w jego strone.", 10000);
-					}
-					else if(pList[playerid][issuerid] != -1 && pList[issuerid][playerid] == -1)
-					{
-						Freeze(issuerid, 3000);
-						pDM[issuerid]++;
-						if(pDM[issuerid] == 5)
-						return AJPlayer(issuerid, "System", "DeadMatch bez kontrataku", 60);
-						return GameTextForPlayer(issuerid, "~r~dm. stop!", 3000, 4);
-					}
-					pList[playerid][issuerid] = 1;
-					if(pList[playerid][issuerid] != -1 && pList[issuerid][playerid] != -1 && !pSawDM[playerid] && !pSawDM[issuerid])
-					{
-						TextDrawForPlayerEx(playerid, 0, "Wykonales(as) kontratak. Od teraz trwa miedzy wami ~r~bojka.", 50000);
-						TextDrawForPlayerEx(issuerid, 0, "Gracz wykonal kontratak. Od teraz trwa miedzy wami ~r~bojka.", 50000);
-						pSawDM[playerid] = true;
-						pSawDM[issuerid] = true;
-						SetTimerEx("DisableMsgDM", 3000, false, "ii", playerid, issuerid);
-					}
-				}
+			
 			}
 		}
 		if(PlayerCache[playerid][pBW_Time])
@@ -9715,7 +9788,7 @@ public OnPlayerTakeDamage(playerid, issuerid, Float:amount, weaponid, bodypart)
 			UpdateDynamic3DTextLabelText(pNick[playerid][nID], DAMAGE_COLOR, pNick[playerid][nStr]);
 			ClearNicknameColorTimer[playerid] = SetTimerEx("ClearNicknameColor", 2500, false, "i", playerid);
 		}
-		new Float:damage =  0.0;
+		new Float:damage =  2.0;
 		switch(weaponid)
 		{
 			case 0:
@@ -9781,7 +9854,7 @@ public OnPlayerTakeDamage(playerid, issuerid, Float:amount, weaponid, bodypart)
 			PlayerCache[playerid][pPosVW] = GetPlayerVirtualWorld(playerid);
 			SendPlayerMe(playerid, "traci przytomnoœæ");
 			PlayerCache[playerid][pBW_Reason] = weaponid;
-			new puid = PlayerCache[playerid][pUID];
+			new puid = playerid;
 			PlayerCache[puid][pHealth]=1;
 			SetPlayerCameraPos(playerid, PlayerCache[puid][pPosX], PlayerCache[puid][pPosY], PlayerCache[puid][pPosZ]+10.0);
 			SetPlayerCameraLookAt(playerid, PlayerCache[puid][pPosX], PlayerCache[puid][pPosY], PlayerCache[puid][pPosZ], CAMERA_CUT);
@@ -10176,11 +10249,21 @@ public min_timer()
 
 					if(PlayerCache[i][pBW_Time] == 0)
 					{
+						
 						TogglePlayerControllable(i, 1);
-						if(!IsPlayerInAnyVehicle(i)) ClearAnimations(i);
+
+						if(!IsPlayerInAnyVehicle(i)){
+							ClearAnimations(i);
+							ApplyAnimation(i, "PLAYIDLES", "stretch", 8.1, false, false, false, false, 1, 1);
+							PlayerCache[i][pHealth] = 5;
+						} 
+						
 						SetCameraBehindPlayer(i);
-						ShowDialogInfo(i, "Twoja postaæ ocknê³¹ siê po utracie przytomnoœci.");
+						ShowDialogInfo(i, ""HEX_WHITE"Twoja postaæ ocknê³¹ siê po utracie przytomnoœci.\n\
+						"HEX_RED"Zdrowie bêdzie regerenowane do pe³na przez najbli¿szy czas.\n\
+						"HEX_YELLOW"Proces ten przerwie wdanie siê w bójkê z innym graczem.");
 						PlayerTextDrawHide(i, BWTextDraw[i]);
+						SetPlayerDrunkLevel(i, 3000);
 						UpdatePlayerName(i);
 					}
 				}
@@ -13671,6 +13754,66 @@ CMD:agrupa (playerid, params[])
 	return SendClientMessage(playerid, COLOR_GRAY, msg);
 }
 
+CMD:adoc (playerid, params[]){
+	if(PlayerCache[playerid][pLevel] < ADMINISTRATION){
+		return 1;
+	}
+
+	new targetid, docType, action[64];
+	if(sscanf(params, "iis[64]", targetid, docType, action)){
+
+		SendClientMessage(playerid, COLOR_GRAY, "Tip: /adoc [ID/Nazwa  gracza] [typ: 0-5] [nadaj/zabierz]");
+		SendClientMessage(playerid, COLOR_GRAY, "0 - dowód osobisty");
+		SendClientMessage(playerid, COLOR_GRAY, "1 - prawo jazdy");
+		SendClientMessage(playerid, COLOR_GRAY, "2 - niepoczytalnoœæ");
+		SendClientMessage(playerid, COLOR_GRAY, "3 - poczytalnoœæ");
+		SendClientMessage(playerid, COLOR_GRAY, "4 - licencja na ³owienie ryb");
+		SendClientMessage(playerid, COLOR_GRAY, "5 - niekaralnoœæ");
+		return 1;
+	} 
+	if(docType < 0 || docType > 5){
+		SendClientMessage(playerid, COLOR_GRAY, "0 - dowód osobisty");
+		SendClientMessage(playerid, COLOR_GRAY, "1 - prawo jazdy");
+		SendClientMessage(playerid, COLOR_GRAY, "2 - niepoczytalnoœæ");
+		SendClientMessage(playerid, COLOR_GRAY, "3 - poczytalnoœæ");
+		SendClientMessage(playerid, COLOR_GRAY, "4 - licencja na ³owienie ryb");
+		SendClientMessage(playerid, COLOR_GRAY, "5 - niekaralnoœæ");
+		return 1;
+	}
+	if(pLogged[targetid] == false){
+		SendClientMessage(playerid, COLOR_GRAY, "Gracz nie jest zalogowany.");
+		return 1;
+	}
+	if(!IsPlayerInRangeOfPlayer(playerid, targetid, 5.0) || GetPlayerVirtualWorld(playerid) != GetPlayerVirtualWorld(targetid)){
+		SendClientMessage(playerid, COLOR_GRAY, "Wybrany gracz jest zbyt daleko.");
+		return 1;
+	}
+	if(!strcmp(action, "nadaj")){
+		if(HasPlayerDoc(playerid, docType)){
+			SendClientMessage(playerid, COLOR_GRAY, "Gracz posiada ju¿ ten dokument.");
+			return 1;
+		}
+		GivePlayerDoc(targetid, docType);
+		TextDrawForPlayerEx(targetid, 1, "Admin nadal Ci nowy dokument postaci.~n~Sprawdz go pod ~y~~h~Stats->Dokumenty", 5000);
+		TextDrawForPlayerEx(playerid, 1, "~g~~h~~h~Pomyslnie ~w~nadano dokument dla gracza", 5000);
+		return 1;
+	}
+	else if(!strcmp(action, "zabierz")){
+		if(!HasPlayerDoc(playerid, docType)){
+			SendClientMessage(playerid, COLOR_GRAY, "Gracz nie posiada takiego dokumentu.");
+			return 1;
+		}
+		
+		TextDrawForPlayerEx(targetid, 1, "Admin odebral Twojej postaci pewien dokument.~n~Sprawdz co zniknelo ~y~~h~Stats->Dokumenty", 5000);
+		TextDrawForPlayerEx(playerid, 1, "~r~~h~Odebrano dokument graczowi", 5000);
+		return 1;
+	}
+	else{
+		SendClientMessage(playerid, COLOR_GRAY, "Tip: U¿yj tylko nadaj/zabierz");
+	}
+	return 1;
+}
+
 CMD:adodaj (playerid, params[])
 {
 	if(PlayerCache[playerid][pLevel] < ADMINISTRATION)
@@ -14528,6 +14671,165 @@ stock ReturnObjectUID(objectid)
 
 	cache_delete(cache);
 	return objectuid;
+}
+
+CMD:pokaz (playerid, params[]){
+
+	new docName[32], targetid; 
+
+	if(sscanf(params, "s[32]r",  docName,targetid)){
+		return SendClientMessage(playerid, COLOR_GRAY, "/pokaz [ID/Czêœæ nazwy gracza] [prawko/niepoczytalnosc/niekaralnosc/wedkarz/poczytalnosc/dowod]");
+	}
+
+	if(pLogged[targetid] == false){
+		return SendClientMessage(playerid, COLOR_GRAY, "Gracz nie jest zalogowany.");
+	}
+	if(!IsPlayerInRangeOfPlayer(playerid, targetid, 5.0)){
+		return SendClientMessage(playerid, COLOR_GRAY, "Wybrany gracz jest zbyt daleko.");
+	}
+	new type = 0;
+
+	if(!strcmp(docName, "prawko", true)){
+		type = DOC_TYPE_DRIVING_LICENSE;
+	}
+	else if(!strcmp(docName, "niepoczytalnosc", true)){
+		type = DOC_TYPE_INSANITY;
+	}
+	else if(!strcmp(docName, "niekaralnosc", true)){
+		type = DOC_TYPE_NO_CRIMINAL_RECORD;
+	}
+	else if(!strcmp(docName, "wedkarz", true)){
+		type = DOC_TYPE_FISHING_RIGHT;
+	}
+	else if(!strcmp(docName, "poczytalnosc", true)){
+		type = DOC_TYPE_SANITY;
+	}
+	else if(!strcmp(docName, "dowod", true)){
+		type = DOC_TYPE_ID;
+	}
+	else
+		return SendClientMessage(playerid, COLOR_GRAY, "/pokaz [ID/Czêœæ nazwy gracza] [prawko/niepoczytalnosc/niekaralnosc/wedkarz/poczytalnosc/dowod]");
+	
+	if(!HasPlayerDoc(playerid, type)){
+		return SendClientMessage(playerid, COLOR_GRAY, "Nie posiadasz takiego dokumentu.");
+	}
+
+	new str[420];
+	format(str,sizeof(str), "SELECT players1.name as name, playerDocs.createdAt as createdAt, players1.gender as gender, players1.bornDate as bornDate FROM playerDocs INNER JOIN players players1 ON playerDocs.playerUID=%d AND playerDocs.type = %d;", PlayerCache[playerid][pUID], type);
+	new Cache:cache = mysql_query(DB_HANDLE, str);
+	
+	new createdAt[32], gender, bornDate, name[24];
+	cache_get_value_name(0, "createdAt", createdAt);
+	cache_get_value_name_int(0, "gender", gender);
+	cache_get_value_name_int(0, "bornDate", bornDate);
+	cache_get_value_name(0, "name", name);
+	cache_delete(cache);
+
+	switch(type){
+		case DOC_TYPE_ID:{
+			new header[64];
+			format(header, sizeof(header) ,"Dowód osobisty "HEX_BLUE"%s", ReturnPlayerName(playerid));
+
+			format(str, sizeof(str), ""HEX_WHITE"Imiê i nazwisko: "HEX_GRAY"%s\n\
+			"HEX_WHITE"Data urodzin: "HEX_GRAY"%dr\n\
+			"HEX_WHITE"P³eæ: "HEX_GRAY"%s\n\
+			"HEX_WHITE"Data rejestracji dowodu: "HEX_GRAY"%s",
+			name,
+			bornDate,
+			(gender) ? ("Kobieta"):("Mê¿czyzna"),
+			createdAt);
+			ShowPlayerDialog(targetid, D_INFO, DIALOG_STYLE_MSGBOX, header, str, "Zamknij","");
+			format(str, sizeof(str), "pokazuje swój dowód osobisty %s", ReturnPlayerName(targetid));
+			SendPlayerMe(playerid, str);
+		}
+		case DOC_TYPE_DRIVING_LICENSE:{
+			new header[64];
+			format(header, sizeof(header) ,"Prawo jazdy "HEX_BLUE"%s", ReturnPlayerName(playerid));
+
+			format(str, sizeof(str), ""HEX_WHITE"Imiê i nazwisko: "HEX_GRAY"%s\n\
+			"HEX_WHITE"Data urodzin: "HEX_GRAY"%dr\n\
+			"HEX_WHITE"P³eæ: "HEX_GRAY"%s\n\
+			"HEX_WHITE"Data rejestracji prawa jazdy: "HEX_GRAY"%s",
+			name,
+			bornDate,
+			(gender) ? ("Kobieta"):("Mê¿czyzna"),
+			createdAt);
+			ShowPlayerDialog(targetid, D_INFO, DIALOG_STYLE_MSGBOX, header, str, "Zamknij","");
+			format(str, sizeof(str), "pokazuje swoje prawo jazdy %s", ReturnPlayerName(targetid));
+			SendPlayerMe(playerid, str);
+		}
+		case DOC_TYPE_INSANITY:{
+			new header[64];
+			format(header, sizeof(header) ,"Zaœwiadczenie o niepoczytalnoœci "HEX_BLUE"%s", ReturnPlayerName(playerid));
+
+			format(str, sizeof(str), ""HEX_WHITE"Imiê i nazwisko: "HEX_GRAY"%s\n\
+			"HEX_WHITE"Data urodzin: "HEX_GRAY"%dr\n\
+			"HEX_WHITE"P³eæ: "HEX_GRAY"%s\n\
+			"HEX_WHITE"Data otrzymania zaœwiadczenia: "HEX_GRAY"%s",
+			name,
+			bornDate,
+			(gender) ? ("Kobieta"):("Mê¿czyzna"),
+			createdAt);
+			ShowPlayerDialog(targetid, D_INFO, DIALOG_STYLE_MSGBOX, header, str, "Zamknij","");
+			format(str, sizeof(str), "pokazuje zaœwiadczenie o niepoczytalnoœci %s", ReturnPlayerName(targetid));
+			SendPlayerMe(playerid, str);
+		}
+		case DOC_TYPE_SANITY:{
+			new header[64];
+			format(header, sizeof(header) ,"Zaœwiadczenie o poczytalnoœci "HEX_BLUE"%s", ReturnPlayerName(playerid));
+
+			format(str, sizeof(str), ""HEX_WHITE"Imiê i nazwisko: "HEX_GRAY"%s\n\
+			"HEX_WHITE"Data urodzin: "HEX_GRAY"%dr\n\
+			"HEX_WHITE"P³eæ: "HEX_GRAY"%s\n\
+			"HEX_WHITE"Data otrzymania zaœwiadczenia: "HEX_GRAY"%s",
+			name,
+			bornDate,
+			(gender) ? ("Kobieta"):("Mê¿czyzna"),
+			createdAt);
+			ShowPlayerDialog(targetid, D_INFO, DIALOG_STYLE_MSGBOX, header, str, "Zamknij","");
+			format(str, sizeof(str), "pokazuje zaœwiadczenie o poczytalnoœci %s", ReturnPlayerName(targetid));
+			SendPlayerMe(playerid, str);
+		}
+		case DOC_TYPE_NO_CRIMINAL_RECORD:{
+			case DOC_TYPE_INSANITY:{
+			new header[64];
+			format(header, sizeof(header) ,"Zaœwiadczenie o niekaralnoœci "HEX_BLUE"%s", ReturnPlayerName(playerid));
+
+			format(str, sizeof(str), ""HEX_WHITE"Imiê i nazwisko: "HEX_GRAY"%s\n\
+			"HEX_WHITE"Data urodzin: "HEX_GRAY"%dr\n\
+			"HEX_WHITE"P³eæ: "HEX_GRAY"%s\n\
+			"HEX_WHITE"Data otrzymania zaœwiadczenia: "HEX_GRAY"%s",
+			name,
+			bornDate,
+			(gender) ? ("Kobieta"):("Mê¿czyzna"),
+			createdAt);
+			ShowPlayerDialog(targetid, D_INFO, DIALOG_STYLE_MSGBOX, header, str, "Zamknij","");
+			format(str, sizeof(str), "pokazuje zaœwiadczenie o niekaralnoœci %s", ReturnPlayerName(targetid));
+			SendPlayerMe(playerid, str);
+		}
+		case DOC_TYPE_FISHING_RIGHT:{
+			case DOC_TYPE_INSANITY:{
+			new header[64];
+			format(header, sizeof(header) ,"Licencja na wêdkarstwo "HEX_BLUE"%s", ReturnPlayerName(playerid));
+
+			format(str, sizeof(str), ""HEX_WHITE"Imiê i nazwisko: "HEX_GRAY"%s\n\
+			"HEX_WHITE"Data urodzin: "HEX_GRAY"%dr\n\
+			"HEX_WHITE"P³eæ: "HEX_GRAY"%s\n\
+			"HEX_WHITE"Data otrzymania licencji wêdkarskiej: "HEX_GRAY"%s",
+			name,
+			bornDate,
+			(gender) ? ("Kobieta"):("Mê¿czyzna"),
+			createdAt);
+			ShowPlayerDialog(targetid, D_INFO, DIALOG_STYLE_MSGBOX, header, str, "Zamknij","");
+			format(str, sizeof(str), "pokazuje licencje na wêdkarstwo %s", ReturnPlayerName(targetid));
+			SendPlayerMe(playerid, str);
+		}
+		
+		
+
+	}
+
+	return 1;
 }
 
 CMD:pomoc (playerid, params[])
@@ -16400,6 +16702,17 @@ CMD:pasy (playerid, params[])
 
 public OnPlayerUpdate(playerid)
 {
+	if(GetPlayerDrunkLevel(playerid)){
+		
+		new Float:x, Float:y, Float:z;
+		GetPlayerVelocity(playerid, x, y, z);
+		if(x>=0.2 || y>=0.2){
+			Freeze(playerid, 3000);
+			TextDrawForPlayerEx(playerid, 2, "Twoja postac jest oslabiona.", 3000);
+			ApplyAnimation(playerid, "ped", "IDLE_tired", 8.1, false, true, true, 1, 1);
+		}
+		
+	}
 	if(PlayerCache[playerid][pUID])
 	{
 		if(pAFK[playerid])
