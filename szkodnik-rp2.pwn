@@ -175,10 +175,6 @@ new const DEV_MODE = 1;
 #define ITEM_STATE_PRODUCT 7
 #define ITEM_STATE_LIST 8
 
-#define VEHICLE_STATE_OWNER 0
-#define VEHICLE_STATE_DESTROYED 1
-#define VEHICLE_STATE_GROUP 2
-
 new bool:pGetPack[MAX_PLAYERS];
 
 #define PARTY 0
@@ -425,6 +421,38 @@ new PlayerText:BWTextDraw[MAX_PLAYERS];
 
 new bool:pFreeze[MAX_PLAYERS];
 
+enum E_VEHICLE
+{
+	vUID,
+	vID,
+	vColor,
+	vColor2,
+	vPlayerUID,
+	vGroupUID,
+	Float:vPosX,
+	Float:vPosY,
+	Float:vPosZ,
+	Float:vAngle,
+	vVW,
+	vFuel,
+	vModel,
+	Float:vHP,
+	vOpen,
+	vRegister,
+	vSiren,
+	vBanReason[128],
+	vBanCost,
+	Float:vMileAge,
+	vTimer,
+	vEngine,
+	vLights,
+	vDoors,
+	vBoot,
+	vBonnet,
+	vAlarm,
+	vObjective
+}
+
 enum E_PLAYER
 {
 	pUID,
@@ -492,7 +520,11 @@ enum E_PLAYER
 	pJailVW,
 	pLastTraining,
 	pObjectEditor,
-	pGymBoostTime
+	pGymBoostTime,
+	// not related to database
+	pCurrentVehicle[E_VEHICLE],
+	pLastUpdateTime 
+
 };
 
 
@@ -705,47 +737,12 @@ new LastvUID;
 
 new VehicleMapIcon[MAX_VEHICLES];
 
-enum E_VEHICLE
-{
-	vUID,
-	vID,
-	vColor,
-	vColor2,
-	vOwner,
-	vState,
-	Float:vPosX,
-	Float:vPosY,
-	Float:vPosZ,
-	Float:vAngle,
-	vVW,
-	vFuel,
-	vModel,
-	Float:vHP,
-	vOpen,
-	bool:vRegister,
-	vSiren,
-	vBanReason[128],
-	vBanCost,
-	Float:vMileAge,
-	vTimer,
-	vEngine,
-	vLights,
-	vDoors,
-	vBoot,
-	vBonnet,
-	vAlarm,
-	vObjective
-}
 
-new VehicleCache[MAX_VEHICLES][E_VEHICLE];
 
 new MapIcon[MAX_PLAYERS];
 new MapIconTimer[MAX_PLAYERS];
 
 new ObjectInfoTimer[MAX_PLAYERS];
-
-new bool:VehicleAttackedByCheater[MAX_VEHICLES];
-
 new aduty[MAX_PLAYERS];
 
 new LastaUID;
@@ -798,7 +795,7 @@ enum E_REPAIR
 {
 	repairTimer,
 	repairTime,
-	repairVehicleUID
+	repairVehicleID
 }
 
 new PlayerRepairingVehicle[MAX_PLAYERS][E_REPAIR];
@@ -824,6 +821,8 @@ new pCuffedTimer[MAX_PLAYERS];
 new pWasInCar[MAX_PLAYERS];
 
 new MySQL:DB_HANDLE;
+
+
 
 forward db_timer();
 public db_timer(){
@@ -875,13 +874,11 @@ public OnGameModeInit()
 		LoadTextures();
 
 		LoadActors();
-		print("test");
 		LoadApps();
 		// LoadZones();
 	
 	
 		SetTimer("min_timer", 1000*60, true);
-		SetTimer("sec_timer", 1000, true);
 
 	}
 
@@ -990,16 +987,52 @@ stock EnsureCreated(){
 	// Groups table
 	mysql_query(DB_HANDLE, 
 	"CREATE TABLE IF NOT EXISTS groups(\n\
-	gUID INT AUTO_INCREMENT PRIMARY KEY,\n\
-	gType INT NOT NULL,\n\
-	gBank INT NOT NULL,\n\
-	gName VARCHAR(32) NOT NULL,\n\
-	gChatOOC INT NOT NULL,\n\
-	gChatIC INT NOT NULL,\n\
-	gColor VARCHAR(16) NOT NULL,\n\
-	gState INT NOT NULL,\n\
-	gVehicleLimit INT NOT NULL,\n\
-	gPayDay INT NOT NULL);", false);
+	uid INT AUTO_INCREMENT PRIMARY KEY,\n\
+	type INT NOT NULL,\n\
+	bank INT NOT NULL,\n\
+	name VARCHAR(32) NOT NULL,\n\
+	chatOOC INT NOT NULL,\n\
+	chatIC INT NOT NULL,\n\
+	color VARCHAR(16) NOT NULL,\n\
+	state INT NOT NULL,\n\
+	vehicleLimit INT NOT NULL,\n\
+	payDay INT NOT NULL);", false);
+
+	mysql_query(DB_HANDLE, "CREATE TABLE IF NOT EXISTS groupMembers(\n\
+	uid INT PRIMARY KEY AUTO_INCREMENT,\n\
+	groupUID INT,\n\
+	playerUID INT,\n\
+	FOREIGN KEY (groupUID) REFERENCES groups(uid),\n\
+	FOREIGN KEY (playerUID) REFERENCES players(uid)\n\
+	);", false);
+
+
+	mysql_query(DB_HANDLE, "CREATE TABLE IF NOT EXISTS vehicles (\n\
+	uid INT PRIMARY KEY AUTO_INCREMENT,\n\
+	color INT DEFAULT 0,\n\
+	color2 INT DEFAULT 0,\n\
+	groupUID INT DEFAULT NULL,\n\
+	playerUID INT DEFAULT NULL,\n\
+	posX FLOAT DEFAULT 876.5847,\n\
+	posY FLOAT DEFAULT -1259.2781,\n\
+	posZ FLOAT DEFAULT 14.6456,\n\
+	angle FLOAT DEFAULT 0,\n\
+	virtualWorld INT DEFAULT 0,\n\
+	fuel INT DEFAULT 100,\n\
+	model INT,\n\
+	HP FLOAT DEFAULT 1000,\n\
+	open TINYINT DEFAULT 0,\n\
+	register INT DEFAULT 0,\n\
+	siren TINYINT DEFAULT 0,\n\
+	banReason VARCHAR(128) DEFAULT 0,\n\
+	banCost INT DEFAULT 0,\n\
+	mileAge INT DEFAULT 0,\n\
+	gameId INT DEFAULT 0,\n\
+	FOREIGN KEY (groupUID) REFERENCES groups(uid),\n\
+	FOREIGN KEY (playerUID) REFERENCES players(uid)\n\
+	);", false);
+
+
 
 
 	// Doors table
@@ -1081,6 +1114,10 @@ stock EnsureCreated(){
 	FOREIGN KEY (playerUID) REFERENCES players(uid) ON DELETE CASCADE\n\
 	);", false);
 	
+
+	mysql_query(DB_HANDLE, "CREATE TABLE IF NOT EXISTS items (\n\
+	uid INT PRIMARY KEY AUTO_INCREMENT,\n\
+	) ", false);
 
 }
 
@@ -1181,18 +1218,6 @@ stock GetPlayerHighSpeed(playerid)
 	return speed;
 }
 
-stock GetPlayerVehicleInRange(playerid)
-{
-	new Float:vX, Float:vY, Float:vZ;
-	for(new i; i<=GetVehiclePoolSize(); i++)
-	{
-		GetVehiclePos(i, vX, vY, vZ);
-		if(IsPlayerInRangeOfPoint(playerid, 5.0, vX, vY, vZ) && VehicleCache[GetVehicleUID(i)][vOwner] == PlayerCache[playerid][pUID])
-		return 1;
-	}
-	return 0;
-}
-
 stock Float:GetDistanceBetweenPoints(Float:X, Float:Y, Float:Z, Float:X2, Float:Y2, Float:Z2)
 {
 	new Float:distance;
@@ -1202,83 +1227,6 @@ stock Float:GetDistanceBetweenPoints(Float:X, Float:Y, Float:Z, Float:X2, Float:
 	return distance;
 }
 
-new gvid, gvuid, gvinfo[128];
-new Float:gX, Float:gY, Float:gZ;
-new gvspeed;
-
-forward sec_timer();
-public sec_timer()
-{
-	for(new i; i<=GetPlayerPoolSize(); i++)
-	{
-		if(IsPlayerConnected(i))
-		{
-			if(IsPlayerInAnyVehicle(i))
-			{
-				if(GetPlayerVehicleSeat(i) == 0)
-				{
-					gvid = GetPlayerVehicleID(i), gvuid = GetVehicleUID(gvid);
-					if(VehicleCache[gvuid][vEngine])
-					{
-						if(GetVehicleModel(i) == 481 || GetVehicleModel(i) == 509 || GetVehicleModel(i) == 510)
-						continue;
-						gvspeed = GetVehicleSpeed(gvid);
-						GetVehiclePos(gvid, gX, gY, gZ);
-						if(pGlobalX[i] != 0)
-						VehicleCache[gvuid][vMileAge] += GetDistanceBetweenPoints(pGlobalX[i], pGlobalY[i], pGlobalZ[i], gX, gY, gZ);
-						GetVehiclePos(gvid, pGlobalX[i], pGlobalY[i], pGlobalZ[i]);
-						format(gvinfo, sizeof(gvinfo), "~y~~h~Licznik: ~w~%d km/h~n~~y~~h~Paliwo: ~w~%d/100l", gvspeed, VehicleCache[gvuid][vFuel]);
-						PlayerTextDrawSetString(i, VehicleInfo[i], gvinfo);
-						PlayerTextDrawShow(i, VehicleInfo[i]);
-						GetPlayerPos(gvid, pGlobalX[i], pGlobalY[i], pGlobalZ[i]);
-					}
-				}
-			}
-			else
-			{
-				if(GetPlayerGroundSpeed(i) > 9)
-				{
-					if(pWasInCar[i])
-					continue;
-					if(GetPlayerSurfingVehicleID(i) != INVALID_VEHICLE_ID)
-					{
-						GetPlayerPos(i, gX, gY, gZ);
-						SetPlayerPos(i, gX+3, gY, gZ-0.5);
-						Freeze(i, 3000);
-						GameTextForPlayer(i, "~r~~h~nie mozesz jezdzic na tym pojezdzie", 3000, 4);
-						continue;
-					}
-					AJPlayer(i, "System", "Rapid movement (A)", 30);
-				}
-			}
-			if(GetPlayerSpecialAction(i) == SPECIAL_ACTION_USEJETPACK)
-			{
-				KickPlayer(i, "System", "Jetpack spawn");
-			}
-			if(GetPlayerWeapon(i) != WeaponCache[i][wcVal] && GetPlayerWeapon(i) != 0 && !pShowingWeapon[i])
-			{
-				new str[64];
-				format(str, sizeof(str), "Weapon Cheat (B) weaponid: %d", GetPlayerWeapon(i));
-				if(GetPlayerWeapon(i) == 46 && !pWasInCar[i])
-				{
-					KickPlayer(i, "System", str);
-				}
-				else
-				{
-					KickPlayer(i, "System", str);
-				}
-			}
-			if(PlayerCache[i][pBW_Time] && !pTeleport[i] && !PlayerCache[i][pAJ_Time])
-			{
-				if(!IsPlayerInRangeOfPoint(i, 5.0, PlayerCache[i][pPosX], PlayerCache[i][pPosY], PlayerCache[i][pPosZ]))
-				{
-					if(!PlayerCache[i][pAJ_Time])
-					AJPlayer(i, "System", "BW Bypass", 5);
-				}
-			}
-		}
-	}
-}
 
 stock ObjPath(id)
 {
@@ -2208,10 +2156,13 @@ stock UseItemOption(playerid, option, uid)
 		{
 			if(IsPlayerInAnyVehicle(playerid))
 			{
-				ItemCache[uid][iState] = 2;
-				ItemCache[uid][iOwner] = VehicleCache[GetVehicleUID(GetPlayerVehicleID(playerid))][vUID];
+				ItemCache[uid][iState] = ITEM_STATE_VEHICLE;
+				ItemCache[uid][iOwner] = PlayerCache[playerid][pCurrentVehicle][vUID];
 
-				format(query, sizeof(query), "UPDATE items SET state = '%d', owner = '%d' WHERE uid = '%d'", 2, VehicleCache[GetVehicleUID(GetPlayerVehicleID(playerid))][vUID], ItemCache[uid][iUID]);
+				format(query, sizeof(query), "UPDATE items SET state = '%d', owner = '%d' WHERE uid = '%d'", 
+				ITEM_STATE_VEHICLE, 
+				ItemCache[uid][iOwner] , 
+				ItemCache[uid][iUID]);
 				new Cache:cache = mysql_query(DB_HANDLE, query);
 				cache_delete(cache);
 
@@ -3597,31 +3548,37 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 			if(response)
 			{
 				if(!IsPlayerInAnyVehicle(playerid))
-				return SendClientMessage(playerid, COLOR_GRAY, "Opuszczono pojazd.");
-				new vuid = GetVehicleUID(GetPlayerVehicleID(playerid));
-				if(VehicleCache[vuid][vState] == 2)
+					return SendClientMessage(playerid, COLOR_GRAY, "Opuszczono pojazd.");
+
+				if(PlayerCache[playerid][pCurrentVehicle][vGroupUID])
 				{
-					VehicleCache[vuid][vOwner] = PlayerCache[playerid][pUID]; VehicleCache[vuid][vState] = 0;
+					PlayerCache[playerid][pCurrentVehicle][vGroupUID] = 0;
+					new query[256];
+					format(query, sizeof(query), "UPDATE vehicles SET groupUID=0 WHERE uid=%d;", PlayerCache[playerid][pCurrentVehicle][vUID]);
+					mysql_query(DB_HANDLE, query, false);
 					return ShowDialogInfo(playerid, "Pojazd zosta³ odpisany z grupy.");
 				}
-				new uid = PlayerCache[playerid][pUID];
-				if(VehicleCache[vuid][vOwner] != uid)
+				
+				if(PlayerCache[playerid][pCurrentVehicle][vPlayerUID] != PlayerCache[playerid][pUID])
 				return SendClientMessage(playerid, COLOR_GRAY, "Ten pojazd nie jest Twój.");
-				new guid = strval(inputtext);
-				new count;
-				for(new i; i<LastvUID; i++)
-				{
-					if(VehicleCache[i][vState] == VEHICLE_STATE_GROUP)
-					{
-						if(VehicleCache[i][vOwner] == guid)
-						count++;
 
-						if(GroupCache[guid][gVehicleLimit] == count)
-						return ShowDialogInfo(playerid, "Grupa osi¹gnê³a limit podpisanych pod ni¹ pojazdów.");
-					}
+
+				new guid = 0;
+				sscanf(inputtext, "i", guid);
+
+				new query[256];
+				format(query, sizeof(query), "SELECT null FROM vehicles WHERE groupUID=%d", guid);
+				new Cache:cache = mysql_query(DB_HANDLE, query);
+				if(cache_num_rows()==20){
+					cache_delete(cache);
+					return TextDrawForPlayerEx(playerid, 2, "Grupa osiagnela limit pojazdow.", 5000);
 				}
-				VehicleCache[vuid][vState] = 2;
-				VehicleCache[vuid][vOwner] = guid;
+
+				
+				PlayerCache[playerid][pCurrentVehicle][vGroupUID] = guid;
+
+				format(query, sizeof(query), "UPDATE vehicles SET groupUID = %d WHERE vehicleUID = %d LIMIT 1", guid, PlayerCache[playerid][pCurrentVehicle][vGroupUID]);
+
 				new str[128]; format(str, sizeof(str), "Pojazd nale¿y teraz do grupy: %s (UID: %d)\nJeœli jednak zmienisz zdanie, mo¿esz go swobodnie odpisaæ.", GroupCache[guid][gName], guid);
 				return ShowDialogInfo(playerid, str);
 			}
@@ -4273,31 +4230,33 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 		}
 		case D_V_OPTIONS:
 		{
-			new vid = GetPlayerVehicleID(playerid), vuid = GetVehicleUID(vid), option = strval(inputtext);
+			new option = 0;
+			sscanf(inputtext, "i", option);
+			new vehicleId = GetPlayerVehicleID(playerid);
 			if(response)
 			{
 				switch(option)
 				{
 					case 1:
 					{
-						if(VehicleCache[vuid][vBonnet])
-						return SetVehicleParamsEx(vid, VehicleCache[vuid][vEngine], VehicleCache[vuid][vLights], VehicleCache[vuid][vAlarm], VehicleCache[vuid][vDoors], VehicleCache[vuid][vBonnet]=0, VehicleCache[vuid][vBoot], VehicleCache[vuid][vObjective]);
-						return SetVehicleParamsEx(vid, VehicleCache[vuid][vEngine], VehicleCache[vuid][vLights], VehicleCache[vuid][vAlarm], VehicleCache[vuid][vDoors], VehicleCache[vuid][vBonnet]=1, VehicleCache[vuid][vBoot], VehicleCache[vuid][vObjective]);
+						if( PlayerCache[playerid][pCurrentVehicle][vBonnet])
+							return SetVehicleParamsEx(vehicleId, PlayerCache[playerid][pCurrentVehicle][vEngine], PlayerCache[playerid][pCurrentVehicle][vLights],  PlayerCache[playerid][pCurrentVehicle][vAlarm],  PlayerCache[playerid][pCurrentVehicle][vDoors],  PlayerCache[playerid][pCurrentVehicle][vBonnet]=0,  PlayerCache[playerid][pCurrentVehicle][vBoot],  PlayerCache[playerid][pCurrentVehicle][vObjective]);
+						return SetVehicleParamsEx(vehicleId, PlayerCache[playerid][pCurrentVehicle][vEngine], PlayerCache[playerid][pCurrentVehicle][vLights],  PlayerCache[playerid][pCurrentVehicle][vAlarm],  PlayerCache[playerid][pCurrentVehicle][vDoors],  PlayerCache[playerid][pCurrentVehicle][vBonnet]=1,  PlayerCache[playerid][pCurrentVehicle][vBoot],  PlayerCache[playerid][pCurrentVehicle][vObjective]);
 					}
 					case 2:
 					{
-						if(VehicleCache[vuid][vBoot])
-						return SetVehicleParamsEx(vid, VehicleCache[vuid][vEngine], VehicleCache[vuid][vLights], VehicleCache[vuid][vAlarm], VehicleCache[vuid][vDoors], VehicleCache[vuid][vBonnet], VehicleCache[vuid][vBoot]=0, VehicleCache[vuid][vObjective]);
-						return SetVehicleParamsEx(vid, VehicleCache[vuid][vEngine], VehicleCache[vuid][vLights], VehicleCache[vuid][vAlarm], VehicleCache[vuid][vDoors], VehicleCache[vuid][vBonnet], VehicleCache[vuid][vBoot]=1, VehicleCache[vuid][vObjective]);
+						if( PlayerCache[playerid][pCurrentVehicle][vBoot])
+						return SetVehicleParamsEx(vehicleId,  PlayerCache[playerid][pCurrentVehicle][vEngine],  PlayerCache[playerid][pCurrentVehicle][vLights],  PlayerCache[playerid][pCurrentVehicle][vAlarm],  PlayerCache[playerid][pCurrentVehicle][vDoors],  PlayerCache[playerid][pCurrentVehicle][vBonnet],  PlayerCache[playerid][pCurrentVehicle][vBoot]=0,  PlayerCache[playerid][pCurrentVehicle][vObjective]);
+						return SetVehicleParamsEx(vehicleId,  PlayerCache[playerid][pCurrentVehicle][vEngine],  PlayerCache[playerid][pCurrentVehicle][vLights],  PlayerCache[playerid][pCurrentVehicle][vAlarm],  PlayerCache[playerid][pCurrentVehicle][vDoors],  PlayerCache[playerid][pCurrentVehicle][vBonnet],  PlayerCache[playerid][pCurrentVehicle][vBoot]=1,  PlayerCache[playerid][pCurrentVehicle][vObjective]);
 					}
 					case 3:
 					{
 						PlayerPlaySound(playerid, 24600, 0.0, 0.0, 0.0);
 						new driver, passenger, bl, br;
-						GetVehicleParamsCarWindows(vid, driver, passenger, bl, br);
+						GetVehicleParamsCarWindows(vehicleId, driver, passenger, bl, br);
 						if(!driver)
-						return SetVehicleParamsCarWindows(vid, 1, 1, 1, 1);
-						return SetVehicleParamsCarWindows(vid, 0, 0, 0, 0);
+						return SetVehicleParamsCarWindows(vehicleId, 1, 1, 1, 1);
+						return SetVehicleParamsCarWindows(vehicleId, 0, 0, 0, 0);
 					}
 					case 4:
 					{
@@ -4305,9 +4264,9 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 					}
 					case 5:
 					{
-						if(VehicleCache[vuid][vState] == VEHICLE_STATE_GROUP)
+						if( PlayerCache[playerid][pCurrentVehicle][vGroupUID] != 0)
 						return SendClientMessage(playerid, COLOR_GRAY, "Nie mo¿esz handlowaæ pojazdem nale¿¹cym do czyjejœ grupy.");
-						pVal[playerid] = vuid;
+						pVal[playerid] = PlayerCache[playerid][pCurrentVehicle][vGroupUID];
 						return ShowDialogNearPlayers(playerid);
 					}
 				}
@@ -4462,40 +4421,55 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 		{
 			if(response)
 			{
-				new vuid = strval(inputtext);
-				if(VehicleCache[vuid][vID] != 0)
-				{
-					for(new i; i<=GetPlayerPoolSize(); i++)
-					{
-						if(IsPlayerConnected(i))
-						{
-							if(GetPlayerVehicleID(i) == VehicleCache[vuid][vID])
-							{
-								return SendClientMessage(playerid, COLOR_GRAY, "Ktoœ znajduje siê w tym pojeŸdzie zatem nie mo¿esz go odspawnowaæ.");
+
+				new vuid = 0;
+				sscanf(inputtext, "i", vuid);
+
+				new query[128];
+				format(query, sizeof(query), "SELECT gameId FROM vehicles WHERE UID=%d LIMIT 1;", vuid);
+				new Cache:cache = mysql_query(DB_HANDLE, query);
+				new vehicleId = 0;
+				cache_get_value_name_int(0, "gameId", vehicleId);
+				cache_delete(cache);
+
+				DestroyDynamicMapIcon(MapIcon[playerid]);
+				KillTimer(MapIconTimer[playerid]);
+
+				if(vehicleId){
+					for(new i=0; i<=GetVehiclePoolSize();i++){
+						if(IsValidVehicle(i)){
+							if(i == vehicleId){
+
+								if(AreAnyPlayersInVehicle(i))
+									return SendClientMessage(playerid, COLOR_GRAY, "Ktoœ znajduje siê w tym pojeŸdzie zatem nie mo¿esz go odspawnowaæ.");
+								TextDrawForPlayerEx(playerid, 1, "Odspawnowano pojazd.", 3000);
+	
+								UnSpawnVehicle(i);
+
 							}
 						}
 					}
-
-					if(VehicleCache[vuid][vEngine])
-					VehicleCache[vuid][vEngine] = 0;
-					DestroyVehicle(VehicleCache[vuid][vID]);
-					VehicleCache[vuid][vID]=0;
-					TextDrawForPlayerEx(playerid, 1, "Odspawnowano pojazd.", 3000);
-					DestroyDynamicMapIcon(MapIcon[playerid]);
-					KillTimer(MapIconTimer[playerid]);
-					return 1;
 				}
-				SpawnVehicle(vuid);
+				else
+				{	
+					vehicleId=SpawnVehicle(vuid);
+					TextDrawForPlayerEx(playerid, 1, "Zespawnowano pojazd.~n~Miejsce pojazdu zostalo oznaczone na mapie.", 5000);
 
-				TextDrawForPlayerEx(playerid, 1, "Zespawnowano pojazd.~n~Miejsce pojazdu zostalo oznaczone na mapie.", 5000);
-				DestroyDynamicMapIcon(MapIcon[playerid]);
-				KillTimer(MapIconTimer[playerid]);
-				MapIcon[playerid] = CreateDynamicMapIcon(VehicleCache[vuid][vPosX], VehicleCache[vuid][vPosY], VehicleCache[vuid][vPosZ], 55,-1,  VehicleCache[vuid][vVW], 0, playerid,-1, 3);
-				MapIconTimer[playerid] = SetTimerEx("DestroyIcon", 5000*60, false, "i", playerid);
-				if(VehicleCache[vuid][vState] == 2)
+					new Float:posX, Float:posY, Float:posZ;
+					GetVehiclePos(vehicleId, posX, posY, posZ);
+					new vw = GetVehicleVirtualWorld(vehicleId);
+
+					MapIcon[playerid] = CreateDynamicMapIcon( posX, posY, posZ, 55,-1, vw, 0, playerid,-1, 3);
+					MapIconTimer[playerid] = SetTimerEx("DestroyIcon", 5000*60, false, "i", playerid);
+				}
+
+			
+
+			
+				/*if( PlayerCache[playerid][pCurrentVehicle][vState] == 2)
 				{
-					new info[64]; format(info, sizeof(info), "%s~n~%s~n~~r~[%s]", ReturnPlayerName(playerid), GetVehicleName(VehicleCache[vuid][vModel]), GroupCache[VehicleCache[vuid][vOwner]][gName]);
-					new guid = VehicleCache[vuid][vOwner];
+					new info[64]; format(info, sizeof(info), "%s~n~%s~n~~r~[%s]", ReturnPlayerName(playerid), GetVehicleName( PlayerCache[playerid][pCurrentVehicle][vModel]), GroupCache[ PlayerCache[playerid][pCurrentVehicle][vOwner]][gName]);
+					new guid =  PlayerCache[playerid][pCurrentVehicle][vOwner];
 					for(new i=0; i<=GetPlayerPoolSize(); i++)
 					{
 						if(IsPlayerConnected(i))
@@ -4506,7 +4480,8 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 							}
 						}
 					}
-				}
+				}*/
+				
 			}
 			else
 			{
@@ -5282,7 +5257,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 
 			if(response)
 			{
-				new vuid = tVal2[playerid];
+				//new vuid = tVal2[playerid];
 				new price = tVal3[playerid];
 
 				if(senderid == -1)
@@ -5300,7 +5275,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 				{
 					SendClientMessage(playerid, COLOR_GRAY, "Wpisz POTWIERDZAM w dialogu, jeœli chcesz zaakceptowaæ ofertê w jej obecnym stanie.");
 					new info[1025]; format(info, sizeof(info), "Informacje o pojeŸdzie:\n\nMarka: %s\nPrzebieg: %dkm\nPaliwo: %d/100\nStan techniczny: %fHP\n\nnCena: "HEX_GREEN"$%d\n\n"HEX_WHITE"Wpisz poni¿ej "HEX_DARKRED"POTWIERDZAM"HEX_WHITE", jeœli chcesz zaakceptowaæ tê ofertê w jej obecnym stanie.",
-				 	GetVehicleName(VehicleCache[vuid][vModel]), VehicleCache[vuid][vMileAge], VehicleCache[vuid][vFuel], VehicleCache[vuid][vHP], price);
+				 	GetVehicleName( PlayerCache[playerid][pCurrentVehicle][vModel]),  PlayerCache[playerid][pCurrentVehicle][vMileAge],  PlayerCache[playerid][pCurrentVehicle][vFuel],  PlayerCache[playerid][pCurrentVehicle][vHP], price);
 
 					new header[64]; format(header, sizeof(header), "Kupno pojazdu od: %s", RPName(senderid));
 
@@ -5308,8 +5283,8 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 				}
 				if(!strcmp(inputtext, "potwierdzam", true))
 				{
-					RemovePlayerFromVehicle(senderid);
-					VehicleCache[vuid][vOwner] = PlayerCache[playerid][pUID];
+					/*RemovePlayerFromVehicle(senderid);
+					PlayerCache[playerid][pCurrentVehicle][vOwner] = PlayerCache[playerid][pUID];
 
 					PlayerCache[playerid][pCash] -= price;
 					PlayerCache[senderid][pCash] += price;
@@ -5318,13 +5293,13 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 					GameTextForPlayer(playerid, msg, 3000, 4);
 					format(msg, sizeof(msg), "~g~+$%d", price);
 					GivePlayerMoney(playerid, price);
-					return GameTextForPlayer(senderid, msg, 3000, 4);
+					return GameTextForPlayer(senderid, msg, 3000, 4);*/
 				}
 				else
 				{
 					SendClientMessage(playerid, COLOR_GRAY, "Wpisz POTWIERDZAM w dialogu, jeœli chcesz zaakceptowaæ ofertê w jej obecnym stanie.");
 					new info[1025]; format(info, sizeof(info), "Informacje o pojeŸdzie:\n\nMarka: %s\nPrzebieg: %dkm\nPaliwo: %d/100\nStan techniczny: %fHP\n\nnCena: "HEX_GREEN"$%d\n\n"HEX_WHITE"Wpisz poni¿ej "HEX_DARKRED"POTWIERDZAM"HEX_WHITE", jeœli chcesz zaakceptowaæ tê ofertê w jej obecnym stanie.",
-				 	GetVehicleName(VehicleCache[vuid][vModel]), VehicleCache[vuid][vMileAge], VehicleCache[vuid][vFuel], VehicleCache[vuid][vHP], price);
+				 	GetVehicleName( PlayerCache[playerid][pCurrentVehicle][vModel]),  PlayerCache[playerid][pCurrentVehicle][vMileAge],  PlayerCache[playerid][pCurrentVehicle][vFuel],  PlayerCache[playerid][pCurrentVehicle][vHP], price);
 
 					new header[64]; format(header, sizeof(header), "Kupno pojazdu od: %s", RPName(senderid));
 
@@ -5339,32 +5314,32 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 		{
 			if(response)
 			{
-				if(!IsPlayerInAnyVehicle(playerid))
-				return SendClientMessage(playerid, COLOR_GRAY, "Nie znajdujesz siê w ¿adnym pojeŸdzie.");
+			/*	if(!IsPlayerInAnyVehicle(playerid))
+					return SendClientMessage(playerid, COLOR_GRAY, "Nie znajdujesz siê w ¿adnym pojeŸdzie.");
 				new vid = GetPlayerVehicleID(playerid);
 				new vuid = GetVehicleUID(vid);
 				if(vuid != pVal[playerid])
-				return SendClientMessage(playerid, COLOR_GRAY, "Opuœci³eœ(aœ) swój pojazd");
+					return SendClientMessage(playerid, COLOR_GRAY, "Opuœci³eœ(aœ) swój pojazd");
 				new price = strval(inputtext);
 				if(price < 1)
-				return ShowPlayerDialog(playerid, D_V_SELL, DIALOG_STYLE_INPUT, "Sprzedaj pojazd", ""HEX_DARKRED"Minimalna cena za, któr¹ mo¿esz sprzedaæ swój pojazd to 1$.\n"HEX_WHITE"Wpisz poni¿ej cenê, za jak¹ chcesz sprzedaæ swój pojazd:", "Sprzedaj", "Anuluj");
+					return ShowPlayerDialog(playerid, D_V_SELL, DIALOG_STYLE_INPUT, "Sprzedaj pojazd", ""HEX_DARKRED"Minimalna cena za, któr¹ mo¿esz sprzedaæ swój pojazd to 1$.\n"HEX_WHITE"Wpisz poni¿ej cenê, za jak¹ chcesz sprzedaæ swój pojazd:", "Sprzedaj", "Anuluj");
 				new targetuid = pVal2[playerid];
 				new targetid = IsUserConnected(targetuid);
 				if(targetid == -1)
-				return SendClientMessage(playerid, COLOR_GRAY, "Gracz wylogowa³ siê lub opuœci³ grê.");
+					return SendClientMessage(playerid, COLOR_GRAY, "Gracz wylogowa³ siê lub opuœci³ grê.");
 				if(!IsPlayerInRangeOfPlayer(playerid, targetid, 5.0))
-				return SendClientMessage(playerid, COLOR_GRAY, "Gracz oddali³ siê.");
+					return SendClientMessage(playerid, COLOR_GRAY, "Gracz oddali³ siê.");
 
 				tVal[targetid] = PlayerCache[playerid][pUID];
 				tVal2[targetid] = vuid;
 				tVal3[targetid] = price;
 
 				new info[1025]; format(info, sizeof(info), "Informacje o pojeŸdzie:\n\nMarka: %s\nPrzebieg: %dkm\nPaliwo: %d/100\nStan techniczny: %fHP\n\nnCena: "HEX_GREEN"$%d\n\n"HEX_WHITE"Wpisz poni¿ej "HEX_DARKRED"POTWIERDZAM"HEX_WHITE", jeœli chcesz zaakceptowaæ tê ofertê w jej obecnym stanie.",
-				GetVehicleName(VehicleCache[vuid][vModel]), VehicleCache[vuid][vMileAge], VehicleCache[vuid][vFuel], VehicleCache[vuid][vHP], price);
+				GetVehicleName( PlayerCache[playerid][pCurrentVehicle][vModel]),  PlayerCache[playerid][pCurrentVehicle][vMileAge],  PlayerCache[playerid][pCurrentVehicle][vFuel],  PlayerCache[playerid][pCurrentVehicle][vHP], price);
 				new header[64]; format(header, sizeof(header), "Kupno pojazdu od: %s", RPName(playerid));
 				ShowPlayerDialog(targetid, D_V_OFFER, DIALOG_STYLE_INPUT, header, info, "Gotowe", "Anuluj");
 
-				return GameTextForPlayer(playerid, "~y~oferta wyslana", 3000, 4);
+				return GameTextForPlayer(playerid, "~y~oferta wyslana", 3000, 4);*/
 			}
 		}
 		case D_V_NEAR_PLAYERS:
@@ -7374,60 +7349,37 @@ stock RPName(playerid)
 	return name;
 }
 
-forward TurnOnEngine(vuid);
-public TurnOnEngine(vuid)
+forward TurnOnEngine(vehicleid, playerid);
+public TurnOnEngine(vehicleid, playerid)
 {
-	new playerid;
-	for(new i; i<=GetPlayerPoolSize(); i++)
+	if( PlayerCache[playerid][pCurrentVehicle][vBanCost])
 	{
-		if(IsPlayerConnected(i))
-		{
-			if(VehicleCache[vuid][vState] == VEHICLE_STATE_OWNER)
-			{
-				if(PlayerCache[i][pUID] == VehicleCache[vuid][vOwner])
-				{
-					playerid = i;
-				}
-			}
-		}
-	}
-	if(VehicleCache[vuid][vBanCost])
-	{
-		VehicleCache[vuid][vTimer] = 0;
+		PlayerCache[playerid][pCurrentVehicle][vTimer] = 0;
 		PlayerTextDrawSetString(playerid, VehicleInfo[playerid], "~b~~h~~h~~h~LCTRL ~w~by uruchomic silnik~n~~b~~h~~h~~h~LPM ~w~by zapalic swiatla");
 		PlayerTextDrawShow(playerid, VehicleInfo[playerid]);
 		new msg[256];
-		format(msg, sizeof(msg), "Nie mo¿esz uruchomiæ pojazdu bo posiada on blokadê na ko³o.\nKoszt zdjêcia: $%d\n\nNotka: %s\nSkontaktuj siê z policj¹ by odblokowaæ ko³o.", VehicleCache[vuid][vBanCost],
-		VehicleCache[vuid][vBanReason]);
+		format(msg, sizeof(msg), "Nie mo¿esz uruchomiæ pojazdu bo posiada on blokadê na ko³o.\nKoszt zdjêcia: $%d\n\nNotka: %s\nSkontaktuj siê z policj¹ by odblokowaæ ko³o.",  PlayerCache[playerid][pCurrentVehicle][vBanCost],
+		PlayerCache[playerid][pCurrentVehicle][vBanReason]);
 		return ShowDialogInfo(playerid, msg);
 	}
-	if(VehicleCache[vuid][vHP] <= 300.0)
+	if( PlayerCache[playerid][pCurrentVehicle][vHP] <= 300.0)
 	{
-		VehicleCache[vuid][vTimer] = 0;
+		PlayerCache[playerid][pCurrentVehicle][vTimer] = 0;
 		PlayerTextDrawSetString(playerid, VehicleInfo[playerid], "~b~~h~~h~~h~LCTRL ~w~by uruchomic silnik~n~~b~~h~~h~~h~LPM ~w~by zapalic swiatla");
 		PlayerTextDrawShow(playerid, VehicleInfo[playerid]);
 		new msg[128]; format(msg, sizeof(msg), "* %s próbuje uruchomiæ silnik w %s, ale stan techniczny pojazdu na to nie pozwala. *", RPName(playerid), GetVehicleName(GetVehicleModel(GetPlayerVehicleID(playerid))));
 		ShowDialogInfo(playerid, "Stan techniczny pojazdu jest w kiepskim stanie.\nSkorzystaj z zestawu naprawczego by naprawiæ pojazd lub wezwij holownik.");
 		Do(playerid, msg);
 	}
-	if(VehicleCache[vuid][vFuel] == 0)
+	if( PlayerCache[playerid][pCurrentVehicle][vFuel] == 0)
 	{
-		for(new i; i<=GetPlayerPoolSize(); i++)
-		{
-			if(IsPlayerConnected(i))
-			{
-				if(PlayerCache[i][pUID] == VehicleCache[vuid][vOwner])
-				{
-					VehicleCache[vuid][vTimer] = 0;
-					PlayerTextDrawSetString(playerid, VehicleInfo[playerid], "~b~~h~~h~~h~LCTRL ~w~by uruchomic silnik~n~~b~~h~~h~~h~LPM ~w~by zapalic swiatla");
-					PlayerTextDrawShow(playerid, VehicleInfo[playerid]);
-					return TextDrawForPlayerEx(i, 1, "W pojezdzie skonczylo sie paliwo.", 3000);
-				}
-			}
-		}
+		PlayerCache[playerid][pCurrentVehicle][vTimer] = 0;
+		PlayerTextDrawSetString(playerid, VehicleInfo[playerid], "~b~~h~~h~~h~LCTRL ~w~by uruchomic silnik~n~~b~~h~~h~~h~LPM ~w~by zapalic swiatla");
+		PlayerTextDrawShow(playerid, VehicleInfo[playerid]);
+		return TextDrawForPlayerEx(playerid, 1, "W pojezdzie skonczylo sie paliwo.", 3000);
 	}
-	SetVehicleParamsEx(VehicleCache[vuid][vID], VehicleCache[vuid][vEngine]=1, VehicleCache[vuid][vLights], VehicleCache[vuid][vAlarm], VehicleCache[vuid][vDoors], VehicleCache[vuid][vBonnet],VehicleCache[vuid][vBoot], VehicleCache[vuid][vObjective]);
-	VehicleCache[vuid][vTimer] = 0;
+	SetVehicleParamsEx( PlayerCache[playerid][pCurrentVehicle][vID],  PlayerCache[playerid][pCurrentVehicle][vEngine]=1,  PlayerCache[playerid][pCurrentVehicle][vLights],  PlayerCache[playerid][pCurrentVehicle][vAlarm],  PlayerCache[playerid][pCurrentVehicle][vDoors],  PlayerCache[playerid][pCurrentVehicle][vBonnet], PlayerCache[playerid][pCurrentVehicle][vBoot],  PlayerCache[playerid][pCurrentVehicle][vObjective]);
+	PlayerCache[playerid][pCurrentVehicle][vTimer] = 0;
 	return 1;
 }
 
@@ -7596,53 +7548,30 @@ public OnPlayerKeyStateChange(playerid, newkeys, oldkeys)
 		{
 			if(GetPlayerVehicleSeat(playerid) != 0)
 			return 1;
-			new vid = GetPlayerVehicleID(playerid), vuid = GetVehicleUID(vid);
+			new vid = GetPlayerVehicleID(playerid);
 			if(GetVehicleModel(vid) == 481 || GetVehicleModel(vid) == 509 || GetVehicleModel(vid) == 510)
 			return 1;
-			if(VehicleCache[vuid][vState] == 2)
-			{
-				new guid = VehicleCache[vuid][vOwner];
-				new puid = PlayerCache[playerid][pUID];
-				if(PlayerCache[puid][pGroup] == guid)
-				{
-					if(!PlayerCache[puid][pGroupVehicle])
-					{
-						return TextDrawForPlayerEx(playerid, 1, "Nie posiadasz kluczy do tego pojazdu.", 1500);
-					}
-				}
-				else if(PlayerCache[puid][pGroup2] == guid)
-				{
-					if(!PlayerCache[puid][pGroupVehicle2])
-					{
-						return TextDrawForPlayerEx(playerid, 1, "Nie posiadasz kluczy do tego pojazdu.", 1500);
-					}
-				}
-				else if(PlayerCache[puid][pGroup3] == guid)
-				{
-					if(!PlayerCache[puid][pGroupVehicle3])
-					{
-						return TextDrawForPlayerEx(playerid, 1, "Nie posiadasz kluczy do tego pojazdu.", 1500);
-					}
-				}
-				else return TextDrawForPlayerEx(playerid, 1, "Nie posiadasz kluczy do tego pojazdu.", 1500);
-			}
-			if(VehicleCache[vuid][vState] == 0 && VehicleCache[vuid][vOwner] != PlayerCache[playerid][pUID])
-			{
+			
+		
+			
+
+
+			if(!HasPlayerAccessToVehicle(playerid, vid))
 				return TextDrawForPlayerEx(playerid, 1, "Nie posiadasz kluczy do tego pojazdu.", 1500);
-			}
-			if(VehicleCache[vuid][vEngine] && !PlayerCache[playerid][pBW_Time])
+
+			if( PlayerCache[playerid][pCurrentVehicle][vEngine] && !PlayerCache[playerid][pBW_Time])
 			{
 				PlayerTextDrawSetString(playerid, VehicleInfo[playerid], "~b~~h~~h~~h~LCTRL ~w~by uruchomic silnik~n~~b~~h~~h~~h~LPM ~w~by zapalic swiatla");
 				PlayerTextDrawShow(playerid, VehicleInfo[playerid]);
-				SetVehicleParamsEx(vid, VehicleCache[vuid][vEngine]=0, VehicleCache[vuid][vLights], VehicleCache[vuid][vAlarm], VehicleCache[vuid][vDoors], VehicleCache[vuid][vBonnet],VehicleCache[vuid][vBoot], VehicleCache[vuid][vObjective]);
-				return SendPlayerMe(playerid, "gasi silnik.");
+				SetVehicleParamsEx(vid,  PlayerCache[playerid][pCurrentVehicle][vEngine]=0,  PlayerCache[playerid][pCurrentVehicle][vLights],  PlayerCache[playerid][pCurrentVehicle][vAlarm],  PlayerCache[playerid][pCurrentVehicle][vDoors],  PlayerCache[playerid][pCurrentVehicle][vBonnet], PlayerCache[playerid][pCurrentVehicle][vBoot],  PlayerCache[playerid][pCurrentVehicle][vObjective]);
+				return SendPlayerMe(playerid, "przekrêca kluczyk w stacyjce.");
 			}
-			else if(VehicleCache[vuid][vTimer] == 0 && !PlayerCache[playerid][pBW_Time])
+			else if( PlayerCache[playerid][pCurrentVehicle][vTimer] == 0 && !PlayerCache[playerid][pBW_Time])
 			{
-				VehicleCache[vuid][vTimer] = SetTimerEx("TurnOnEngine", 3000, false, "i", vuid);
+				PlayerCache[playerid][pCurrentVehicle][vTimer] = SetTimerEx("TurnOnEngine", 3000, false, "i", vid);
 				PlayerTextDrawSetString(playerid, VehicleInfo[playerid], "~y~Trwa uruchamianie silnika..");
 				PlayerTextDrawShow(playerid, VehicleInfo[playerid]);
-				return SendPlayerMe(playerid, "zapala silnik.");
+				return SendPlayerMe(playerid, "przekrêca kluczyk w stacyjce.");
 			}
 		}
 		return 1;
@@ -7793,39 +7722,47 @@ public OnPlayerKeyStateChange(playerid, newkeys, oldkeys)
 		{
 			if(GetPlayerVehicleSeat(playerid) == 0)
 			{
-				new vid = GetPlayerVehicleID(playerid);
-				new vuid = GetVehicleUID(vid);
-				if(GetVehicleModel(vid) == 525)
+				new vehicleid = GetPlayerVehicleID(playerid);
+				if(GetVehicleModel(vehicleid) == 525)
 				{
-					if(VehicleCache[vuid][vEngine])
+					if( PlayerCache[playerid][pCurrentVehicle][vEngine])
 					{
-						if(IsTrailerAttachedToVehicle(vid))
+						if(IsTrailerAttachedToVehicle(vehicleid))
 						{
-							new trailerid = GetVehicleTrailer(vid);
-							new traileruid = GetVehicleUID(trailerid);
-							GetVehiclePos(trailerid, VehicleCache[traileruid][vPosX], VehicleCache[traileruid][vPosY], VehicleCache[traileruid][vPosZ]);
-							GetVehicleZAngle(trailerid, VehicleCache[traileruid][vAngle]);
-							VehicleCache[traileruid][vVW] = GetVehicleVirtualWorld(trailerid);
-							DetachTrailerFromVehicle(vid);
+							new trailerid = GetVehicleTrailer(vehicleid);
+							new Float:posX, Float:posY, Float:posZ, Float:angle, virtualWorld;
+
+							GetVehiclePos(trailerid, posX, posY, posZ);
+							GetVehicleZAngle(trailerid, angle);
+							virtualWorld = GetVehicleVirtualWorld(trailerid);
+
+							DetachTrailerFromVehicle(vehicleid);
+
 							new str[128];
 							format(str, sizeof(str), "Odholowano pojazd marki ~b~~h~~h~~h~%s~w~.", GetVehicleName(GetVehicleModel(trailerid)));
 							TextDrawForPlayerEx(playerid, 1, str, 5000);
+							
+							format(str, sizeof(str), "UPDATE vehicles SET posX=%f, posY=%f, posZ=%f, virtualWorld=%d, angle=%f WHERE gameId = %d",
+							posX, posY, posZ, virtualWorld, angle, trailerid);
+							mysql_query(DB_HANDLE, str, false);
+
 							return 1;
 						}
+
 						new str[128];
 						new targetvid = GetPlayerCameraTargetVehicle(playerid);
+
 						if(targetvid == INVALID_VEHICLE_ID)
 						return TextDrawForPlayerEx(playerid, 1, "Skieruj kamere na ~b~~h~~h~~h~pojazd~w~ aby go zaczepic.", 3000);
 						new Float:X, Float:Y, Float:Z;
 						GetVehiclePos(targetvid, X, Y, Z);
 						if(!IsPlayerInRangeOfPoint(playerid, 7.5, X, Y, Z))
-						return TextDrawForPlayerEx(playerid, 1, "Ten pojazd jest zbyt daleko! Podjedz blizej.", 5000);
+							return TextDrawForPlayerEx(playerid, 1, "Ten pojazd jest zbyt daleko! Podjedz blizej.", 5000);
 
-						new targetvuid = GetVehicleUID(targetvid);
-						if(VehicleCache[targetvuid][vEngine])
-						return TextDrawForPlayerEx(playerid, 1, "Silnik w pojezdzie, ktory chcesz odholowac jest ~y~zapalony~w~.", 3000);
-						AttachTrailerToVehicle(targetvid, vid);
-						format(str, sizeof(str), "Zaczepiono pojazd marki ~b~~h~~h~~h~%s~w~.", GetVehicleName(GetVehicleModel(VehicleCache[targetvuid][vID])));
+							//return TextDrawForPlayerEx(playerid, 1, "Silnik w pojezdzie, ktory chcesz odholowac jest ~y~zapalony~w~.", 3000);
+
+						AttachTrailerToVehicle(targetvid, vehicleid);
+						format(str, sizeof(str), "Zaczepiono pojazd marki ~b~~h~~h~~h~%s~w~.", GetVehicleName(GetVehicleModel(targetvid)) );
 						return TextDrawForPlayerEx(playerid, 1, str, 3000);
 					}
 					return ShowDialogInfo(playerid, "W³¹cz silnik.");
@@ -7834,62 +7771,28 @@ public OnPlayerKeyStateChange(playerid, newkeys, oldkeys)
 		}
 		if(GetPlayerCameraTargetVehicle(playerid) != INVALID_VEHICLE_ID)
 		{
-			new vuid = GetVehicleUID(GetPlayerCameraTargetVehicle(playerid));
+			new vehicleid = GetPlayerCameraTargetVehicle(playerid);
 			new Float:vX, Float:vY, Float:vZ;
-			GetVehiclePos(GetPlayerCameraTargetVehicle(playerid), vX, vY, vZ);
+			GetVehiclePos(vehicleid, vX, vY, vZ);
 			if(IsPlayerInRangeOfPoint(playerid, 5.0, vX, vY, vZ))
 			{
-				new puid = PlayerCache[playerid][pUID];
-				if(VehicleCache[vuid][vState] == 2)
-				{
-					new guid = VehicleCache[vuid][vOwner];
-					if(PlayerCache[puid][pGroup] == guid)
-					{
-						if(!PlayerCache[puid][pGroupVehicle])
-						{
-							TextDrawForPlayerEx(playerid, 1, "~r~~h~Nie posiadasz kluczy do tego pojazdu", 3000);
-							return ClearAnimations(playerid);
-						}
-					}
-					else if(PlayerCache[puid][pGroup2] == guid)
-					{
-						if(!PlayerCache[puid][pGroupVehicle2])
-						{
-							TextDrawForPlayerEx(playerid, 1, "~r~~h~Nie posiadasz kluczy do tego pojazdu", 3000);
-							return ClearAnimations(playerid);
-						}
-					}
-					else if(PlayerCache[puid][pGroup3] == guid)
-					{
-						if(!PlayerCache[puid][pGroupVehicle3])
-						{
-							TextDrawForPlayerEx(playerid, 1, "~r~~h~Nie posiadasz kluczy do tego pojazdu", 3000);
-							return ClearAnimations(playerid);
-						}
-					}
-					else
-					{
-						TextDrawForPlayerEx(playerid, 1, "~r~~h~Nie posiadasz kluczy do tego pojazdu", 3000);
-						return ClearAnimations(playerid);
-					}
-				}
-				if(VehicleCache[vuid][vState] == 0 && VehicleCache[vuid][vOwner] != PlayerCache[playerid][pUID])
-				{
+				if(!HasPlayerAccessToVehicle(playerid, vehicleid)){
 					TextDrawForPlayerEx(playerid, 1, "~r~~h~Nie posiadasz kluczy do tego pojazdu", 3000);
 					return ClearAnimations(playerid);
 				}
+			
 				ApplyAnimation(playerid, "BD_FIRE", "wash_up", 4.1, 0, 0, 0, 0, 0, 0);
 				PlayerPlaySound(playerid, 24600, 0.0, 0.0, 0.0);
-				if(VehicleCache[vuid][vOpen])
+				if( PlayerCache[playerid][pCurrentVehicle][vOpen])
 				{
 					SendPlayerMe(playerid, "zamyka pojazd.");
-					VehicleCache[vuid][vOpen]=0;
+					PlayerCache[playerid][pCurrentVehicle][vOpen]=0;
 					return GameTextForPlayer(playerid, "~w~Pojazd ~r~~h~zamkniety", 3000, 4);
 				}
 				else
 				{
 					SendPlayerMe(playerid, "otwiera pojazd.");
-					VehicleCache[vuid][vOpen]=1;
+					PlayerCache[playerid][pCurrentVehicle][vOpen]=1;
 					return GameTextForPlayer(playerid, "~w~Pojazd ~g~~h~otwarty", 3000, 4);
 				}	
 			}
@@ -7996,12 +7899,12 @@ public OnPlayerKeyStateChange(playerid, newkeys, oldkeys)
 	{
 		if(IsPlayerInAnyVehicle(playerid))
 		{
-			new vid = GetPlayerVehicleID(playerid), vuid = GetVehicleUID(vid);
+			new vid = GetPlayerVehicleID(playerid);
 			if(GetPlayerVehicleSeat(playerid) != 0)
 			return 1;
-			if(VehicleCache[vuid][vLights])
-			return SetVehicleParamsEx(vid, VehicleCache[vuid][vEngine], VehicleCache[vuid][vLights]=0, VehicleCache[vuid][vAlarm], VehicleCache[vuid][vDoors], VehicleCache[vuid][vBonnet], VehicleCache[vuid][vBoot], VehicleCache[vuid][vObjective]);
-			return SetVehicleParamsEx(vid, VehicleCache[vuid][vEngine], VehicleCache[vuid][vLights]=1, VehicleCache[vuid][vAlarm], VehicleCache[vuid][vDoors], VehicleCache[vuid][vBonnet], VehicleCache[vuid][vBoot], VehicleCache[vuid][vObjective]);
+			if( PlayerCache[playerid][pCurrentVehicle][vLights])
+			return SetVehicleParamsEx(vid,  PlayerCache[playerid][pCurrentVehicle][vEngine],  PlayerCache[playerid][pCurrentVehicle][vLights]=0,  PlayerCache[playerid][pCurrentVehicle][vAlarm],  PlayerCache[playerid][pCurrentVehicle][vDoors],  PlayerCache[playerid][pCurrentVehicle][vBonnet],  PlayerCache[playerid][pCurrentVehicle][vBoot],  PlayerCache[playerid][pCurrentVehicle][vObjective]);
+			return SetVehicleParamsEx(vid,  PlayerCache[playerid][pCurrentVehicle][vEngine],  PlayerCache[playerid][pCurrentVehicle][vLights]=1,  PlayerCache[playerid][pCurrentVehicle][vAlarm],  PlayerCache[playerid][pCurrentVehicle][vDoors],  PlayerCache[playerid][pCurrentVehicle][vBonnet],  PlayerCache[playerid][pCurrentVehicle][vBoot],  PlayerCache[playerid][pCurrentVehicle][vObjective]);
 		}
 		new lib[32], name[32], index;
 		index = GetPlayerAnimationIndex(playerid);
@@ -8179,7 +8082,7 @@ public ChooseSkin(playerid)
 		PlayerTextDrawHide(playerid, BottomTextDraw[playerid]);
 
 		new query[86];
-		format(query, sizeof(query), "UPDATE players SET tutorial_level = '0', skin = '%d' WHERE uid = '%d'", GetPlayerSkin(playerid), PlayerCache[playerid][pUID]);
+		format(query, sizeof(query), "UPDATE players SET tutorialLevel = '0', skin = '%d' WHERE uid = '%d'", GetPlayerSkin(playerid), PlayerCache[playerid][pUID]);
 		mysql_query(DB_HANDLE, query, false);
 	}
 }
@@ -9784,22 +9687,8 @@ public OnPlayerTakeDamage(playerid, issuerid, Float:amount, weaponid, bodypart)
 	}
 	if(issuerid != INVALID_PLAYER_ID)
 	{
-		if(weaponid == 0)
-		{
-			new gtype = GroupCache[pDuty[issuerid]][gType];
-			if(gtype == 1 || gtype == 2 || gtype == 16 || gtype == 4 || gtype == 5)
-			{
-
-			}
-			else
-			{
-			
-			}
-		}
-		if(PlayerCache[playerid][pBW_Time])
-		GetPlayerPos(playerid, PlayerCache[playerid][pPosX],  PlayerCache[playerid][pPosY],  PlayerCache[playerid][pPosZ]);
 		if(pTrainingTimer[playerid])
-		return KickPlayer(issuerid, "System", "Przeszkadzanie w treningu na silowni");
+			return KickPlayer(issuerid, "System", "Przeszkadzanie w treningu na silowni");
 		if(IsPlayerInAnyVehicle(issuerid))
 		{
 			if(GetPlayerVehicleSeat(issuerid) == 0)
@@ -9815,6 +9704,7 @@ public OnPlayerTakeDamage(playerid, issuerid, Float:amount, weaponid, bodypart)
 		if(ClearNicknameColorTimer[playerid] == 0)
 		{
 			UpdateDynamic3DTextLabelText(pNick[playerid][nID], DAMAGE_COLOR, pNick[playerid][nStr]);
+			KillTimer(ClearNicknameColorTimer[playerid]);
 			ClearNicknameColorTimer[playerid] = SetTimerEx("ClearNicknameColor", 2500, false, "i", playerid);
 		}
 		new Float:damage =  2.0;
@@ -9863,18 +9753,10 @@ public OnPlayerTakeDamage(playerid, issuerid, Float:amount, weaponid, bodypart)
 					SetTimerEx("StandUp", 1000*30, false, "i", playerid);
 				}
 			}
-			else if(WeaponCache[issuerid][wcVal3] == 2)
-			{
-				damage = 20;
-			}
-			else if(WeaponCache[issuerid][wcVal3] == 3)
-			{
-				damage = 15;
-			}
 		}
 		if(PlayerCache[playerid][pHealth] - damage <= 0)
 		{
-			pShowingWeapon[playerid] = true;
+			/*pShowingWeapon[playerid] = true;
 			SetTimerEx("ShowingWeapon", 3000, false, "i", playerid);
 			pWasInCar[playerid] = true;
 			SetTimerEx("ClearWasInCar", 3000, false, "i", playerid);
@@ -9894,7 +9776,9 @@ public OnPlayerTakeDamage(playerid, issuerid, Float:amount, weaponid, bodypart)
 			ResetPlayerWeapons(playerid);
 			TogglePlayerControllable(playerid, 0);
 			ApplyAnimation(playerid, "crack", "crckdeth1", 4.1, 0, 0, 0, 1, 0, 0);
-			UpdatePlayerName(playerid);
+			UpdatePlayerName(playerid);*/
+
+			BWPlayer(playerid, 5,weaponid);
 			return 1;
 		}
 		SetPlayerHP(playerid, PlayerCache[playerid][pHealth]-damage);
@@ -10138,20 +10022,20 @@ public min_timer()
 		SendClientMessageToAll(DO_SHADE_1, gmsg);
 		SetWorldTime(ghour);
 	}
-	new vuid;
+	//new vuid;
 	for(new i; i<=GetVehiclePoolSize(); i++)
 	{
-		vuid = GetVehicleUID(i);
-		if(VehicleCache[vuid][vEngine])
+		//vuid = GetVehicleUID(i);
+		if( PlayerCache[i][pCurrentVehicle][vEngine])
 		{
-			if(VehicleCache[vuid][vFuel] == 0)
+			if( PlayerCache[i][pCurrentVehicle][vFuel] == 0)
 			{
-				SetVehicleParamsEx(i, VehicleCache[vuid][vEngine]=0, VehicleCache[vuid][vLights], VehicleCache[vuid][vAlarm], VehicleCache[vuid][vDoors],  VehicleCache[vuid][vBonnet],VehicleCache[vuid][vBoot], VehicleCache[vuid][vObjective]);
+				SetVehicleParamsEx(i,  PlayerCache[i][pCurrentVehicle][vEngine]=0,  PlayerCache[i][pCurrentVehicle][vLights],  PlayerCache[i][pCurrentVehicle][vAlarm],  PlayerCache[i][pCurrentVehicle][vDoors],   PlayerCache[i][pCurrentVehicle][vBonnet], PlayerCache[i][pCurrentVehicle][vBoot],  PlayerCache[i][pCurrentVehicle][vObjective]);
 				continue;
 			}
-			VehicleCache[vuid][vFuel]--;
-			format(query, sizeof(query), "UPDATE vehicles SET fuel = '%d' WHERE uid = '%d'", VehicleCache[vuid][vFuel], VehicleCache[vuid][vUID]);
-			mysql_query(DB_HANDLE, query);
+			PlayerCache[i][pCurrentVehicle][vFuel]--;
+			format(query, sizeof(query), "UPDATE vehicles SET fuel = '%d' WHERE uid = '%d'",  PlayerCache[i][pCurrentVehicle][vFuel],  PlayerCache[i][pCurrentVehicle][vUID]);
+			mysql_query(DB_HANDLE, query, false);
 		}
 	}
 	new Float:pH, guid;
@@ -10219,36 +10103,36 @@ public min_timer()
 							AJPlayer(i, "System", "Veh speedhack (A)", 30);
 						}
 
-						vuid = GetVehicleUID(GetPlayerVehicleID(i));
+						//vuid = GetVehicleUID(GetPlayerVehicleID(i));
 
-						if(VehicleCache[vuid][vState] == 0 && VehicleCache[vuid][vOwner] != PlayerCache[i][pUID])
+					/*	if( PlayerCache[i][pCurrentVehicle][vState] == 0 &&  PlayerCache[i][pCurrentVehicle][vOwner] != PlayerCache[i][pUID])
 						{
 							AJPlayer(i, "System", "Vehicle Jack (A)", 30);
 						}
-						if(VehicleCache[vuid][vState] == 2)
+						if( PlayerCache[i][pCurrentVehicle][vState] == 2)
 						{
-							if(PlayerCache[i][pGroup] == VehicleCache[vuid][vOwner])
+							if(PlayerCache[i][pGroup] ==  PlayerCache[playerid][pCurrentVehicle][vOwner])
 							{
 								if(!PlayerCache[i][pGroupVehicle])
 								{
 									AJPlayer(i, "System", "Vehicle Jack (A)", 30);
 								}
 							}
-							if(PlayerCache[i][pGroup2] == VehicleCache[vuid][vOwner])
+							if(PlayerCache[i][pGroup2] ==  PlayerCache[playerid][pCurrentVehicle][vOwner])
 							{
 								if(!PlayerCache[i][pGroupVehicle2])
 								{
 									AJPlayer(i, "System", "Vehicle Jack (A)", 30);
 								}
 							}
-							if(PlayerCache[i][pGroup3] == VehicleCache[vuid][vOwner])
+							if(PlayerCache[i][pGroup3] ==  PlayerCache[playerid][pCurrentVehicle][vOwner])
 							{
 								if(!PlayerCache[i][pGroupVehicle3])
 								{
 									AJPlayer(i, "System", "Vehicle Jack (A)", 30);
 								}
 							}
-						}
+						}*/
 					}
 				}
 				GetPlayerHealth(i, pH);
@@ -10289,10 +10173,9 @@ public min_timer()
 						
 						SetCameraBehindPlayer(i);
 						ShowDialogInfo(i, ""HEX_WHITE"Twoja postaæ ocknê³¹ siê po utracie przytomnoœci.\n\
-						"HEX_RED"Zdrowie bêdzie regerenowane do pe³na przez najbli¿szy czas.\n\
-						"HEX_YELLOW"Proces ten przerwie wdanie siê w bójkê z innym graczem.");
+						Mo¿esz zadzwoniæ po odpowiednie s³u¿by jeœli potrzebujesz odnowiæ zdrowie lub pójœæ do apteki i kupiæ lek.");
 						PlayerTextDrawHide(i, BWTextDraw[i]);
-						SetPlayerDrunkLevel(i, 3000);
+						SetPlayerDrunkLevel(i, 4000);
 						UpdatePlayerName(i);
 					}
 				}
@@ -11050,6 +10933,25 @@ public HidePenalityTextDraw()
 	PenalityTimer = 0;
 }
 
+forward GetVehicleData(vehicleid, &model, &fuel, &Float:posX, &Float:posY, &Float:posZ, &Float:angle, &playerUID, &groupUID, &register, &color, &color2, &Float:health);
+public GetVehicleData(vehicleid,  &model, &fuel, &Float:posX, &Float:posY, &Float:posZ, &Float:angle, &playerUID, &groupUID, &register, &color, &color2, &Float:health){
+	new query[256];
+	format(query, sizeof(query), "SELECT model, fuel, posX, posY, posZ, angle, playerUID, groupUID, register, color, color2, HP FROM vehicles WHERE gameId=%d LIMIT 1;", vehicleid);
+	new Cache:cache = mysql_query(DB_HANDLE, query);
+	cache_get_value_name_int(0, "model", model);
+	cache_get_value_name_int(0, "playerUID", playerUID);
+	cache_get_value_name_int(0, "groupUID", groupUID);
+	cache_get_value_name_int(0, "fuel", fuel);
+	cache_get_value_name_float(0, "posX", posX);
+	cache_get_value_name_float(0, "posY", posY);
+	cache_get_value_name_float(0, "posZ", posZ);
+	cache_get_value_name_float(0, "angle", angle);
+	cache_get_value_name_int(0, "register", register);
+	cache_get_value_name_int(0, "color", color);
+	cache_get_value_name_int(0, "color2", color2);
+	cache_get_value_name_float(0, "HP", health);
+	cache_delete(cache);
+}
 
 stock AJPlayer(playerid, const adminname[], const reason[], time)
 {
@@ -11970,9 +11872,9 @@ cmd:p (playerid, params[])
 				{
 
 				}
-				else if(VehicleCache[vuid][vState] == 2)
+				else if( PlayerCache[playerid][pCurrentVehicle][vState] == 2)
 				{
-					new guid = VehicleCache[vuid][vOwner];
+					new guid =  PlayerCache[playerid][pCurrentVehicle][vOwner];
 
 					if(PlayerCache[playerid][pGroup] == guid)
 					{
@@ -11996,7 +11898,7 @@ cmd:p (playerid, params[])
 						}
 					}
 				}
-				else if(VehicleCache[vuid][vOwner] != PlayerCache[playerid][pUID] && VehicleCache[vuid][vState] == 0)
+				else if( PlayerCache[playerid][pCurrentVehicle][vOwner] != PlayerCache[playerid][pUID] &&  PlayerCache[playerid][pCurrentVehicle][vState] == 0)
 				{
 					return TextDrawForPlayerEx(playerid, 1, "Brak uprawnien.", 3000);
 				}
@@ -12006,7 +11908,7 @@ cmd:p (playerid, params[])
 					break;
 					if(ItemCache[i][iState] == ITEM_STATE_VEHICLE)
 					{
-						if(ItemCache[i][iOwner] == VehicleCache[vuid][vUID])
+						if(ItemCache[i][iOwner] ==  PlayerCache[playerid][pCurrentVehicle][vUID])
 						format(list, sizeof(list), "%s%d\t%s\n", list, i, ItemCache[i][iName]);
 					}
 				}
@@ -12535,49 +12437,50 @@ stock UseItem(playerid, itemuid)
 					}
 				}
 			}
-			new vid = GetPlayerCameraTargetVehicle(playerid);
-			if(vid)
+			new vehicleid = GetPlayerCameraTargetVehicle(playerid);
+			if(vehicleid)
 			{
 				new Float:X, Float:Y, Float:Z;
-				GetVehiclePos(vid, X, Y, Z);
+				GetVehiclePos(vehicleid, X, Y, Z);
 				if(!IsPlayerInRangeOfPoint(playerid, 5.0, X, Y, Z))
-				return GameTextForPlayer(playerid, "~r~~h~stan blizej", 3000, 4);
-				PlayerRepairingVehicle[playerid][repairVehicleUID] = GetVehicleUID(vid);
-				if(VehicleCache[GetVehicleUID(vid)][vHP] > 300)
-				return TextDrawForPlayerEx(playerid, 1, "Ten pojazd jest w stanie uruchomic silnik~n~Naprawa jest niepotrzebna.", 3000);
+					return GameTextForPlayer(playerid, "~r~~h~stan blizej", 3000, 4);
+
+				PlayerRepairingVehicle[playerid][repairVehicleID] = vehicleid;
+				
+				new Float:health;
+				GetVehicleHealth(vehicleid, health);
+
+				if(health > 300)
+					return TextDrawForPlayerEx(playerid, 1, "Ten pojazd jest w stanie uruchomic silnik~n~Naprawa jest niepotrzebna.", 3000);
 				TextDrawForPlayerEx(playerid, 1, "Rozpoczynasz naprawe pojazdu.~n~Odegraj akcje RolePlay naprawy pojazdu.", 10000);
 				PlayerRepairingVehicle[playerid][repairTime] = 30;
-				ItemCache[itemuid][iActive] = 1;
 				PlayerRepairingVehicle[playerid][repairTimer] = SetTimerEx("RepairingVehicle", 1000, true, "i", playerid);
 			}
 			return GameTextForPlayer(playerid, "~r~~h~spojrz na pojazd", 3000, 4);
 		}
 		case 10:
 		{
-			new Float:vx, Float:vy, Float:vz, vvw, pvw = GetPlayerVirtualWorld(playerid);
 			for(new i; i<=GetVehiclePoolSize(); i++)
 			{
-				vvw = GetVehicleVirtualWorld(i);
-				if(pvw == vvw)
-				{
-					GetVehiclePos(i, vx, vy, vz);
-					if(IsPlayerInRangeOfPoint(playerid, 5.0, vx, vy, vz))
-					{
-						new vuid = GetVehicleUID(i);
-						new fuel = VehicleCache[vuid][vFuel];
-						if(VehicleCache[vuid][vEngine])
+					if(IsPlayerInRangeOfVehicle(playerid, i, 5.0)){
+						
+
+
+					/*	new fuel =  0;
+						if( PlayerCache[playerid][pCurrentVehicle][vEngine])
 						return ShowDialogInfo(playerid, "Silnik  w tym pojeŸdzie musi byæ zgaszony.");
 						if(fuel + ItemCache[itemuid][iVal] > 100)
 						return TextDrawForPlayerEx(playerid, 1, "W tym pojezdzie nie zmiesci sie az tyle paliwa.", 3000);
 						if(IsPlayerInAnyVehicle(playerid))
 						return ShowDialogInfo(playerid, "Nie mo¿esz u¿yæ tej funkcji znajduj¹c siê w pojeŸdzie.");
-						VehicleCache[vuid][vFuel] += ItemCache[itemuid][iVal];
+							PlayerCache[playerid][pCurrentVehicle][vFuel] += ItemCache[itemuid][iVal];
 						new str[128]; format(str, sizeof(str), "uzupe³nia bak paliwa pojazdu marki %s", GetVehicleName(GetVehicleModel(i)));
 						ApplyAnimation(playerid, "BD_FIRE", "wash_up", 4.1, 0, 0, 0, 0, 0, 0);
-						ItemCache[itemuid][iState] = 3;
-						return SendPlayerMe(playerid, str);
+						ItemCache[itemuid][iState] = 3;*/
+						//return SendPlayerMe(playerid, str);
 					}
-				}
+				
+				
 			}
 			return TextDrawForPlayerEx(playerid, 1, "Nie znajdujesz sie w poblizu zadnego pojazdu.", 3000);
 		}
@@ -12699,29 +12602,23 @@ stock UseItem(playerid, itemuid)
 			new vid = GetPlayerCameraTargetVehicle(playerid);
 			if(vid != INVALID_VEHICLE_ID)
 			{
-				new vuid = GetVehicleUID(vid);
-				if(VehicleCache[vuid][vRegister])
-				return TextDrawForPlayerEx(playerid, 1, "Ten pojazd posiada juz rejestracje.", 3000);
-				if(VehicleCache[vuid][vOwner] != PlayerCache[playerid][pUID] && VehicleCache[vuid][vState] == 0)
-				return TextDrawForPlayerEx(playerid, 1, "Brak uprawnien.", 3000);
-				if(VehicleCache[vuid][vState] == 2)
-				{
-					new guid = VehicleCache[vuid][vOwner];
-					new uid = PlayerCache[playerid][pUID];
-					if(PlayerCache[uid][pGroup] == guid || PlayerCache[uid][pGroup2] == guid || PlayerCache[uid][pGroup3] == guid)  
-					{
+				new Float:posX, Float:posY, Float:posZ, Float:angle, model, fuel, playerUID, groupUID, register, color, color2, Float:health;
+				GetVehicleData(vid, model, fuel, posX, posY, posZ, angle, playerUID, groupUID, register, color, color2, health);
 
-					}
-					else
-					{
-						return TextDrawForPlayerEx(playerid, 1, "Brak uprawnien.", 3000);
-					}
-				}
-				VehicleCache[vuid][vRegister] = true;
-				UnSpawnVehicle(vuid);
-				SpawnVehicle(vuid);
+				if(register)
+					return TextDrawForPlayerEx(playerid, 1, "Ten pojazd posiada juz rejestracje.", 3000);
+				if( !HasPlayerAccessToVehicle(playerid, vid))
+					return TextDrawForPlayerEx(playerid, 1, "Brak uprawnien.", 3000);
+			
+
+				new query[128];
+				format(query, sizeof(query), "UPDATE vehicles SET register=1 WHERE gameId=%d;", vid);
+				mysql_query(DB_HANDLE, query, false);
+				
+				UnSpawnVehicle(vid);
+				SpawnVehicle(vid);
 				ShowDialogInfo(playerid, "Pomyœlnie zamontowano rejstracjê pojazdu.");
-				ItemCache[itemuid][iState] = 2;
+				//ItemCache[itemuid][iState] = 2;
 			}
 			return TextDrawForPlayerEx(playerid, 1, "Spojrz na pojazd na, ktory chcesz nalozyc nowa rejestracje.", 3000);
 		}
@@ -12848,24 +12745,30 @@ public DestroyDynObjects(obj, obj2, obj3, obj4)
 
 stock BWPlayer(playerid, bwtime, reason)
 {
-	new puid = PlayerCache[playerid][pUID];
 	pShowingWeapon[playerid] = true;
 	SetTimerEx("ShowingWeapon", 3000, false, "i", playerid);
-	ClearAnimations(playerid);
-	GetPlayerPos(playerid, PlayerCache[puid][pPosX], PlayerCache[puid][pPosY], PlayerCache[puid][pPosZ]);
-	PlayerCache[puid][pPosVW] = GetPlayerVirtualWorld(playerid);
+	
+	GetPlayerPos(playerid, PlayerCache[playerid][pPosX], PlayerCache[playerid][pPosY], PlayerCache[playerid][pPosZ]);
+	PlayerCache[playerid][pPosVW] = GetPlayerVirtualWorld(playerid);
 	SendPlayerMe(playerid, "traci przytomnoœæ");
-	PlayerCache[puid][pBW_Reason] = reason;
-	PlayerCache[puid][pHealth]=1;
-	SetPlayerCameraPos(playerid, PlayerCache[puid][pPosX], PlayerCache[puid][pPosY], PlayerCache[puid][pPosZ]+10.0);
-	SetPlayerCameraLookAt(playerid, PlayerCache[puid][pPosX], PlayerCache[puid][pPosY], PlayerCache[puid][pPosZ], CAMERA_CUT);
-	PlayerCache[puid][pBW_Time] = bwtime;
+	PlayerCache[playerid][pBW_Reason] = reason;
+	PlayerCache[playerid][pHealth]=1;
+	SetPlayerCameraPos(playerid, PlayerCache[playerid][pPosX], PlayerCache[playerid][pPosY], PlayerCache[playerid][pPosZ]+10.0);
+	SetPlayerCameraLookAt(playerid, PlayerCache[playerid][pPosX], PlayerCache[playerid][pPosY], PlayerCache[playerid][pPosZ], CAMERA_CUT);
+	PlayerCache[playerid][pBW_Time] = bwtime;
 	new msg[64];
-	format(msg, sizeof(msg),  "Stan nieprzytomnosci przez: %dmin", PlayerCache[puid][pBW_Time]);
+	format(msg, sizeof(msg),  "Stan nieprzytomnosci przez: %dmin", PlayerCache[playerid][pBW_Time]);
 	TextDrawForPlayer(playerid, 2, msg);
 	ResetPlayerWeapons(playerid);
+
+
 	TogglePlayerControllable(playerid, 0);
-	ApplyAnimation(playerid, "crack", "crckdeth1", 4.1, 0, 0, 0, 1, 0, 0);
+	if(!IsPlayerInAnyVehicle(playerid)){
+		ClearAnimations(playerid);
+		ApplyAnimation(playerid, "crack", "crckdeth1", 4.1, 0, 0, 0, 1, 0, 0);
+	}
+		
+
 	UpdatePlayerName(playerid);
 	return 1;
 }
@@ -12961,9 +12864,9 @@ public DetonatorTimer(playerid, dooruid, groupuid)
 forward RepairingVehicle(playerid);
 public RepairingVehicle(playerid)
 {
-	new targetid = GetPlayerCameraTargetVehicle(playerid);
+	/*new targetid = GetPlayerCameraTargetVehicle(playerid);
 	new targetuid = GetVehicleUID(targetid);
-	if(targetuid != PlayerRepairingVehicle[playerid][repairVehicleUID])
+	if(targetuid != PlayerRepairingVehicle[playerid][repairVehicleID])
 	return GameTextForPlayer(playerid, "~r~~h~spojrz na pojazd", 1000, 4);
 	new Float:X, Float:Y, Float:Z;
 	GetVehiclePos(targetid, X, Y, Z);
@@ -12984,7 +12887,7 @@ public RepairingVehicle(playerid)
 	}
 	if(PlayerRepairingVehicle[playerid][repairTime] == 0)
 	{
-		new vuid = PlayerRepairingVehicle[playerid][repairVehicleUID];
+		new vuid = PlayerRepairingVehicle[playerid][repairVehicleID];
 		new val;
 		for(new i; i<MAX_ITEMS; i++)
 		{
@@ -13004,11 +12907,11 @@ public RepairingVehicle(playerid)
 				}
 			}
 		}
-		VehicleCache[vuid][vHP] = VehicleCache[vuid][vHP] + val;
-		SetVehicleHealth(VehicleCache[vuid][vID], VehicleCache[vuid][vHP]);
+		 PlayerCache[playerid][pCurrentVehicle][vHP] =  PlayerCache[playerid][pCurrentVehicle][vHP] + val;
+		SetVehicleHealth( PlayerCache[playerid][pCurrentVehicle][vID],  PlayerCache[playerid][pCurrentVehicle][vHP]);
 		PlayerPlaySound(playerid, 1133, 0.0, 0.0, 0.0);
 		KillTimer(PlayerRepairingVehicle[playerid][repairTimer]);
-	}
+	}*/
 	return 1;
 }
 
@@ -13462,7 +13365,7 @@ CMD:g (playerid, params[])
 			}
 			else if(!strcmp(sub, "zapros", true))
 			{
-				new guid;
+				/*new guid;
 				switch(slot)
 				{
 					case 1: guid = PlayerCache[playerid][pGroup];
@@ -13483,9 +13386,9 @@ CMD:g (playerid, params[])
 				{
 					new vid = GetPlayerVehicleID(playerid);
 					new vuid = GetVehicleUID(vid);
-					if(VehicleCache[vuid][vState] == 2)
+					if( PlayerCache[playerid][pCurrentVehicle][vState] == 2)
 					{
-						if(VehicleCache[vuid][vOwner] == guid)
+						if( PlayerCache[playerid][pCurrentVehicle][vOwner] == guid)
 						{
 
 						}
@@ -13519,11 +13422,12 @@ CMD:g (playerid, params[])
 				new info[256]; format(info, sizeof(info),"Otrzymano zaproszenie do grupy %s przez gracza %s.\nMo¿esz do³¹czyæ do tej grupy wybieraj¹c tak lub nie.\nCzy akceptujesz tê ofertê?",
 				GroupCache[guid][gName], RPName(playerid));
 				ShowPlayerDialog(targetid, D_JOIN_GROUP, DIALOG_STYLE_MSGBOX, header, info, "Tak", "Nie");
+				*/
 				return TextDrawForPlayerEx(playerid, 1, "Oferta ~g~wyslana.", 3000);
 			}
 			else if(!strcmp(sub, "v", true))
 			{
-				new guid;
+				/*new guid;
 				switch(slot)
 				{
 					case 1: guid = PlayerCache[playerid][pGroup];
@@ -13548,7 +13452,7 @@ CMD:g (playerid, params[])
 				}
 				if(count)
 				return ShowPlayerDialog(playerid, D_VEHICLES, DIALOG_STYLE_LIST, "Pojazdy grupy (* - zespawnowany)", list, "(Un)Spawn", "Anuluj");
-				return ShowDialogInfo(playerid, "Do tej grupy nie zosta³y przypisane jeszcze ¿adne pojazdy.");
+				return ShowDialogInfo(playerid, "Do tej grupy nie zosta³y przypisane jeszcze ¿adne pojazdy.");*/
 			}
 			else if(!strcmp(sub, "z", true))
 			{
@@ -14031,6 +13935,8 @@ CMD:rc (playerid, params[])
 		PlayerTextDrawShow(playerid, ObjectInfo[playerid]);
 	}
 }*/
+
+
 
 new gindex[MAX_PLAYERS], globallib[MAX_PLAYERS][32], globalname[MAX_PLAYERS][32];
 new gstr[MAX_PLAYERS][256];
@@ -14702,12 +14608,27 @@ stock ReturnObjectUID(objectid)
 	return objectuid;
 }
 
+forward HasPlayerAccessToVehicle(playerid, vehicleid);
+public HasPlayerAccessToVehicle(playerid, vehicleid){
+	new query[256];
+	format(query, sizeof(query), "SELECT NULL FROM vehicles INNER JOIN players ON vehicles.playerUID=%d LEFT OUTER JOIN groupMembers ON vehicles.groupUID=groupMembers.groupUID and players.uid = groupMembers.playerUID  WHERE vehicles.gameId=%d;", PlayerCache[playerid][pUID], vehicleid);
+	mysql_query(DB_HANDLE, query);
+	new Cache:cache = mysql_query(DB_HANDLE, query);
+	new rows = cache_num_rows();
+	cache_delete(cache);
+	if(rows){
+		return true;
+	}
+	return false;
+
+}
+
 CMD:pokaz (playerid, params[]){
 
 	new docName[32], targetid; 
 
 	if(sscanf(params, "s[32]r",  docName,targetid)){
-		return SendClientMessage(playerid, COLOR_GRAY, "/pokaz [ID/Czêœæ nazwy gracza] [prawko/niepoczytalnosc/niekaralnosc/wedkarz/poczytalnosc/dowod]");
+		return SendClientMessage(playerid, COLOR_GRAY, "/pokaz [prawko/niepoczytalnosc/niekaralnosc/wedkarz/poczytalnosc/dowod] [ID/Czêœæ nazwy gracza] ");
 	}
 
 	if(pLogged[targetid] == false){
@@ -14737,16 +14658,15 @@ CMD:pokaz (playerid, params[]){
 		type = DOC_TYPE_ID;
 	}
 	else
-		return SendClientMessage(playerid, COLOR_GRAY, "/pokaz [ID/Czêœæ nazwy gracza] [prawko/niepoczytalnosc/niekaralnosc/wedkarz/poczytalnosc/dowod]");
+		return SendClientMessage(playerid, COLOR_GRAY, "/pokaz [prawko/niepoczytalnosc/niekaralnosc/wedkarz/poczytalnosc/dowod] [ID/Czêœæ nazwy gracza]");
 	
 	if(!HasPlayerDoc(playerid, type)){
 		return SendClientMessage(playerid, COLOR_GRAY, "Nie posiadasz takiego dokumentu.");
 	}
 
 	new str[420];
-	format(str,sizeof(str), "SELECT players1.name as name, playerDocs.createdAt as createdAt, players1.gender as gender, players1.bornDate as bornDate FROM playerDocs INNER JOIN players players1 ON playerDocs.playerUID=%d AND playerDocs.type = %d;", PlayerCache[playerid][pUID], type);
+	format(str,sizeof(str), "SELECT players1.uid as playerUID, players1.name as name, playerDocs.createdAt as createdAt, players1.gender as gender, players1.bornDate as bornDate FROM playerDocs INNER JOIN players players1 ON playerDocs.type = %d WHERE playerDocs.playerUID=%d LIMIT 1;", type, PlayerCache[playerid][pUID]);
 	new Cache:cache = mysql_query(DB_HANDLE, str);
-	
 	new createdAt[32], gender, bornDate, name[24];
 	cache_get_value_name(0, "createdAt", createdAt);
 	cache_get_value_name_int(0, "gender", gender);
@@ -15069,7 +14989,8 @@ CMD:ap(playerid, params[])
 	{
 		new name[32], color, color2, siren;
 		if(sscanf(params, "s[32]iii", name, color, color2, siren))
-		return SendClientMessage(playerid, COLOR_GRAY, "Poprawne u¿ycie: /ap [Czêœæ/nazwa pojazdu] [ID koloru] [ID koloru 2] [wartoœæ syreny]");
+			return SendClientMessage(playerid, COLOR_GRAY, "Poprawne u¿ycie: /ap [Czêœæ/nazwa pojazdu] [ID koloru] [ID koloru 2] [wartoœæ syreny]");
+
 		new model;
 		for(new i=400; i<=611; i++)
 		{
@@ -15079,26 +15000,25 @@ CMD:ap(playerid, params[])
 		if(!model)
 		return SendClientMessage(playerid, COLOR_GRAY, "Nie znaleziono takiego pojazdu.");
 
-		GetPlayerPos(playerid, PlayerCache[playerid][pPosX], PlayerCache[playerid][pPosY], PlayerCache[playerid][pPosZ]);
-		new Float:ang; 
+		new Float:x, Float:y, Float:z, Float:ang; 
+		GetPlayerPos(playerid, x,y,z);
 		GetPlayerFacingAngle(playerid, ang);
 
-		new vid = CreateVehicle(model, PlayerCache[playerid][pPosX], PlayerCache[playerid][pPosY], PlayerCache[playerid][pPosZ], ang, color, color2, -1, siren);
+		new vid = CreateVehicle(model, x,y,z, ang, color, color2, -1, siren);
 
 		new query[256];
-		format(query, sizeof(query), "INSERT INTO vehicles (owner, model, color, color2, posX, posY, posZ, id, siren, vw) VALUES ('%d', '%d', '%d', '%d', '%f', '%f', '%f', '%d', '%d', '%d')",
-		PlayerCache[playerid][pUID], model, color, color2, PlayerCache[playerid][pPosX], PlayerCache[playerid][pPosY], PlayerCache[playerid][pPosZ], vid, siren, GetPlayerVirtualWorld(playerid));
-		cache_delete(mysql_query(DB_HANDLE, query));
+		format(query, sizeof(query), "INSERT INTO vehicles (playerUID, model, color, color2, posX, posY, posZ, gameId, siren, virtualWorld, register) VALUES ('%d', '%d', '%d', '%d', '%f', '%f', '%f', '%d', '%d', '%d', 1)",
+		PlayerCache[playerid][pUID], model, color, color2, x,y,z, vid, siren, GetPlayerVirtualWorld(playerid));
+		mysql_query(DB_HANDLE, query, false);
 
 		new uid;
-
-		format(query, sizeof(query), "SELECT uid FROM vehicles WHERE id = '%d'", vid);
+		format(query, sizeof(query), "SELECT uid FROM vehicles WHERE gameId = '%d'", vid);
 		new Cache:cache = mysql_query(DB_HANDLE, query);
-
 		cache_get_value_name_int(0, "uid", uid);
-
 		cache_delete(cache);
 
+		format(query, sizeof(query), "> Utworzono pojazd "HEX_WHITE"%s (UID: %d, ID: %d)", GetVehicleName(model), uid, vid);
+		SendClientMessage(playerid, COLOR_GREEN, query);
 		PutPlayerInVehicle(playerid, vid, 0);
 	}
 
@@ -15111,7 +15031,6 @@ return ShowPlayerDialog(playerid, D_V_OPTIONS, DIALOG_STYLE_LIST, "Zarz¹dzaj poj
 
 CMD:v (playerid, params[])
 {
-	/*new vid = GetPlayerVehicleID(playerid), vuid = GetVehicleUID(vid);
 
 	new sub[32], uid;
 	sscanf(params, "s[32]i", sub, uid);
@@ -15120,100 +15039,48 @@ CMD:v (playerid, params[])
 	{
 		if(!strcmp(sub, "namierz", true))
 		{
-			if(VehicleCache[vuid][vState] == 2)
-			{
-				new guid = VehicleCache[vuid][vOwner];
-				if(PlayerCache[playerid][pGroup] == guid)
-				{
-					if(!PlayerCache[playerid][pGroupVehicle])
-					{
-						return SendClientMessage(playerid, COLOR_GRAY, "Aby namierzaæ pojazdy grupowe musisz mieæ odpowiednie uprawnienia nadane przez lidera.");
-					}
-				}
-				if(PlayerCache[playerid][pGroup2] == guid)
-				{
-					if(!PlayerCache[playerid][pGroupVehicle2])
-					{
-						return SendClientMessage(playerid, COLOR_GRAY, "Aby namierzaæ pojazdy grupowe musisz mieæ odpowiednie uprawnienia nadane przez lidera.");
-					}
-				}
-				if(PlayerCache[playerid][pGroup3] == guid)
-				{
-					if(!PlayerCache[playerid][pGroupVehicle3])
-					{
-						return SendClientMessage(playerid, COLOR_GRAY, "Aby namierzaæ pojazdy grupowe musisz mieæ odpowiednie uprawnienia nadane przez lidera.");
-					}
-				}
-			}
-			if(VehicleCache[vuid][vState] == 0 && VehicleCache[vuid][vOwner] != PlayerCache[playerid][pUID])
+			// return SendClientMessage(playerid, COLOR_GRAY, "Aby namierzaæ pojazdy grupowe musisz mieæ odpowiednie uprawnienia nadane przez lidera.");
+			/*if( PlayerCache[playerid][pCurrentVehicle][vState] == 0 &&  PlayerCache[playerid][pCurrentVehicle][vOwner] != PlayerCache[playerid][pUID])
 			{
 				SendClientMessage(playerid, COLOR_GRAY, "Mo¿esz namierzaæ tylko pojazdy nale¿¹ce do Ciebie.");
 				return ClearAnimations(playerid);
 			}
-			if(VehicleCache[vuid][vID] == 0)
+			if( PlayerCache[playerid][pCurrentVehicle][vID] == 0)
 			return SendClientMessage(playerid, COLOR_GRAY, "Ten pojazd nie jest zespawnowany.");
 			DestroyDynamicMapIcon(MapIcon[playerid]);
 			KillTimer(MapIconTimer[playerid]);
-			MapIcon[playerid] = CreateDynamicMapIcon(VehicleCache[vuid][vPosX], VehicleCache[vuid][vPosY], VehicleCache[vuid][vPosZ], 55,-1,  0, 0, playerid,-1, 3);
+			MapIcon[playerid] = CreateDynamicMapIcon( PlayerCache[playerid][pCurrentVehicle][vPosX],  PlayerCache[playerid][pCurrentVehicle][vPosY],  PlayerCache[playerid][pCurrentVehicle][vPosZ], 55,-1,  0, 0, playerid,-1, 3);
 			MapIconTimer[playerid] = SetTimerEx("DestroyIcon", 5000*60, false, "i", playerid);
-			return TextDrawForPlayerEx(playerid, 1, "~g~~h~Ikona pojazdu pojawila sie na radarze.", 5000);
+			return TextDrawForPlayerEx(playerid, 1, "~g~~h~Ikona pojazdu pojawila sie na radarze.", 5000);*/
 		}
 		else if(!strcmp(sub, "z", true))
 		{
 			new Float:vX, Float:vY, Float:vZ, veVW, pVW=GetPlayerVirtualWorld(playerid);
-			new guid;
 			for(new i; i<=GetVehiclePoolSize(); i++)
 			{
-				vuid = GetVehicleUID(i);
 				GetVehiclePos(i, vX, vY, vZ);
 				veVW = GetVehicleVirtualWorld(i);
 				if(pVW == veVW)
 				{
 					if(IsPlayerInRangeOfPoint(playerid, 5.0, vX, vY, vZ))
 					{
-						if(VehicleCache[vuid][vState] == 2)
-						{
-							guid = VehicleCache[vuid][vOwner];
-							if(PlayerCache[playerid][pGroup] == guid)
-							{
-								if(!PlayerCache[playerid][pGroupVehicle])
-								{
-									return TextDrawForPlayerEx(playerid, 1, "Nie posiadasz kluczy do tego pojazdu.", 1500);
-								}
-							}
-							else if(PlayerCache[playerid][pGroup2] == guid)
-							{
-								if(!PlayerCache[playerid][pGroupVehicle2])
-								{
-									return TextDrawForPlayerEx(playerid, 1, "Nie posiadasz kluczy do tego pojazdu.", 1500);
-								}
-							}
-							else if(PlayerCache[playerid][pGroup3] == guid)
-							{
-								if(!PlayerCache[playerid][pGroupVehicle3])
-								{
-									return TextDrawForPlayerEx(playerid, 1, "Nie posiadasz kluczy do tego pojazdu.", 1500);
-								}
-							}
-							else
-							return TextDrawForPlayerEx(playerid, 1, "Nie posiadasz kluczy do tego pojazdu.", 1500);
-						}
-						if(VehicleCache[vuid][vState] == 0 && VehicleCache[vuid][vOwner] != PlayerCache[playerid][pUID])
-						{
+						if(!HasPlayerAccessToVehicle(playerid, i)){
 							return TextDrawForPlayerEx(playerid, 1, "Nie posiadasz kluczy do tego pojazdu.", 1500);
 						}
 						ApplyAnimation(playerid, "BD_FIRE", "wash_up", 4.1, 0, 0, 0, 0, 0, 0);
 						PlayerPlaySound(playerid, 24600, 0.0, 0.0, 0.0);
-						if(VehicleCache[vuid][vOpen])
+						new engine,lights,alarm,doors,bonnet,boot,objective;
+						GetVehicleParamsEx(i, engine, lights, alarm, doors, bonnet, boot, objective);
+						if(doors)
 						{
 							SendPlayerMe(playerid, "zamyka pojazd.");
-							VehicleCache[vuid][vOpen]=0;
+							SetVehicleParamsEx(i, engine, lights, alarm, 0, bonnet, boot, objective);
 							return GameTextForPlayer(playerid, "~w~Pojazd ~r~~h~zamkniety", 3000, 4);
 						}
 						else
 						{
 							SendPlayerMe(playerid, "otwiera pojazd.");
-							VehicleCache[vuid][vOpen]=1;
+							SetVehicleParamsEx(i, engine, lights, alarm, 1, bonnet, boot, objective);
 							return GameTextForPlayer(playerid, "~w~Pojazd ~g~~h~otwarty", 3000, 4);
 						}
 					}
@@ -15231,8 +15098,7 @@ CMD:v (playerid, params[])
 				GetVehiclePos(i, X, Y, Z);
 				if(IsPlayerInRangeOfPoint(playerid, 5.0, X, Y, Z))
 				{
-					vuid = GetVehicleUID(i);
-					return ShowDialogVInfo(playerid, vuid);
+					return ShowDialogVInfo(playerid, i);
 				}
 			}
 		}
@@ -15242,40 +15108,21 @@ CMD:v (playerid, params[])
 			{
 				if(GetPlayerVehicleSeat(playerid) == 0)
 				{
-					if(VehicleCache[vuid][vState] == 2)
-					{
-						new guid = VehicleCache[vuid][vOwner];
-						if(PlayerCache[playerid][pGroup] == guid)
-						{
-							if(!PlayerCache[playerid][pGroupVehicle])
-							{
-								return TextDrawForPlayerEx(playerid, 1, "Nie posiadasz kluczy do tego pojazdu.", 1500);
-							}
-						}
-						else if(PlayerCache[playerid][pGroup2] == guid)
-						{
-							if(!PlayerCache[playerid][pGroupVehicle2])
-							{
-								return TextDrawForPlayerEx(playerid, 1, "Nie posiadasz kluczy do tego pojazdu.", 1500);
-							}
-						}
-						else if(PlayerCache[playerid][pGroup3] == guid)
-						{
-							if(!PlayerCache[playerid][pGroupVehicle3])
-							{
-								return TextDrawForPlayerEx(playerid, 1, "Nie posiadasz kluczy do tego pojazdu.", 1500);
-							}
-						}
-						else return TextDrawForPlayerEx(playerid, 1, "Nie posiadasz kluczy do tego pojazdu.", 1500);
-					}
-					if(VehicleCache[vuid][vState] == 0 && VehicleCache[vuid][vOwner] != PlayerCache[playerid][pUID])
+					
+					if( !HasPlayerAccessToVehicle(playerid, PlayerCache[playerid][pCurrentVehicle][vID]))
 					{
 						TextDrawForPlayerEx(playerid, 1, "~r~~h~Nie posiadasz kluczy do tego pojazdu", 3000);
 						return ClearAnimations(playerid);
 					}
-					GetVehiclePos(vid, VehicleCache[vuid][vPosX], VehicleCache[vuid][vPosY], VehicleCache[vuid][vPosZ]);
-					VehicleCache[vuid][vVW] = GetPlayerVirtualWorld(playerid);
-					GetVehicleZAngle(vid, VehicleCache[vuid][vAngle]);
+					GetVehiclePos(PlayerCache[playerid][pCurrentVehicle][vID],  PlayerCache[playerid][pCurrentVehicle][vPosX],  PlayerCache[playerid][pCurrentVehicle][vPosY],  PlayerCache[playerid][pCurrentVehicle][vPosZ]);
+					PlayerCache[playerid][pCurrentVehicle][vVW] = GetPlayerVirtualWorld(playerid);
+					GetVehicleZAngle(PlayerCache[playerid][pCurrentVehicle][vID],  PlayerCache[playerid][pCurrentVehicle][vAngle]);
+
+					new query[256];
+					format(query, sizeof(query), "UPDATE vehicles SET posX=%f, posY=%f, posZ=%f, angle=%f WHERE gameId=%d", PlayerCache[playerid][pCurrentVehicle][vPosX],  PlayerCache[playerid][pCurrentVehicle][vPosY],  PlayerCache[playerid][pCurrentVehicle][vPosZ],
+					PlayerCache[playerid][pCurrentVehicle][vAngle], PlayerCache[playerid][pCurrentVehicle][vID]);
+					mysql_query(DB_HANDLE, query, false);
+
 					return TextDrawForPlayerEx(playerid, 1, "Przeparkowano pojazd.", 3000);
 				}
 			}
@@ -15285,156 +15132,54 @@ CMD:v (playerid, params[])
 	}
 	if(IsPlayerInAnyVehicle(playerid))
 	{
-		if(VehicleCache[vuid][vState] == 2)
-		{
-			new guid = VehicleCache[vuid][vOwner];
-			if(PlayerCache[playerid][pGroup] == guid)
-			{
-				if(PlayerCache[playerid][pGroupVehicle])
-				{
-					return ShowDialogVehicleOptions(playerid);
-				}
-			}
-			if(PlayerCache[playerid][pGroup2] == guid)
-			{
-				if(PlayerCache[playerid][pGroupVehicle2])
-				{
-					return ShowDialogVehicleOptions(playerid);
-				}
-			}
-			if(PlayerCache[playerid][pGroup3] == guid)
-			{
-				if(PlayerCache[playerid][pGroupVehicle3])
-				{	
-					return ShowDialogVehicleOptions(playerid);
-				}
-			}
-		}
-		if(VehicleCache[vuid][vState] == 0 && VehicleCache[vuid][vOwner] == PlayerCache[playerid][pUID])
-		{
-			return ShowDialogVehicleOptions(playerid);
-		}
-	}
-	new list[1024], info[128], count;
-	for(new i; i<MAX_VEHICLES; i++)
-	{
-		if(!VehicleCache[i][vUID])
-		break;
-		if(VehicleCache[i][vState] == 0)
-		{
-			if(VehicleCache[i][vOwner] == PlayerCache[playerid][pUID])
-			{
-				format(info, sizeof(info), ""HEX_WHITE"%d\t%s\n", i, GetVehicleName(VehicleCache[i][vModel]));
-				if(VehicleCache[i][vID] != 0)
-				format(info, sizeof(info), ""HEX_WHITE"%d\t%s*\n", i, GetVehicleName(VehicleCache[i][vModel]));
-				strins(list, info, strlen(list));
-				count++;
+		if(GetPlayerVehicleSeat(playerid) == 0){
+			if(HasPlayerAccessToVehicle(playerid, GetPlayerVehicleID(playerid) ) ){
+				return ShowDialogVehicleOptions(playerid);
 			}
 		}
 	}
-	if(!count)
-	return ShowDialogInfo(playerid, "Nie posiadasz ¿adnych pojazdów.\n\nPojazd mo¿esz nabyæ od innego gracza lub kupiæ jakiœ w salonie samochodowym.");
-	ShowPlayerDialog(playerid, D_VEHICLES, DIALOG_STYLE_LIST, "Pojazdy (* - zespawnowany)", list, "(Un)Spawn", "Anuluj");*/
-	return 1;
-}
 
-stock VehiclePath(id)
-{
-	new path[64]; format(path, sizeof(path), FOLDER_VEHICLES"%d.ini", id);
-	return path;
-}
+	new query[128];
+	format(query, sizeof(query), "SELECT uid, HP, model, gameId FROM vehicles WHERE playerUID=%d", PlayerCache[playerid][pUID]);
+	new Cache:cache = mysql_query(DB_HANDLE, query);
 
-stock LoadVehicles()
-{
-	mysql_query(DB_HANDLE, "SELECT * FROM vehicles");
+	new rows = cache_num_rows();
 
-	mysql_store_result();
+	new list[1024], info[128];
 
-	new data[525], i;
+	new Float:HP, model, gameId;
 
-	while(mysql_fetch_row(data))
-	{
-		sscanf(data, "p<|>ddddddffffdddfddds[128]df",
-		VehicleCache[i][vUID],
-		VehicleCache[i][vID],
-		VehicleCache[i][vColor], 
-		VehicleCache[i][vColor2],
-		VehicleCache[i][vOwner],
-		VehicleCache[i][vState],
-		VehicleCache[i][vPosX],
-		VehicleCache[i][vPosY],
-		VehicleCache[i][vPosZ],
-		VehicleCache[i][vAngle],
-		VehicleCache[i][vVW], 
-		VehicleCache[i][vFuel],
-		VehicleCache[i][vModel],
-		VehicleCache[i][vHP],
-		VehicleCache[i][vOpen],
-		VehicleCache[i][vRegister],
-		VehicleCache[i][vSiren],
-		VehicleCache[i][vBanReason],
-		VehicleCache[i][vBanCost],
-		VehicleCache[i][vMileAge]);
+	for(new i=0; i<rows; i++){
+		cache_get_value_name_int(i, "uid", uid);
+		cache_get_value_name_int(i, "model", model);
+		cache_get_value_name_float(i, "HP", HP);
+		cache_get_value_name_int(i, "gameId", gameId);
 
-		VehicleCache[i][vID] = 0;
-		VehicleCache[i][vTimer] = 0;
-		VehicleCache[i][vEngine] = 0;
-		VehicleCache[i][vObjective] = 0;
-		VehicleCache[i][vBoot] = 0;
-		VehicleCache[i][vBonnet] = 0;
-		VehicleCache[i][vAlarm] = 0;
-
-		i++;
+		format(info, sizeof(info), ""HEX_WHITE"%d\t%s\n", uid, GetVehicleName(model));
+		if(gameId)
+			format(info, sizeof(info), ""HEX_WHITE"%d\t%s*\n", uid, GetVehicleName(model));
+		strins(list, info, strlen(list));
 	}
-
+		
+	ShowPlayerDialog(playerid, D_VEHICLES, DIALOG_STYLE_LIST, "Pojazdy (* - zespawnowany)", list, "(Un)Spawn", "Anuluj");
 	cache_delete(cache);
-
-	printf(">>> Loaded %d vehicles.", i);
+	if(!rows){
+		cache_delete(cache);
+		ShowDialogInfo(playerid, "Nie posiadasz ¿adnych pojazdów.\n\nPojazd mo¿esz nabyæ od innego gracza lub kupiæ jakiœ w salonie samochodowym.");
+		return 1;
+	}
+		
+	return 1;
 }
 
 stock ShowDialogVInfo(playerid, vuid)
 {
 	new info[525];
 	format(info, sizeof(info), "Marka: ~y~%s~w~ Paliwo: ~y~%d/100~w~ Kolor: ~y~%d %d ~w~Przebieg: ~y~%dkm",
-	GetVehicleName(VehicleCache[vuid][vModel]), VehicleCache[vuid][vFuel], VehicleCache[vuid][vColor], VehicleCache[vuid][vColor2], floatround(VehicleCache[vuid][vMileAge])/1000);
+	GetVehicleName( PlayerCache[playerid][pCurrentVehicle][vModel]),  PlayerCache[playerid][pCurrentVehicle][vFuel],  PlayerCache[playerid][pCurrentVehicle][vColor],  PlayerCache[playerid][pCurrentVehicle][vColor2], floatround( PlayerCache[playerid][pCurrentVehicle][vMileAge])/1000);
 	return TextDrawForPlayerEx(playerid, 0, info, 10000);
 }
 
-stock SaveVehicles()
-{
-	/*new count;
-	for(new i; i<LastvUID; i++)
-	{
-		if(!dfile_FileExists(VehiclePath(i)))
-		dfile_Create(VehiclePath(i));
-		dfile_Open(VehiclePath(i));
-		dfile_WriteInt("UID", VehicleCache[i][vUID]);
-		dfile_WriteInt("Owner", VehicleCache[i][vOwner]);
-		dfile_WriteInt("State", VehicleCache[i][vState]);
-		dfile_WriteInt("Model", VehicleCache[i][vModel]);
-		dfile_WriteFloat("PosX", VehicleCache[i][vPosX]);
-		dfile_WriteFloat("PosY", VehicleCache[i][vPosY]);
-		dfile_WriteFloat("PosZ", VehicleCache[i][vPosZ]);
-		dfile_WriteFloat("Angle", VehicleCache[i][vAngle]);
-		dfile_WriteInt("Fuel", VehicleCache[i][vFuel]);
-		dfile_WriteInt("VW", VehicleCache[i][vVW]);
-		dfile_WriteInt("Color", VehicleCache[i][vColor]);
-		dfile_WriteInt("Color2", VehicleCache[i][vColor2]);
-		dfile_WriteFloat("HP", VehicleCache[i][vHP]);
-		dfile_WriteInt("Open", VehicleCache[i][vOpen]);
-		dfile_WriteInt("Fuel", VehicleCache[i][vFuel]);
-		dfile_WriteBool("Registered", VehicleCache[i][vRegister]);
-		dfile_WriteInt("Siren", VehicleCache[i][vSiren]);
-		dfile_WriteString("BanReason", VehicleCache[i][vBanReason]);
-		dfile_WriteInt("BanCost", VehicleCache[i][vBanCost]);
-		dfile_WriteFloat("MileAge", VehicleCache[i][vMileAge]);
-		dfile_SaveFile();
-		dfile_CloseFile();
-		if(VehicleCache[i][vState] != 1)
-		count++;
-	}
-	printf(">>> Saved %d vehicles.", count);*/
-}
 
 stock GetVehicleName(vehicleid)
 {
@@ -15659,77 +15404,40 @@ stock GetVehicleName(vehicleid)
 
 public OnVehicleDeath(vehicleid, killerid)
 {
-	new vuid = GetVehicleUID(vehicleid);
-	VehicleCache[vuid][vEngine] = 0;
-	if(VehicleAttackedByCheater[vehicleid] == false)
-	VehicleCache[vuid][vHP] = 300.0;
-	if(killerid != 53)
-	{
-		if(VehicleAttackedByCheater[vehicleid] == false)
-		{
-			GetVehiclePos(vehicleid, VehicleCache[vuid][vPosX], VehicleCache[vuid][vPosY], VehicleCache[vuid][vPosZ]);
-			GetVehicleZAngle(vehicleid, VehicleCache[vuid][vAngle]);
-			VehicleCache[vuid][vVW] = GetVehicleVirtualWorld(vehicleid);
-		}
-	}
-	else
-	{
-		VehicleCache[vuid][vPosX] = 876.5847;
-		VehicleCache[vuid][vPosY] = -1259.2781;
-		VehicleCache[vuid][vPosZ] = 14.6456;
-		VehicleCache[vuid][vVW] = 0;
-	}
+
+/* 876.5847;
+		 PlayerCache[playerid][pCurrentVehicle][vPosY] = -1259.2781;
+		 PlayerCache[playerid][pCurrentVehicle][vPosZ] = 14.6456;*/
 	new Float:X, Float:Y, Float:Z;
 	GetVehiclePos(vehicleid,X, Y, Z);
+		
 	new Float:ang;
 	new VW=GetVehicleVirtualWorld(vehicleid);
 	GetVehicleZAngle(vehicleid, ang);
-	DestroyVehicle(vehicleid);
-	if(VehicleAttackedByCheater[vehicleid] == false)
+
+	new query[256];
+	format(query, sizeof(query), "UPDATE vehicles SET virtualWorld=%d, posX=%f, posY=%f, posZ=%f, HP=300.0, angle=%f WHERE gameId=%d;", VW, X,Y,Z,ang,vehicleid);
+	mysql_query(DB_HANDLE, query, false);
+
+	UnSpawnVehicle(vehicleid);
+
+
+	for(new i; i<=GetPlayerPoolSize(); i++)
 	{
-		VehicleCache[vuid][vID] = CreateVehicle(VehicleCache[vuid][vModel], VehicleCache[vuid][vPosX], VehicleCache[vuid][vPosY], VehicleCache[vuid][vPosZ], VehicleCache[vuid][vAngle], VehicleCache[vuid][vColor], VehicleCache[vuid][vColor2], -1, VehicleCache[vuid][vSiren]);
-		SetVehicleHealth(VehicleCache[vuid][vID], VehicleCache[vuid][vHP]);
-		SetVehicleZAngle(VehicleCache[vuid][vID], VehicleCache[vuid][vAngle]);
-		SetVehicleVirtualWorld(VehicleCache[vuid][vID], VehicleCache[vuid][vVW]);
-	}
-	else
-	{
-		VehicleCache[vuid][vID] = CreateVehicle(VehicleCache[vuid][vModel], X, Y, Z, ang, VehicleCache[vuid][vColor], VehicleCache[vuid][vColor2], -1, VehicleCache[vuid][vSiren]);
-		SetVehicleHealth(VehicleCache[vuid][vID], VehicleCache[vuid][vHP]);
-		SetVehicleZAngle(VehicleCache[vuid][vID], ang);
-		SetVehicleVirtualWorld(VehicleCache[vuid][vID], VW);
-	}
-	if(VehicleAttackedByCheater[vehicleid] == false)
-	{
-		for(new i; i<=GetPlayerPoolSize(); i++)
+		if(IsPlayerConnected(i))
 		{
-			if(IsPlayerConnected(i))
+			if(PlayerCache[i][pUID] ==  PlayerCache[i][pCurrentVehicle][vPlayerUID])
 			{
-				if(PlayerCache[i][pUID] == VehicleCache[vuid][vOwner])
-				{
-					DestroyDynamicMapIcon(MapIcon[i]);
-					KillTimer(MapIconTimer[i]);
-					MapIcon[i] = CreateDynamicMapIcon(VehicleCache[vuid][vPosX], VehicleCache[vuid][vPosY], VehicleCache[vuid][vPosZ], 55,-1,  VehicleCache[vuid][vVW], 0, i,-1, 3);
-					MapIconTimer[i] = SetTimerEx("DestroyIcon", 5000*60, false, "i", i);
-					TextDrawForPlayerEx(i, 1, "Twoj pojazd zostal odspawnowany po zniszczeniu.~n~Miejsce spawnu pojazdu zostalo oznaczone na mapie.", 10000);
-					return 1;
-				}
+				DestroyDynamicMapIcon(MapIcon[i]);
+				KillTimer(MapIconTimer[i]);
+				MapIcon[i] = CreateDynamicMapIcon(X,Y,Z, 55,-1,   VW, 0, i,-1, 3);
+				MapIconTimer[i] = SetTimerEx("DestroyIcon", 5000*60, false, "i", i);
+				TextDrawForPlayerEx(i, 1, "Twoj pojazd zostal odspawnowany po zniszczeniu.~n~Miejsce spawnu pojazdu zostalo oznaczone na mapie.", 10000);
+				return 1;
 			}
 		}
 	}
 	return 1;
-}
-
-stock GetVehicleUID(vehicleid)
-{
-	for(new i; i<MAX_VEHICLES; i++)
-	{
-		if(VehicleCache[i][vID] == vehicleid)
-		{
-			return i;
-		}
-	}
-	return 0;
 }
 
 CMD:adrzwi (playerid, params[])
@@ -15769,17 +15477,18 @@ public OnPlayerEnterVehicle(playerid, vehicleid, ispassenger)
 		pEnteringCar[playerid] = true;
 		SetTimerEx("DisableEnteringCar", 100, false, "i", playerid);
 	}
+	/*
 	new vuid = GetVehicleUID(vehicleid);
-	if(!VehicleCache[vuid][vOpen])
+	if(! PlayerCache[playerid][pCurrentVehicle][vOpen])
 	{
 		TextDrawForPlayerEx(playerid, 1, "~r~Ten pojazd jest zamkniety!", 1500);
 		return ClearAnimations(playerid);
 	}
 	if(!ispassenger)
 	{
-		if(VehicleCache[vuid][vState] == 2)
+		if( PlayerCache[playerid][pCurrentVehicle][vState] == 2)
 		{
-			new guid = VehicleCache[vuid][vOwner];
+			new guid =  PlayerCache[playerid][pCurrentVehicle][vOwner];
 			new puid = PlayerCache[playerid][pUID];
 			if(PlayerCache[puid][pGroup] == guid)
 			{
@@ -15799,12 +15508,12 @@ public OnPlayerEnterVehicle(playerid, vehicleid, ispassenger)
 			TextDrawForPlayerEx(playerid, 1, "~r~~h~Nie posiadasz kluczy do tego pojazdu", 3000);
 			return ClearAnimations(playerid);
 		}
-		if(VehicleCache[vuid][vOwner] != PlayerCache[playerid][pUID])
+		if( PlayerCache[playerid][pCurrentVehicle][vOwner] != PlayerCache[playerid][pUID])
 		{
 			TextDrawForPlayerEx(playerid, 1, "~r~~h~Ten pojazd nie nalezy do Ciebie!", 3000);
 			return ClearAnimations(playerid);
 		}
-	}
+	}*/
 	return 1;
 }
 
@@ -15814,27 +15523,56 @@ pEnteringCar[playerid] = false;
 
 stock SpawnVehicle(vuid)
 {
-	VehicleCache[vuid][vID] = CreateVehicle(VehicleCache[vuid][vModel], VehicleCache[vuid][vPosX], VehicleCache[vuid][vPosY],VehicleCache[vuid][vPosZ], VehicleCache[vuid][vAngle], VehicleCache[vuid][vColor],
-	VehicleCache[vuid][vColor2], -1, VehicleCache[vuid][vSiren]);
+	new query[64];
+	format(query, sizeof(query), "SELECT * FROM vehicles WHERE uid=%d LIMIT 1;", vuid);
+	new Cache:cache = mysql_query(DB_HANDLE, query);
+
+	new Float:posX, Float:posY, Float:posZ, Float:angle,
+	color, color2, model,siren, virtualWorld, 
+	register, Float:HP;
+
+	cache_get_value_name_float(0, "posX", posX);
+	cache_get_value_name_float(0, "posY", posY);
+	cache_get_value_name_float(0, "posZ", posZ);
+	cache_get_value_name_float(0, "angle", angle);
+	cache_get_value_name_float(0, "HP", HP);
+	cache_get_value_name_int(0, "color", color);
+	cache_get_value_name_int(0, "color2", color2);
+	cache_get_value_name_int(0, "model", model);
+	cache_get_value_name_int(0, "siren", siren);
+	cache_get_value_name_int(0, "virtualWorld", virtualWorld);
+	cache_get_value_name_int(0, "register", register);
+
+
+	new vehicleId=CreateVehicle( 
+	model,  posX,  posY, posZ, angle,  color,
+	color2, -1, siren);
 
 	new str[32];
-	if(VehicleCache[vuid][vRegister])
+	if( register)
 	format(str, sizeof(str), ""HEX_BLACK"LS-%000d", vuid);
 	else
 	format(str, sizeof(str), " ");
+	SetVehicleNumberPlate( vehicleId, str);
 
-	SetVehicleNumberPlate(VehicleCache[vuid][vID], str);
-	SetVehicleHealth(VehicleCache[vuid][vID], VehicleCache[vuid][vHP]);
-	SetVehicleZAngle(VehicleCache[vuid][vID], VehicleCache[vuid][vAngle]);
-	SetVehicleVirtualWorld(VehicleCache[vuid][vID], VehicleCache[vuid][vVW]);
-	SetVehicleParamsEx(VehicleCache[vuid][vID], VehicleCache[vuid][vEngine], VehicleCache[vuid][vLights], VehicleCache[vuid][vAlarm], VehicleCache[vuid][vDoors], VehicleCache[vuid][vBonnet],VehicleCache[vuid][vBoot], VehicleCache[vuid][vObjective]);
-	return 1;
+	SetVehicleHealth( vehicleId,  HP);
+	SetVehicleZAngle( vehicleId,  angle);
+	SetVehicleVirtualWorld( vehicleId,  virtualWorld);
+	SetVehicleParamsEx( vehicleId,  0,  0,  0,  0,  0, 0,  0);
+
+	cache_delete(cache);
+	format(query, sizeof(query), "UPDATE vehicles SET gameId=%d WHERE uid=%d;", vehicleId, vuid);
+	mysql_query(DB_HANDLE, query, false);
+
+	return vehicleId;
 }
 
-stock UnSpawnVehicle(vuid)
-{
-	DestroyVehicle(VehicleCache[vuid][vID]);
-	VehicleCache[vuid][vID] = 0;
+stock UnSpawnVehicle(vehicleid)
+{	
+	DestroyVehicle(vehicleid);
+	new query[256];
+	format(query, sizeof(query), "UPDATE vehicles SET gameId=0 WHERE gameId=%d;", vehicleid);
+	mysql_query(DB_HANDLE, query, false);
 	return 1;
 }
 
@@ -15843,74 +15581,149 @@ public ClearWasInCar(playerid)
 {
 	pWasInCar[playerid] = 0;
 }
+forward ListenForVehicleDamage(playerid, Float:previousHealth);
+public ListenForVehicleDamage(playerid, Float:previousHealth){
+	new vehicleid = GetPlayerVehicleID(playerid);
+	if(vehicleid == INVALID_VEHICLE_ID)
+		return;
+	if(!ClearNicknameColorTimer[playerid])
+	{
+		UpdateDynamic3DTextLabelText(pNick[playerid][nID], DAMAGE_COLOR, pNick[playerid][nStr]);
+		KillTimer(ClearNicknameColorTimer[playerid]);
+		ClearNicknameColorTimer[playerid] = SetTimerEx("ClearNicknameColor", 2500, false, "i", playerid);
+	
+	}
+	new Float:currentHP = 0;
+	GetVehicleHealth(vehicleid, currentHP);
+
+	if(PlayerCache[playerid][pBW_Time]){
+
+	}
+	else{
+		if(currentHP < previousHealth)
+		{
+			new Float:damage = GetVehicleSpeed(vehicleid)/2;
+			if(pBelts[playerid])
+				damage = damage/4;
+			if(PlayerCache[playerid][pHealth] - damage <= 0)
+			{
+				SetVehicleVelocity(vehicleid, 0, 0, 0);
+			/*	GetPlayerPos(playerid,PlayerCache[playerid][pPosX],PlayerCache[playerid][pPosY],PlayerCache[playerid][pPosZ]);
+				pShowingWeapon[playerid] = true;
+				SetTimerEx("ShowingWeapon", 3000, false, "i", playerid);
+				pWasInCar[playerid] = true;
+				SetTimerEx("ClearWasInCar", 3000, false, "i", playerid);
+				SetPlayerArmedWeapon(playerid, 0);
+				ResetPlayerWeapons(playerid);
+				PlayerCache[playerid][pBW_Reason] = 49;
+				SendPlayerMe(playerid, "traci przytomnoœæ");
+				new puid = PlayerCache[playerid][pUID];
+				SetPlayerCameraPos(playerid, PlayerCache[puid][pPosX], PlayerCache[puid][pPosY], PlayerCache[puid][pPosZ]+10.0);
+				SetPlayerCameraLookAt(playerid, PlayerCache[puid][pPosX], PlayerCache[puid][pPosY], PlayerCache[puid][pPosZ], CAMERA_CUT);
+				PlayerCache[puid][pBW_Time] = 2;
+				new msg[32];
+				format(msg, sizeof(msg),  "Stan nieprzytomnosci przez: %d min", PlayerCache[puid][pBW_Time]);
+				TextDrawForPlayer(playerid, 2, msg);
+				TogglePlayerControllable(playerid, 0);
+				UpdatePlayerName(playerid);
+				UpdatePlayerInfo(playerid);*/
+				BWPlayer(playerid, 2, 49);
+			}
+			else
+			{	
+				SetPlayerHP(playerid, PlayerCache[playerid][pHealth]-damage);
+			}
+			
+		}
+		SetTimerEx("ListenForVehicleDamage", 1000, false, "if", playerid, currentHP);
+	}
+	
+}
 
 public OnPlayerStateChange(playerid, newstate, oldstate)
 {	
-	if(newstate == PLAYER_STATE_ONFOOT && oldstate == PLAYER_STATE_DRIVER || oldstate == PLAYER_STATE_PASSENGER)
-	{
-		pWasInCar[playerid] = 1;
-		SetTimerEx("ClearWasInCar", 5000, false, "i", playerid);
-		if(pGPSTimer[playerid])
-		{
-			for(new i; i<=GetVehiclePoolSize(); i++)
-			{
-				DestroyDynamicMapIcon(VehicleMapIcon[i]);
-			}
-			KillTimer(pGPSTimer[playerid]);
-			pGPSTimer[playerid] = 0;
-		}
-	}
-	if(newstate == PLAYER_STATE_DRIVER && oldstate == PLAYER_STATE_PASSENGER)
-	return KickPlayer(playerid, "System", "Nieautoryzowane wejscie do pojazdu (A)"); // Anti vehicle jack when vehicle is locked
-	new vid = GetPlayerVehicleID(playerid), vuid = GetVehicleUID(vid);
-	if(VehicleCache[vuid][vState] == 2 && newstate == PLAYER_STATE_DRIVER)
-	{
-		new guid = VehicleCache[vuid][vOwner];
+	switch(newstate){
+		case PLAYER_STATE_DRIVER:{
 
-		if(PlayerCache[playerid][pGroup] == guid)
-		{
-			if(!PlayerCache[playerid][pGroupVehicle])
-			{
-				return AJPlayer(playerid, "System", "Nieautoryzowane wejscie do pojazdu (D)", 30);
+			
+			new vehicleId = GetPlayerVehicleID(playerid);
+			if(vehicleId == INVALID_VEHICLE_ID)
+			return 1;
+			if(!HasPlayerAccessToVehicle(playerid, vehicleId)){
+				KickPlayer(playerid, "System", "Nieautoryzowane wejscie do pojazdu (driver)");
+				return 1;
 			}
-		}
-		if(PlayerCache[playerid][pGroup2] == guid)
-		{
-			if(!PlayerCache[playerid][pGroupVehicle2])
+
+		
+
+			new Float:posX, Float:posY, Float:posZ, Float:angle, fuel, model, playerUID, groupUID, register, color, color2, Float:health;
+			GetVehicleData(vehicleId, posX, posY, posZ, angle,fuel, model, playerUID, groupUID, register, color, color2, health);
+			PlayerCache[playerid][pCurrentVehicle][vID] = vehicleId;
+			PlayerCache[playerid][pCurrentVehicle][vFuel] = fuel;
+			PlayerCache[playerid][pCurrentVehicle][vPosX] = posX;
+			PlayerCache[playerid][pCurrentVehicle][vPosY] = posY;
+			PlayerCache[playerid][pCurrentVehicle][vPosZ] = posZ;
+			PlayerCache[playerid][pCurrentVehicle][vAngle] = angle;
+			PlayerCache[playerid][pCurrentVehicle][vModel] = model;
+			PlayerCache[playerid][pCurrentVehicle][vColor] = color;
+			PlayerCache[playerid][pCurrentVehicle][vColor2] = color2;
+			PlayerCache[playerid][pCurrentVehicle][vPlayerUID] = playerUID;
+			PlayerCache[playerid][pCurrentVehicle][vGroupUID] = groupUID;
+			PlayerCache[playerid][pCurrentVehicle][vRegister] = register;
+			PlayerCache[playerid][pCurrentVehicle][vHP] = health;
+
+			if(GetVehicleModel(vehicleId) == 481 || GetVehicleModel(vehicleId) == 509 || GetVehicleModel(vehicleId) == 510)
 			{
-				return AJPlayer(playerid, "System", "Nieautoryzowane wejscie do pojazdu (D)", 60);
+
 			}
-		}
-		if(PlayerCache[playerid][pGroup3] == guid)
-		{
-			if(!PlayerCache[playerid][pGroupVehicle3])
-			{
-				return AJPlayer(playerid, "System", "Nieautoryzowane wejscie do pojazdu (D)", 120);
+			else{
+				if(! PlayerCache[playerid][pCurrentVehicle][vRegister])
+					ShowDialogInfo(playerid, "Pojazd jest niezarejestrowany.\nNiezarejestrowany pojazd ponosi za sob¹ konsekwencje prawne Twojej postaci.\nUdaj siê do urzêdu miasta i zakup rejestracjê jak najszybciej!");
+				DestroyDynamicMapIcon(MapIcon[playerid]);
+				KillTimer(MapIconTimer[playerid]);
+				PlayerTextDrawSetString(playerid, VehicleInfo[playerid], "~b~~h~~h~~h~LCTRL ~w~by uruchomic silnik~n~~b~~h~~h~~h~LPM ~w~by zapalic swiatla");
+				PlayerTextDrawShow(playerid, VehicleInfo[playerid]);
+				SetPlayerArmedWeapon(playerid, 0);
 			}
+		
+
 		}
 	}
-	if(VehicleCache[vuid][vState] == 0 && VehicleCache[vuid][vOwner] != PlayerCache[playerid][pUID] && newstate == PLAYER_STATE_DRIVER)
-	{
-		AJPlayer(playerid, "System", "Nieautoryzowane wejscie do pojazdu (D)", 60);
-		return ClearAnimations(playerid);
-	}
+	
+	if(newstate == PLAYER_STATE_ONFOOT &&
+		oldstate == PLAYER_STATE_PASSENGER || oldstate == PLAYER_STATE_DRIVER)
+		{
+			new empty[E_VEHICLE];
+			PlayerCache[playerid][pCurrentVehicle] = empty;
+
+			if(IsPlayerAttachedObjectSlotUsed(playerid, 7)){
+				SendPlayerMe(playerid, "œci¹ga kask z g³owy");
+				RemovePlayerAttachedObject(playerid, 7);
+			}
+
+			pBelts[playerid] = false;
+			UpdatePlayerName(playerid);
+			UpdatePlayerInfo(playerid);
+		}
+	
+	
+	// ac OnPlayerStateChange
+	if(newstate == PLAYER_STATE_DRIVER && oldstate == PLAYER_STATE_PASSENGER)
+		return AJPlayer(playerid, "System", "Nieautoryzowana zmiana miejsca pasazera (A)", 60); 
 	if(newstate == PLAYER_STATE_PASSENGER && oldstate == PLAYER_STATE_DRIVER)
-	return KickPlayer(playerid, "System", "Nieautoryzowane wejscie do pojazdu (C)"); // Anti change driver seat to passenger seat
+		return AJPlayer(playerid, "System", "Nieautoryzowana zmiana miejsca pasazera (C)", 60); // Anti change driver seat to passenger seat
+
+
+	new vid = GetPlayerVehicleID(playerid);
 	if((newstate == PLAYER_STATE_DRIVER || newstate == PLAYER_STATE_PASSENGER) && PlayerCache[playerid][pLevel] < ADMINISTRATION)
 	{
 		if(pEnteringCar[playerid])
 		{
-			return AJPlayer(playerid, "System", "Nieautoryzowane wejscie do pojazdu (H)", 60);
+			return AJPlayer(playerid, "System", "Nieautoryzowane wejscie do pojazdu (A)", 60);
 		}
 	}
-	if(newstate == PLAYER_STATE_ONFOOT)
-	{
-		if(IsPlayerAttachedObjectSlotUsed(playerid, 7))
-		RemovePlayerAttachedObject(playerid, 7);
-		pBelts[playerid] = false;
-		UpdatePlayerName(playerid);
-		UpdatePlayerInfo(playerid);
-	}
+
+	// if cheater is stealing someone seat, lmao.
 	if(newstate == PLAYER_STATE_DRIVER || newstate == PLAYER_STATE_PASSENGER)
 	{
 		new pseat = GetPlayerVehicleSeat(playerid);
@@ -15924,31 +15737,26 @@ public OnPlayerStateChange(playerid, newstate, oldstate)
 					{
 						if(GetPlayerVehicleSeat(i) == pseat)
 						{
-							return KickPlayer(playerid, "System", "Nieautoryzowane wejscie do pojazdu (D)");
+							return AJPlayer(playerid, "System", "Unauthorized vehicle seat steal.", 60);
 						}
 					}
 				}
 			}
 		}
 	}
-	if(newstate == PLAYER_STATE_DRIVER)
-	{
-		if(GetVehicleModel(vid) == 481 || GetVehicleModel(vid) == 509 || GetVehicleModel(vid) == 510)
-		return 1;
-		if(!VehicleCache[vuid][vRegister])
-		ShowDialogInfo(playerid, "Pojazd jest niezarejestrowany.\nNiezarejestrowany pojazd ponosi za sob¹ konsekwencje prawne Twojej postaci.\nUdaj siê do urzêdu miasta i zakup rejestracjê jak najszybciej!");
-		DestroyDynamicMapIcon(MapIcon[playerid]);
-		KillTimer(MapIconTimer[playerid]);
-		PlayerTextDrawSetString(playerid, VehicleInfo[playerid], "~b~~h~~h~~h~LCTRL ~w~by uruchomic silnik~n~~b~~h~~h~~h~LPM ~w~by zapalic swiatla");
-		PlayerTextDrawShow(playerid, VehicleInfo[playerid]);
-		return SetPlayerArmedWeapon(playerid, 0);
+	
+	if(newstate == PLAYER_STATE_DRIVER || newstate == PLAYER_STATE_PASSENGER){
+		new Float:health = 0;
+		GetVehicleHealth(vid, health);
+		SetTimerEx("ListenForVehicleDamage", 1000, false, "ii", playerid, health);
 	}
+
 	if(newstate == PLAYER_STATE_ONFOOT && oldstate == PLAYER_STATE_DRIVER)
 	return PlayerTextDrawHide(playerid, VehicleInfo[playerid]);
 	return 1;
 }
 
-CMD:vdel (playerid, params[])
+/*CMD:vdel (playerid, params[])
 {
 	if(PlayerCache[playerid][pLevel] < ADMINISTRATION)
 	return 1;
@@ -15977,16 +15785,16 @@ CMD:vdel (playerid, params[])
 	}
 	if(vuid < 0 || vuid >= MAX_VEHICLES)
 	return SendClientMessage(playerid, COLOR_GRAY, "Wprowadzono niepoprawn¹ wartoœæ.");
-	if(VehicleCache[vuid][vUID] == 0)
+	if( PlayerCache[playerid][pCurrentVehicle][vUID] == 0)
 	return SendClientMessage(playerid, COLOR_GRAY, "Ten pojazd nie istnieje.");
-	if(VehicleCache[vuid][vState] == 1)
+	if( PlayerCache[playerid][pCurrentVehicle][vState] == 1)
 	return SendClientMessage(playerid, COLOR_GRAY, "Ten pojazd zosta³ ju¿ usuniêty z gry.");
-	VehicleCache[vuid][vState] = 1;
-	DestroyVehicle(VehicleCache[vuid][vID]);
-	VehicleCache[vuid][vID] = 0;
-	new msg[128]; format(msg, sizeof(msg), "Usuniêto pojazd marki %s (UID: %d).", GetVehicleName(VehicleCache[vuid][vModel]), vuid);
+	 PlayerCache[playerid][pCurrentVehicle][vState] = 1;
+	DestroyVehicle( PlayerCache[playerid][pCurrentVehicle][vID]);
+	 PlayerCache[playerid][pCurrentVehicle][vID] = 0;
+	new msg[128]; format(msg, sizeof(msg), "Usuniêto pojazd marki %s (UID: %d).", GetVehicleName( PlayerCache[playerid][pCurrentVehicle][vModel]), vuid);
 	return SendClientMessage(playerid, COLOR_GRAY, msg);
-}
+}*/
 
 CMD:idel (playerid, params[])
 {
@@ -16051,7 +15859,7 @@ CMD:idel (playerid, params[])
 								if(IsPlayerInRangeOfPoint(playerid, 5.0, vx, vy, vz))
 								{
 									new vuid = GetVehicleUID(j);
-									if(VehicleCache[vuid][vFuel]+fuel > 100)
+									if( PlayerCache[playerid][pCurrentVehicle][vFuel]+fuel > 100)
 									return SendClientMessage(playerid, COLOR_GRAY, "W tym pojeŸdzie nie zmieœci siê tyle paliwa.");
 									new price = fuel *2;
 									if(PlayerCache[playerid][pCash] < price)
@@ -16061,11 +15869,11 @@ CMD:idel (playerid, params[])
 									}
 									if(fuel < 1)
 									return SendClientMessage(playerid, COLOR_GRAY, "Minimalnie mo¿esz zatankowaæ 1 litr.");
-									if(VehicleCache[vuid][vEngine])
+									if( PlayerCache[playerid][pCurrentVehicle][vEngine])
 									return ShowDialogInfo(playerid, "Silnik musi byæ zgaszony.");
 									if(GetPlayerVehicleID(playerid) == j)
 									return ShowDialogInfo(playerid, "Wysi¹dŸ z pojazdu.");
-									VehicleCache[vuid][vFuel]+=fuel;
+									 PlayerCache[playerid][pCurrentVehicle][vFuel]+=fuel;
 									PlayerCache[playerid][pCash] -= price;
 									GivePlayerMoney(playerid, -price);
 									new str[128]; format(str, sizeof(str), "wk³ada pistolet do baku pojazdu marki %s", GetVehicleName(GetVehicleModel(j)));
@@ -16209,21 +16017,21 @@ CMD:brama (playerid, params[])
 
 CMD:przejazd (playerid, params[])
 {
-	if(!IsPlayerInAnyVehicle(playerid))
+	/*if(!IsPlayerInAnyVehicle(playerid))
 	return ShowDialogInfo(playerid, "Musisz znajdowaæ siê w pojeŸdzie.");
 	if(GetPlayerVehicleSeat(playerid) != 0)
 	return ShowDialogInfo(playerid, "Musisz byæ kierowc¹.");
 	new vid = GetPlayerVehicleID(playerid), vuid = GetVehicleUID(vid);
-	if(!VehicleCache[vuid][vEngine])
+	if(! PlayerCache[playerid][pCurrentVehicle][vEngine])
 	return TextDrawForPlayerEx(playerid, 1, "Silnik nie moze byc zgaszony.", 3000);
-	if(VehicleCache[vuid][vState] == VEHICLE_STATE_OWNER)
+	if( PlayerCache[playerid][pCurrentVehicle][vState] == VEHICLE_STATE_OWNER)
 	{
-		if(VehicleCache[vuid][vOwner] != PlayerCache[playerid][pUID])
+		if( PlayerCache[playerid][pCurrentVehicle][vOwner] != PlayerCache[playerid][pUID])
 		return TextDrawForPlayerEx(playerid, 1, "Brak uprawnien.", 3000);
 	}
-	else if(VehicleCache[vuid][vState] == VEHICLE_STATE_GROUP)
+	else if( PlayerCache[playerid][pCurrentVehicle][vState] == VEHICLE_STATE_GROUP)
 	{
-		new guid = VehicleCache[vuid][vOwner];
+		new guid =  PlayerCache[playerid][pCurrentVehicle][vOwner];
 		if(PlayerCache[playerid][pGroup] == guid || PlayerCache[playerid][pGroup2] == guid
 		|| PlayerCache[playerid][pGroup3] == guid)
 		{
@@ -16326,7 +16134,7 @@ CMD:przejazd (playerid, params[])
 			}
 		}
 	}
-	return TextDrawForPlayerEx(playerid, 1, "Nie znajdujesz sie w poblizu zadnego przejazdu.", 3000);
+	return TextDrawForPlayerEx(playerid, 1, "Nie znajdujesz sie w poblizu zadnego przejazdu.", 3000);*/
 }
 
 CMD:go (playerid, params[])
@@ -16358,7 +16166,7 @@ stock IsVehicleInRangeOfPoint(vehicleid, Float:range, Float:X, Float:Y, Float:Z)
 
 public OnUnoccupiedVehicleUpdate(vehicleid, playerid, passenger_seat, Float:new_x, Float:new_y, Float:new_z, Float:vel_x, Float:vel_y, Float:vel_z)
 {
-	if(pEnteringCar[playerid] && passenger_seat)
+	/*if(pEnteringCar[playerid] && passenger_seat)
 	return AJPlayer(playerid, "System", "Vehicle hack (C)", 5);
 	new Float:oldX, Float:oldY, Float:oldZ;
 	if(IsPlayerInRangeOfPoint(playerid, 3.0, new_x, new_y, new_z) && new_x+0.5>oldX && new_y+0.5>oldY && new_z+0.5>oldZ)
@@ -16378,7 +16186,7 @@ public OnUnoccupiedVehicleUpdate(vehicleid, playerid, passenger_seat, Float:new_
 			VehicleAttackedByCheater[vehicleid] = true;
 			return !AJPlayer(playerid, "System", "Veh hack (A)", 30);
 		}
-	}
+	}*/
 	return 1;
 }
 
@@ -16643,49 +16451,7 @@ stock UpdatePlayerInfo(playerid)
 
 public OnVehicleDamageStatusUpdate(vehicleid, playerid)
 {
-	if(PlayerCache[playerid][pBW_Time])
-	GetVehiclePos(playerid,PlayerCache[playerid][pPosX],PlayerCache[playerid][pPosY],PlayerCache[playerid][pPosZ]);
-	if(!aduty[playerid])
-	{
-		if(!ClearNicknameColorTimer[playerid])
-		{
-			UpdateDynamic3DTextLabelText(pNick[playerid][nID], DAMAGE_COLOR, pNick[playerid][nStr]);
-			ClearNicknameColorTimer[playerid] = SetTimerEx("ClearNicknameColor", 2500, false, "i", playerid);
-		}
-	}
-	new Float:damage = GetVehicleSpeed(vehicleid)/2;
-	if(pBelts[playerid])
-	damage = damage/4;
-	if(PlayerCache[playerid][pHealth] - damage <= 0)
-	{
-		SetVehicleVelocity(vehicleid, 0, 0, 0);
-		GetPlayerPos(playerid,PlayerCache[playerid][pPosX],PlayerCache[playerid][pPosY],PlayerCache[playerid][pPosZ]);
-		pShowingWeapon[playerid] = true;
-		SetTimerEx("ShowingWeapon", 3000, false, "i", playerid);
-		pWasInCar[playerid] = true;
-		SetTimerEx("ClearWasInCar", 3000, false, "i", playerid);
-		SetPlayerArmedWeapon(playerid, 0);
-		ResetPlayerWeapons(playerid);
-		PlayerCache[playerid][pBW_Reason] = 49;
-		SendPlayerMe(playerid, "traci przytomnoœæ");
-		new puid = PlayerCache[playerid][pUID];
-		SetPlayerCameraPos(playerid, PlayerCache[puid][pPosX], PlayerCache[puid][pPosY], PlayerCache[puid][pPosZ]+10.0);
-		SetPlayerCameraLookAt(playerid, PlayerCache[puid][pPosX], PlayerCache[puid][pPosY], PlayerCache[puid][pPosZ], CAMERA_CUT);
-		PlayerCache[puid][pBW_Time] = 2;
-		new msg[32];
-		format(msg, sizeof(msg),  "Stan nieprzytomnosci przez: %d min", PlayerCache[puid][pBW_Time]);
-		TextDrawForPlayer(playerid, 2, msg);
-		TogglePlayerControllable(playerid, 0);
-		UpdatePlayerName(playerid);
-		UpdatePlayerInfo(playerid);
-		return 1;
-	}
-	else
-	{
-		PlayerCache[playerid][pHealth] -= damage;
-		PlayerCache[playerid][pBW_Reason] = 49;
-		SetPlayerHealth(playerid, PlayerCache[playerid][pHealth]);
-	}
+	
 	return 1;
 }
 
@@ -16727,17 +16493,117 @@ CMD:pasy (playerid, params[])
 	return TextDrawForPlayerEx(playerid, 1, "pasy ~g~~h~zapiete.", 3000);
 }
 
+
+
 public OnPlayerUpdate(playerid)
 {
+	if(PlayerCache[playerid][pLastUpdateTime] == 0){
+		PlayerCache[playerid][pLastUpdateTime] = gettime();
+	}
+	new timeNow = gettime();
+	// if a second passed we can check player stuff again, which is great because OnPlayerUpdate is called every 500ms OR if something is triggering
+	// any other callback on the server + a timer loop will be useless every 1 second, because player is afk and we don't need to
+	// check for  him so this update callback is great + anti cheat MUST be there otherwise there will be false-positives
+	if(timeNow - PlayerCache[playerid][pLastUpdateTime] < 1){
+		return 1;
+	}
+	PlayerCache[playerid][pLastUpdateTime] = gettime();
+	if(PlayerCache[playerid][pUID] == 0){
+		// if player is not logged and doing this stuff this is 100% true that he is cheating without ANY exceptions.
+		if(GetPlayerWeapon(playerid))
+			Ban(playerid);
+		if(GetPlayerSpecialAction(playerid))
+			Ban(playerid);
+		return 1;
+	}
+	if(GetPlayerSpecialAction(playerid) == SPECIAL_ACTION_USEJETPACK)
+	{
+			KickPlayer(playerid, "System", "Jetpack spawn");
+	}
+	if(GetPlayerWeapon(playerid) != WeaponCache[playerid][wcVal] && GetPlayerWeapon(playerid) != 0 && !pShowingWeapon[playerid])
+	{
+			new str[64];
+			format(str, sizeof(str), "Weapon Cheat (B) weaponid: %d", GetPlayerWeapon(playerid));
+			if(GetPlayerWeapon(playerid) == 46 && !pWasInCar[playerid])
+			{
+				KickPlayer(playerid, "System", str);
+			}
+			else
+			{
+				KickPlayer(playerid, "System", str);
+			}
+	}
+	if(PlayerCache[playerid][pBW_Time] && !pTeleport[playerid] && !PlayerCache[playerid][pAJ_Time])
+	{
+			if(!IsPlayerInRangeOfPoint(playerid, 5.0, PlayerCache[playerid][pPosX], PlayerCache[playerid][pPosY], PlayerCache[playerid][pPosZ]))
+			{
+				if(!PlayerCache[playerid][pAJ_Time])
+				AJPlayer(playerid, "System", "BW Bypass", 5);
+			}
+	}
+	if(PlayerCache[playerid][pUID])
+	{			
+			new engine, lights, alarm, doors, bonnet, boot, objective;
+			GetVehicleParamsEx(PlayerCache[playerid][pCurrentVehicle][vID], engine, lights, alarm, doors, bonnet, boot, objective);
+
+			if(engine)
+			{
+				if(GetVehicleModel(playerid) == 481 || GetVehicleModel(playerid) == 509 || GetVehicleModel(playerid) == 510)
+					{
+						
+					}
+				else{
+					new Float:speed = GetVehicleSpeed(PlayerCache[playerid][pCurrentVehicle][vID]);
+					new Float:x, Float:y, Float:z;
+
+					GetVehiclePos(PlayerCache[playerid][pCurrentVehicle][vID], x, y, z);
+					//PlayerCache[playerid][pCurrentVehicle][vMileAge] += GetDistanceBetweenPoints(playerPosX, playerPosY, playerPosZ,  x, y, z);
+
+					new str[128];
+					format(str, sizeof(str),  "~y~~h~Licznik: ~w~%d km/h~n~~y~~h~Paliwo: ~w~%d/100l", floatround(speed), PlayerCache[playerid][pCurrentVehicle][vFuel]);
+					PlayerTextDrawSetString(playerid, VehicleInfo[playerid], str);
+					PlayerTextDrawShow(playerid, VehicleInfo[playerid]);
+				}
+			}
+			else if(GetPlayerVehicleSeat(playerid) == -1)
+			{
+				if(GetPlayerGroundSpeed(playerid) > 9)
+				{
+					if(pWasInCar[playerid])
+					{
+						
+					}
+					else{
+						if(GetPlayerSurfingVehicleID(playerid) != INVALID_VEHICLE_ID)
+						{
+							//GetPlayerPos(playerid, gX, gY, gZ);
+							//SetPlayerPos(playerid, gX+3, gY, gZ-0.5);
+							Freeze(playerid, 3000);
+							GameTextForPlayer(playerid, "~r~~h~nie mozesz jezdzic na tym pojezdzie", 3000, 4);
+
+						}
+					}	
+					
+					AJPlayer(playerid, "System", "Rapid movement (A)", 30);
+				}
+			}
+	}
+	if(GetPlayerVehicleSeat(playerid) == 0)
+	{
+			new panels, doors, lights, tires;
+			GetVehicleDamageStatus(GetPlayerVehicleID(playerid), panels, doors, lights, tires);
+			if(tires){
+				SetVehicleVelocity(GetPlayerVehicleID(playerid), 2.0, 2.0, 2.0);
+			}
+	}
 	if(GetPlayerDrunkLevel(playerid)){
-		
-		new Float:x, Float:y, Float:z;
-		GetPlayerVelocity(playerid, x, y, z);
-		if(x>=0.2 || y>=0.2){
-			Freeze(playerid, 3000);
-			TextDrawForPlayerEx(playerid, 2, "Twoja postac jest oslabiona.", 3000);
-			ApplyAnimation(playerid, "ped", "IDLE_tired", 8.1, false, true, true, 1, 1);
-		}
+			new Float:x, Float:y, Float:z;
+			GetPlayerVelocity(playerid, x, y, z);
+			if(x>=0.2 || y>=0.2){
+				Freeze(playerid, 3000);
+				TextDrawForPlayerEx(playerid, 2, "Twoja postac jest oslabiona.", 3000);
+				ApplyAnimation(playerid, "ped", "IDLE_tired", 8.1, false, true, true, 1, 1);
+			}
 		
 	}
 	if(PlayerCache[playerid][pUID])
@@ -16750,6 +16616,7 @@ public OnPlayerUpdate(playerid)
 		}
 		CallLocalFunction("OnPlayerWeaponChange", "ii", playerid, GetPlayerWeapon(playerid));
 	}
+	
 	return 1;
 }
 
@@ -17150,7 +17017,7 @@ CMD:gps (playerid, params[])
 forward GPSTimer(playerid, guid);
 public GPSTimer(playerid, guid)
 {
-	for(new i; i<=GetVehiclePoolSize(); i++)
+	/*for(new i; i<=GetVehiclePoolSize(); i++)
 	{
 		DestroyDynamicMapIcon(VehicleMapIcon[i]);
 	}
@@ -17163,9 +17030,9 @@ public GPSTimer(playerid, guid)
 			if(pGPSTimer[k])
 			{
 				vuid = GetVehicleUID(GetPlayerVehicleID(k));
-				if(VehicleCache[vuid][vState] == 2)
+				if( PlayerCache[playerid][pCurrentVehicle][vState] == 2)
 				{
-					if(VehicleCache[vuid][vOwner] == guid)
+					if( PlayerCache[playerid][pCurrentVehicle][vOwner] == guid)
 					{
 						GetVehiclePos(GetPlayerVehicleID(k), X, Y, Z);
 						VehicleMapIcon[GetPlayerVehicleID(k)] = CreateDynamicMapIcon(X, Y,Z, 30, -1, GetVehicleVirtualWorld(GetPlayerVehicleID(k)), 0, playerid, 60000, MAPICON_GLOBAL);
@@ -17173,7 +17040,7 @@ public GPSTimer(playerid, guid)
 				}
 			}
 		}
-	}
+	}*/
 }
 
 /*CMD:sms (playerid, params[])
@@ -17489,7 +17356,7 @@ stock ReplacePolishSymbols(const str[])
 
 CMD:blokuj (playerid, params[])
 {
-	if(GroupCache[pDuty[playerid]][gType] == 1 || GroupCache[pDuty[playerid]][gType] == 16)
+	/*if(GroupCache[pDuty[playerid]][gType] == 1 || GroupCache[pDuty[playerid]][gType] == 16)
 	{
 		if(IsPlayerInAnyVehicle(playerid))
 		return SendClientMessage(playerid, COLOR_GRAY, "Wysi¹dŸ z pojazdu.");
@@ -17505,15 +17372,15 @@ CMD:blokuj (playerid, params[])
 				if(cost < 1 || cost > 3000)
 				return SendClientMessage(playerid, COLOR_GRAY, "Koszt blokady musi znajdowaæ siê w przedziale $1-$3000.");
 				new vuid = GetVehicleUID(vid);
-				if(VehicleCache[vuid][vBanCost])
+				if( PlayerCache[playerid][pCurrentVehicle][vBanCost])
 				return SendClientMessage(playerid, COLOR_GRAY, "Ten pojazd posiada ju¿ aktywn¹ blokadê na ko³o.");
-				VehicleCache[vuid][vBanCost] = cost;
-				VehicleCache[vuid][vBanReason] = reason;
-				format(reason, sizeof(reason), "nak³ada blokadê na ko³o pojazdu %s", GetVehicleName(VehicleCache[vuid][vModel]));
+				 PlayerCache[playerid][pCurrentVehicle][vBanCost] = cost;
+				 PlayerCache[playerid][pCurrentVehicle][vBanReason] = reason;
+				format(reason, sizeof(reason), "nak³ada blokadê na ko³o pojazdu %s", GetVehicleName( PlayerCache[playerid][pCurrentVehicle][vModel]));
 				SendPlayerMe(playerid, reason);
 				format(reason, sizeof(reason), "~w~blokada nalozona:~n~~g~~h~$%d", cost);
 				GameTextForPlayer(playerid, reason, 3000, 4);
-				GetVehiclePos(vid, VehicleCache[vuid][vPosX], VehicleCache[vuid][vPosY], VehicleCache[vuid][vPosZ]);
+				GetVehiclePos(vid,  PlayerCache[playerid][pCurrentVehicle][vPosX],  PlayerCache[playerid][pCurrentVehicle][vPosY],  PlayerCache[playerid][pCurrentVehicle][vPosZ]);
 				return 1;
 			}
 			else
@@ -17525,13 +17392,13 @@ CMD:blokuj (playerid, params[])
 		{
 			return SendClientMessage(playerid, COLOR_GRAY, "Musisz skierowaæ swoj¹ kamerê na pojazd i stan¹æ przy nim, by go zablokowaæ!");
 		}
-	}
+	}*/
 	return SendClientMessage(playerid, COLOR_GRAY, "Nie znajdujesz siê na s³u¿bie odpowiedniej grupy by móc u¿yæ tej komendy.");
 }
 
 CMD:odblokuj (playerid, params[])
 {
-	if(GroupCache[pDuty[playerid]][gType] == 1 || GroupCache[pDuty[playerid]][gType] == 16)
+/*	if(GroupCache[pDuty[playerid]][gType] == 1 || GroupCache[pDuty[playerid]][gType] == 16)
 	{
 		if(IsPlayerInAnyVehicle(playerid))
 		return SendClientMessage(playerid, COLOR_GRAY, "Wysi¹dŸ z pojazdu.");
@@ -17542,13 +17409,13 @@ CMD:odblokuj (playerid, params[])
 			if(IsPlayerInRangeOfPoint(playerid, 5.0, X, Y, Z))
 			{
 				new vuid = GetVehicleUID(vid);
-				if(VehicleCache[vuid][vBanCost] == 0)
+				if( PlayerCache[playerid][pCurrentVehicle][vBanCost] == 0)
 				return SendClientMessage(playerid, COLOR_GRAY, "Ten pojazd nie posiada blokady na ko³o.");
 				GameTextForPlayer(playerid, "~w~blokada zdjeta", 3000, 4);
-				VehicleCache[vuid][vBanCost] = 0;
+				 PlayerCache[playerid][pCurrentVehicle][vBanCost] = 0;
 				new reason[128]; reason = "";
-				VehicleCache[vuid][vBanReason] = reason;
-				format(reason, sizeof(reason), "zdejmuje blokadê na ko³o pojazdu %s", GetVehicleName(VehicleCache[vuid][vModel]));
+				 PlayerCache[playerid][pCurrentVehicle][vBanReason] = reason;
+				format(reason, sizeof(reason), "zdejmuje blokadê na ko³o pojazdu %s", GetVehicleName( PlayerCache[playerid][pCurrentVehicle][vModel]));
 				return SendPlayerMe(playerid, reason);
 			}
 			else
@@ -17561,7 +17428,7 @@ CMD:odblokuj (playerid, params[])
 			return SendClientMessage(playerid, COLOR_GRAY, "Musisz skierowaæ swoj¹ kamerê na pojazd i stan¹æ przy nim, by go odblokowaæ!");
 		}
 	}
-	return SendClientMessage(playerid, COLOR_GRAY, "Nie znajdujesz siê na s³u¿bie odpowiedniej grupy by móc u¿yæ tej komendy.");
+	return SendClientMessage(playerid, COLOR_GRAY, "Nie znajdujesz siê na s³u¿bie odpowiedniej grupy by móc u¿yæ tej komendy.");*/
 }
 
 CMD:tog (playerid, params[])
@@ -17819,7 +17686,7 @@ stock IsPlayerInRangeOfVehicle(playerid, vehicleid, Float:range)
 
 CMD:live (playerid, params[])
 {
-	new guid = pDuty[playerid];
+	/*new guid = pDuty[playerid];
 	if(GroupCache[guid][gType] != SAN_NEWS)
 	return SendClientMessage(playerid, COLOR_GRAY, "Nie znajdujesz siê na s³u¿bie odpowiedniej grupy by móc u¿yæ tej komendy.");
 
@@ -17831,13 +17698,13 @@ CMD:live (playerid, params[])
 		for(new i; i<=GetVehiclePoolSize(); i++)
 		{
 			vuid = GetVehicleUID(i);
-			if(VehicleCache[vuid][vModel] == 488 || VehicleCache[vuid][vModel] == 582)
+			if( PlayerCache[playerid][pCurrentVehicle][vModel] == 488 ||  PlayerCache[playerid][pCurrentVehicle][vModel] == 582)
 			{
 				if(IsPlayerInRangeOfVehicle(playerid, i, 50.0))
 				{
-					if(VehicleCache[vuid][vState] == VEHICLE_STATE_GROUP)
+					if( PlayerCache[playerid][pCurrentVehicle][vState] == VEHICLE_STATE_GROUP)
 					{
-						if(VehicleCache[vuid][vOwner] == guid)
+						if( PlayerCache[playerid][pCurrentVehicle][vOwner] == guid)
 						{
 							new text[256];
 							if(sscanf(params, "s[256]", text))
@@ -17864,7 +17731,7 @@ CMD:live (playerid, params[])
 			return TextDrawShowForAll(RadioTextDraw);
 		}
 		return SendClientMessage(playerid, COLOR_GRAY, "Nie znajdujesz siê w odpowiednim budynku grupy.");
-	}
+	}*/
 }
 
 CMD:ubranie (playerid, params[])
@@ -18620,4 +18487,14 @@ stock AddAnimations()
 		repeat = false;
 		time = 0;
 	}
+}
+
+forward AreAnyPlayersInVehicle(vehicleid);
+public AreAnyPlayersInVehicle(vehicleid){
+	for(new i=0; i<=GetPlayerPoolSize();i++){
+		if(IsPlayerInVehicle(i, vehicleid) ){
+			return true;
+		}
+	}
+	return false;
 }
