@@ -11051,7 +11051,7 @@ cmd:zamknij (playerid, params[])
 	cache_get_value_name_int(0, "outVW", outVW);
 
 
-	cache_delete(cache)
+	cache_delete(cache);
 
 	if(!rows)
 	return SendClientMessage(playerid, COLOR_GRAY, "Nie znajdujesz siê przy ¿adnych drzwiach.");
