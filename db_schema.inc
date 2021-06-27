@@ -1,6 +1,8 @@
-#include "szkodnik-rp2.pwn"
+#include <a_mysql>
+new MySQL:DB_HANDLE;
 
-stock EnsureCreated(){
+forward EnsureCreated();
+public EnsureCreated(){
 	// db schema
 
 	// init
