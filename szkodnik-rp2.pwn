@@ -1289,7 +1289,7 @@ stock CreateTextDraws()
 {
 	getdate(gyear, gmonth, gday);
 	new str[128];
-	format(str, sizeof(str), "~w~STATE~b~~h~~h~-~w~RP.PL: %02d.%02d.%02d", gyear-2000, gmonth, gday);
+	format(str, sizeof(str), "~w~LC~b~~h~~h~-~w~RP.PL: %02d.%02d.%02d", gyear-2000, gmonth, gday);
 	GlobalLogo = TextDrawCreate(54.335029, 425.271667, str);
 	TextDrawLetterSize(GlobalLogo,  0.251358, 1.210700);
 	TextDrawAlignment(GlobalLogo, 2);
