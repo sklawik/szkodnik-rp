@@ -291,6 +291,7 @@ enum E_SERVER
 new bool:pShowingWeapon[MAX_PLAYERS];
 
 
+
 new ServerSettings[E_SERVER];
 
 new PlayerText:PlayerAction[MAX_PLAYERS];
@@ -535,6 +536,39 @@ enum E_PLAYER
 new bool:AreObjectsLoaded;
 
 new PlayerCache[MAX_PLAYERS][E_PLAYER];
+
+enum E_GROUP
+{
+	gUID,
+	gType,
+	gName[32],
+	gBank,
+	bool:gChatIC,
+	bool:gChatOOC,
+	gColor[16],
+	gState,
+	gVehicleLimit,
+	gPayDay
+};
+
+enum E_GROUP_MEMBER{
+	gmUID,
+	bool:gmIsMapper,
+	bool:gmCanInvite,
+	bool:gmIsAdmin,
+	bool:gmDoorAccess, 
+	bool:gmVehicleAccess,	
+	bool:gmProductsAccess,
+	gmPayday,
+	gmDuty,
+	gmReward,
+	gmMapper
+}
+
+enum E_PLAYER_GROUP{
+	group[E_GROUP],
+	memberInfo[E_GROUP_MEMBER]
+}
 
 enum E_REGISTER
 {
@@ -904,16 +938,9 @@ stock CreateLog(logType, playerid, const message[], anyUID=0){
 
 public OnGameModeExit()
 {
-	mysql_close();
+	mysql_close(DB_HANDLE);
 	printf(">>> Serwer zostal wylaczony.");
 	return 1;
-}
-
-stock ActorPath(actoruid)
-{
-	new path[128];
-	format(path, sizeof(path), FOLDER_ACTORS"%d.ini", actoruid);
-	return path;
 }
 
 stock GetVehicleSpeed(vehicleid)
@@ -970,19 +997,6 @@ stock Float:GetDistanceBetweenPoints(Float:X, Float:Y, Float:Z, Float:X2, Float:
 	return distance;
 }
 
-
-stock ObjPath(id)
-{
-	new path[64];
-	format(path, sizeof(path), FOLDER_OBJECTS"%d.ini", id);
-	return path;
-}
-
-stock TexturePath(textureid)
-{
-	new path[64]; format(path, sizeof(path), FOLDER_TEXTURES"%d.ini", textureid);
-	return path;
-}
 
 stock LoadTextures()
 {
@@ -1273,7 +1287,7 @@ stock LoadDoors()
 
 stock ShowDialogMemberPayDay(playerid)
 {
-	new guid = pVal[playerid];
+	/*new guid = pVal[playerid];
 	new muid = pVal2[playerid];
 	new header[64];
 	if(PlayerCache[muid][pGroup] == guid)
@@ -1282,7 +1296,7 @@ stock ShowDialogMemberPayDay(playerid)
 	format(header, sizeof(header), "Aktualna wyp³ata %s: $%d", strreplace(PlayerCache[muid][pName], '_', ' '), PlayerCache[muid][pGroupReward2]);
 	else if(PlayerCache[muid][pGroup3] == guid)
 	format(header, sizeof(header), "Aktualna wyp³ata %s: $%d", strreplace(PlayerCache[muid][pName], '_', ' '), PlayerCache[muid][pGroupReward3]);
-	return ShowPlayerDialog(playerid, D_MEMBER_PAYDAY, DIALOG_STYLE_INPUT, header, ""HEX_WHITE"Wpisz poni¿ej now¹ wyp³ate dla cz³onka:", "Gotowe", "Anuluj");
+	return ShowPlayerDialog(playerid, D_MEMBER_PAYDAY, DIALOG_STYLE_INPUT, header, ""HEX_WHITE"Wpisz poni¿ej now¹ wyp³ate dla cz³onka:", "Gotowe", "Anuluj");*/
 }
 
 stock CreateTextDraws()
@@ -1810,33 +1824,7 @@ stock LoadPlayerData(playerid)
 		cache_get_value_name_int(0, "BW_Time", PlayerCache[playerid][pBW_Time]);
 		cache_get_value_name_int(0, "BW_Reason", PlayerCache[playerid][pBW_Reason]);
 		cache_get_value_name_int(0, "AJ_Time", PlayerCache[playerid][pAJ_Time]);
-		cache_get_value_name_int(0, "groupUID", PlayerCache[playerid][pGroup]);
-		cache_get_value_name_int(0, "groupUID2", PlayerCache[playerid][pGroup2]);
-		cache_get_value_name_int(0, "groupUID3", PlayerCache[playerid][pGroup3]);
-		cache_get_value_name_int(0, "groupMapper", PlayerCache[playerid][pGroupMapper]);
-		cache_get_value_name_int(0, "groupMapper2", PlayerCache[playerid][pGroupMapper2]);
-		cache_get_value_name_int(0, "groupMapper3", PlayerCache[playerid][pGroupMapper3]);
-		cache_get_value_name_int(0, "groupInvite", PlayerCache[playerid][pGroupInvite]);
-		cache_get_value_name_int(0, "groupInvite2", PlayerCache[playerid][pGroupInvite2]);
-		cache_get_value_name_int(0, "groupInvite3", PlayerCache[playerid][pGroupInvite3]);
-		cache_get_value_name_int(0, "groupAdmin", PlayerCache[playerid][pGroupAdmin]);
-		cache_get_value_name_int(0, "groupAdmin2", PlayerCache[playerid][pGroupAdmin2]);
-		cache_get_value_name_int(0, "groupAdmin3", PlayerCache[playerid][pGroupAdmin3]);
-		cache_get_value_name_int(0, "groupDoor", PlayerCache[playerid][pGroupDoor]);
-		cache_get_value_name_int(0, "groupDoor2", PlayerCache[playerid][pGroupDoor2]);
-		cache_get_value_name_int(0, "groupDoor3", PlayerCache[playerid][pGroupDoor3]);
-		cache_get_value_name_int(0, "groupVehicle", PlayerCache[playerid][pGroupVehicle]);
-		cache_get_value_name_int(0, "groupVehicle2", PlayerCache[playerid][pGroupVehicle2]);
-		cache_get_value_name_int(0, "groupVehicle3", PlayerCache[playerid][pGroupVehicle3]);
-		cache_get_value_name_int(0, "groupProducts", PlayerCache[playerid][pGroupProducts]);
-		cache_get_value_name_int(0, "groupProducts2", PlayerCache[playerid][pGroupProducts2]);
-		cache_get_value_name_int(0, "groupProducts3", PlayerCache[playerid][pGroupProducts3]);
-		cache_get_value_name_int(0, "groupPayday", PlayerCache[playerid][pGroupPayDay]);
-		cache_get_value_name_int(0, "groupPayday2", PlayerCache[playerid][pGroupPayDay2]);
-		cache_get_value_name_int(0, "groupPayday3", PlayerCache[playerid][pGroupPayDay3]);
-		cache_get_value_name_int(0, "groupDuty", PlayerCache[playerid][pGroupDuty]);
-		cache_get_value_name_int(0, "groupDuty2", PlayerCache[playerid][pGroupDuty2]);
-		cache_get_value_name_int(0, "groupDuty3", PlayerCache[playerid][pGroupDuty3]);
+		
 		cache_get_value_name_int(0, "playTime", PlayerCache[playerid][pPlayTime]);
 		cache_get_value_name_int(0, "score", PlayerCache[playerid][pScore]);
 		cache_get_value_name_int(0, "houseSpawn", PlayerCache[playerid][pHouseSpawn]);
@@ -2368,7 +2356,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 		{
 			if(response)
 			{
-				new duid = GetPlayerDoorUID(playerid);
+				/*new duid = GetPlayerDoorUID(playerid);
 				new guid = DoorCache[duid][dGroupUID];
 				if(GroupCache[guid][gType] != 12)
 				return SendClientMessage(playerid, COLOR_GRAY, "Nie znajdujesz siê w sklepie odzie¿owym.");
@@ -2401,7 +2389,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 					{
 						return ShowDialogInfo(playerid, "Jutro zrobie xd");
 					}
-				}
+				}*/
 			}
 		}
 		case D_MEMBER_PAYDAY:
@@ -2783,7 +2771,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 		}
 		case D_APPS:
 		{
-			if(response)
+			/*if(response)
 			{
 				new app_id = strval(inputtext);
 				new calleruid = AppCache[app_id][appPlayerUID];
@@ -2848,7 +2836,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 				new str[256]; format(str, sizeof(str), "~y~Nr zadania: %d~n~Zadajacy: %s~n~~n~~w~%s", app_id, PlayerCache[AppCache[app_id][appPlayerUID]][pName], AppCache[app_id][appText]);
 				PlayerTextDrawSetString(playerid,ObjectInfo[playerid], str);
 				PlayerTextDrawShow(playerid, ObjectInfo[playerid]);
-			}
+			}*/
 		}
 		case D_APP:
 		{
@@ -3034,7 +3022,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 		{
 			if(response)
 			{
-				new guid = pVal[playerid];
+				/*new guid = pVal[playerid];
 				new muid = pVal2[playerid];
 				if(PlayerCache[muid][pGroup] == guid)             // GROUP 1
 				{
@@ -3228,13 +3216,13 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 				return ShowDialogMemberPerms(playerid);
 			}
 			PlayerTextDrawHide(playerid, ObjectInfo[playerid]);
-			return ShowDialogGroupMembers(playerid);
+			return ShowDialogGroupMembers(playerid);*/
 		}
 		case D_MANAGE_MEMBER:
 		{
 			if(response)
 			{
-				new option = strval(inputtext);
+				/*new option = strval(inputtext);
 				new guid = pVal[playerid];
 				new muid = pVal2[playerid];
 				switch(option)
@@ -3306,9 +3294,9 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 					}
 					case 2: return ShowDialogMemberPerms(playerid);
 					case 3: return ShowDialogMemberPayDay(playerid);
-				}
+				}*/
 			}
-			return ShowDialogGroupMembers(playerid);
+			return ShowDialogGroupMembers(playerid);*/
 		}
 		case D_GROUP_OPTIONS:
 		{
