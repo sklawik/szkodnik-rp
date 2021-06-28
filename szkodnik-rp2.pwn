@@ -16,14 +16,11 @@ main(){}
 
 // mysql settings
 
-#define MYSQL_HOST "127.0.0.1"
-#define MYSQL_USER "www"
-#define MYSQL_PASSWORD "123"
-#define MYSQL_DB "szkodnikrp"
+
 
 #define COL_AC_CHAT 0x42D95EFF
 
-#define DEV_MODE 1
+#define DEV_MODE 0
 
 // defines dialogs
 #define D_LOGIN 0
@@ -485,60 +482,9 @@ enum E_DOOR
 	Float:dFacingAngle
 };
 
-enum E_PLAYER
-{
-	pUID,
-	pHash[64+1],
-	pSalt[10+1], 
-	pName[24], 
-	pGender,
-	pSkin,
-	Float:pHealth,
-	pCash,
-	pTutorialLevel,
-	pStrenght, 
-	pLevel,
-	pBW_Time,
-	pBW_Reason,
-	pAJ_Time,
-	pPlayTime, 
-	pScore,
-	pHouseSpawn, 
-	pBank,
-	pBornDate,
-	pPosVW, 
-	Float:pPosX,
-	Float:pPosY,
-	Float:pPosZ,
-	pID_Card,
-	pDrivingLicense,
-	pBankAccount,
-	pOOC,
-	pGroupReward, 
-	pGroupReward2,
-	pGroupReward3,
-	pFavAnim[16],
-	pJailTime,
-	Float:pJailX, 
-	Float:pJailY, 
-	Float:pJailZ, 
-	pJailVW,
-	pLastTraining,
-	pObjectEditor,
-	pGymBoostTime,
-	// not related to database
-	pCurrentVehicle[E_VEHICLE],
-	pCurrentDoor[E_DOOR],
-	pLastUpdateTime
-
-};
-
 
 
 new bool:AreObjectsLoaded;
-
-new PlayerCache[MAX_PLAYERS][E_PLAYER];
-
 
 
 enum E_REGISTER
@@ -697,6 +643,64 @@ enum E_PLAYER_GROUP{
 
 new GroupCache[MAX_GROUPS][E_GROUP];
 
+#define MAX_PLAYER_GROUPS 8
+
+enum E_PLAYER
+{
+	pUID,
+	pHash[64+1],
+	pSalt[10+1], 
+	pName[24], 
+	pGender,
+	pSkin,
+	Float:pHealth,
+	pCash,
+	pTutorialLevel,
+	pStrenght, 
+	pLevel,
+	pBW_Time,
+	pBW_Reason,
+	pAJ_Time,
+	pPlayTime, 
+	pScore,
+	pHouseSpawn, 
+	pBank,
+	pBornDate,
+	pPosVW, 
+	Float:pPosX,
+	Float:pPosY,
+	Float:pPosZ,
+	pID_Card,
+	pDrivingLicense,
+	pBankAccount,
+	pOOC,
+	pGroupReward, 
+	pGroupReward2,
+	pGroupReward3,
+	pFavAnim[16],
+	pJailTime,
+	Float:pJailX, 
+	Float:pJailY, 
+	Float:pJailZ, 
+	pJailVW,
+	pLastTraining,
+	pObjectEditor,
+	pGymBoostTime,
+	// not related to database
+	pCurrentVehicle[E_VEHICLE],
+	pCurrentDoor[E_DOOR],
+	pLastUpdateTime,
+
+	pGroups[MAX_PLAYER_GROUPS][E_PLAYER_GROUP],
+	PlayerText:pGroupTxd[MAX_PLAYER_GROUPS]
+
+};
+
+
+
+
+new PlayerCache[MAX_PLAYERS][E_PLAYER];
+
 new LastgUID;
 
 new pChoosingTxd[MAX_PLAYERS];
@@ -828,10 +832,11 @@ public db_timer(){
 	DB_HANDLE = mysql_connect(MYSQL_HOST, MYSQL_USER, MYSQL_PASSWORD, MYSQL_DB);
 	if(mysql_errno() != 0){
 
-		print(">>> Probuje polaczyc z baza");
+		printf(">>> Wystapil blad w probie polaczenia z baza danych, kod bledu: %d", mysql_errno());
 		SetTimer("db_timer", 2000, false);
 	}
 	else{
+				LoadGameMode();
 			print(">>> Pomyslnie nawiazano polaczenie z baza danych.");
 	}
 }
@@ -842,13 +847,24 @@ public OnGameModeInit()
 	DB_HANDLE = mysql_connect(MYSQL_HOST, MYSQL_USER, MYSQL_PASSWORD, MYSQL_DB);
 	if(mysql_errno() != 0) {
 		SetTimer("db_timer", 2000, false);
-		// return !printf(">>> Wystapil blad w probie polaczenia z baza danych, kod bledu: %d", mysql_errno());
+		printf(">>> Wystapil blad w probie polaczenia z baza danych, kod bledu: %d", mysql_errno());
 		
 	}
 	else{
 		print(">>> Pomyslnie nawiazano polaczenie z baza danych.");
 
-		EnsureCreated();
+		LoadGameMode();
+
+	}
+
+
+	
+	return 1;
+}
+
+forward LoadGameMode();
+public LoadGameMode(){
+	EnsureCreated();
 		
 		CreateTextDraws();
 
@@ -877,15 +893,7 @@ public OnGameModeInit()
 	
 	
 		SetTimer("min_timer", 1000*60, true);
-
-	}
-
-
-	
-	return 1;
 }
-
-
 
 #define DOC_TYPE_ID 0
 #define DOC_TYPE_DRIVING_LICENSE 1
@@ -11659,7 +11667,7 @@ stock UseItem(playerid, itemuid)
 			if(val2 == 0)
 			return SendClientMessage(playerid, COLOR_GRAY, "W tej broni skoñczy³a siê amunicja.");
 			
-			format(itemQuery, sizeof(itemQuery), "SELECT * FROM items WHERE owner = '%d' AND type = '1' AND active = '1' AND uid != '%d' LIMIT 1", PlayerCache[playerid][pUID], itemuid);
+			format(itemQuery, sizeof(itemQuery), "SELECT * FROM items WHERE playerUID = '%d' AND type = '1' AND active = '1' AND uid != '%d' LIMIT 1", PlayerCache[playerid][pUID], itemuid);
 			cache = mysql_query(DB_HANDLE, itemQuery);
 			
 			cache_delete(cache);
