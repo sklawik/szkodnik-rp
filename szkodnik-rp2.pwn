@@ -7,7 +7,9 @@
 #include <colors>
 
 #include "db_schema.inc"
+
 main(){}
+
 #undef MAX_PLAYERS
 #define MAX_PLAYERS 1000
 
@@ -18,11 +20,7 @@ main(){}
 
 #define COL_AC_CHAT 0x42D95EFF
 
-<<<<<<< HEAD
 #define DEV_MODE 0
-=======
-new const DEV_MODE = 1;
->>>>>>> parent of 9085ba7 (Gamemode can be compiled now!)
 
 // defines dialogs
 #define D_LOGIN 0
@@ -488,43 +486,6 @@ enum E_DOOR
 
 new bool:AreObjectsLoaded;
 
-<<<<<<< HEAD
-=======
-new PlayerCache[MAX_PLAYERS][E_PLAYER];
-
-enum E_GROUP
-{
-	gUID,
-	gType,
-	gName[32],
-	gBank,
-	bool:gChatIC,
-	bool:gChatOOC,
-	gColor[16],
-	gState,
-	gVehicleLimit,
-	gPayDay
-};
-
-enum E_GROUP_MEMBER{
-	gmUID,
-	bool:gmIsMapper,
-	bool:gmCanInvite,
-	bool:gmIsAdmin,
-	bool:gmDoorAccess, 
-	bool:gmVehicleAccess,	
-	bool:gmProductsAccess,
-	gmPayday,
-	gmDuty,
-	gmReward,
-	gmMapper
-}
-
-enum E_PLAYER_GROUP{
-	group[E_GROUP],
-	memberInfo[E_GROUP_MEMBER]
-}
->>>>>>> parent of 9085ba7 (Gamemode can be compiled now!)
 
 enum E_REGISTER
 {
@@ -661,7 +622,6 @@ enum E_GROUP
 	gPayDay
 };
 
-<<<<<<< HEAD
 enum E_GROUP_MEMBER
 {
 	gmUID,
@@ -682,8 +642,6 @@ enum E_PLAYER_GROUP{
 	memberInfo[E_GROUP_MEMBER]
 };
 
-=======
->>>>>>> parent of 9085ba7 (Gamemode can be compiled now!)
 new GroupCache[MAX_GROUPS][E_GROUP];
 
 #define MAX_PLAYER_GROUPS 8
@@ -868,7 +826,6 @@ new pCuffedTimer[MAX_PLAYERS];
 
 new pWasInCar[MAX_PLAYERS];
 
-new MySQL:DB_HANDLE;
 
 
 
@@ -981,9 +938,16 @@ stock CreateLog(logType, playerid, const message[], anyUID=0){
 
 public OnGameModeExit()
 {
-	mysql_close(DB_HANDLE);
+	mysql_close();
 	printf(">>> Serwer zostal wylaczony.");
 	return 1;
+}
+
+stock ActorPath(actoruid)
+{
+	new path[128];
+	format(path, sizeof(path), FOLDER_ACTORS"%d.ini", actoruid);
+	return path;
 }
 
 stock GetVehicleSpeed(vehicleid)
@@ -1040,6 +1004,19 @@ stock Float:GetDistanceBetweenPoints(Float:X, Float:Y, Float:Z, Float:X2, Float:
 	return distance;
 }
 
+
+stock ObjPath(id)
+{
+	new path[64];
+	format(path, sizeof(path), FOLDER_OBJECTS"%d.ini", id);
+	return path;
+}
+
+stock TexturePath(textureid)
+{
+	new path[64]; format(path, sizeof(path), FOLDER_TEXTURES"%d.ini", textureid);
+	return path;
+}
 
 stock LoadTextures()
 {
@@ -2463,7 +2440,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 		{
 			if(response)
 			{
-				new payday = strval(inputtext);
+				/*new payday = strval(inputtext);
 				if(payday < 60)
 				{
 					TextDrawForPlayerEx(playerid, 1, "Minimalnie mozesz ustawic $60 wyplaty.", 5000);
@@ -2495,7 +2472,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 				PlayerCache[muid][pGroupReward3] = payday;
 				new msg[64]; format(msg, sizeof(msg), "%s~n~Nowa wyplata: ~g~$%d", PlayerCache[muid][pName], payday);
 				TextDrawForPlayerEx(playerid, 1, msg, 5000);
-				return ShowDialogMemberPayDay(playerid);
+				return ShowDialogMemberPayDay(playerid);*/
 			}
 			return ShowDialogManageMember(playerid);
 		}
@@ -2909,7 +2886,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 		{
 			if(response)
 			{
-				if(Isnull(inputtext))
+				/*if(Isnull(inputtext))
 				return ShowDialogApp(playerid);
 				new p_phone = pVal[playerid];
 				new group_uid = pVal2[playerid];
@@ -2947,7 +2924,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 				AppCache[free_slot][appPlayerUID] = PlayerCache[playerid][pUID];
 				new str[128]; format(str, sizeof(str), inputtext);
 				AppCache[free_slot][appText] = str;
-				return SetPlayerSpecialAction(playerid, SPECIAL_ACTION_STOPUSECELLPHONE);
+				return SetPlayerSpecialAction(playerid, SPECIAL_ACTION_STOPUSECELLPHONE);*/
 			}
 			SetPlayerSpecialAction(playerid, SPECIAL_ACTION_STOPUSECELLPHONE);
 			return ShowDialogContacts(playerid);
@@ -3279,11 +3256,11 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 						if(PlayerCache[muid][pGroupProducts3])
 						PlayerCache[muid][pGroupProducts3] = false;
 					}
-				}
+				}*/
 				return ShowDialogMemberPerms(playerid);
 			}
 			PlayerTextDrawHide(playerid, ObjectInfo[playerid]);
-			return ShowDialogGroupMembers(playerid);*/
+			return ShowDialogGroupMembers(playerid);
 		}
 		case D_MANAGE_MEMBER:
 		{
@@ -3363,7 +3340,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 					case 3: return ShowDialogMemberPayDay(playerid);
 				}*/
 			}
-			return ShowDialogGroupMembers(playerid);*/
+			return ShowDialogGroupMembers(playerid);
 		}
 		case D_GROUP_OPTIONS:
 		{
@@ -3766,11 +3743,11 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 			{
 				new option = strval(inputtext);
 				new dooruid = pVal[playerid];
-				switch(option)
+				/*switch(option)
 				{
 					case 1:
 					{
-						/*for(new i; i<MAX_OBJECTS; i++)
+						for(new i; i<MAX_OBJECTS; i++)
 						{
 							if(DoorCache[dooruid][dInsVW] == 0 || DoorCache[dooruid][dOutVW] == 0)
 							continue;
@@ -3789,7 +3766,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 									}
 								}
 							}
-						}*/
+						}
 						for(new i; i<=GetPlayerPoolSize(); i++)
 						{
 							if(DoorCache[dooruid][dInsVW] == 0 || DoorCache[dooruid][dOutVW] == 0)
@@ -3818,13 +3795,8 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 					{
 						return ShowPlayerDialog(playerid, D_DOOR_VW, DIALOG_STYLE_INPUT, "Zmie¥ Virtual World drzwi", "Wpisz poni¥ej warto¥¥:\n", "Zmie¥", "Anuluj");
 					}
-<<<<<<< HEAD
 					case 3: return ShowPlayerDialog(playerid, D_ADOOR_CHANGE_NAME, DIALOG_STYLE_INPUT, ""HEX_RED"Zmie¥ nazw¥ drzwi", ""HEX_WHITE"Wpisz poni¥ej now¥ nazw¥:\n", "Zmie¥", "Anuluj");
 				}*/
-=======
-					case 3: return ShowPlayerDialog(playerid, D_ADOOR_CHANGE_NAME, DIALOG_STYLE_INPUT, ""HEX_RED"Zmieñ nazwê drzwi", ""HEX_WHITE"Wpisz poni¿ej now¹ nazwê:\n", "Zmieñ", "Anuluj");
-				}
->>>>>>> parent of 9085ba7 (Gamemode can be compiled now!)
 			}
 			return 1;
 		}
@@ -3836,7 +3808,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 				return ShowPlayerDialog(playerid, D_ADOOR_CHANGE_NAME, DIALOG_STYLE_INPUT, ""HEX_RED"Zmie¥ nazw¥ drzwi", ""HEX_RED"Nazwa jest zbyt kr¥tka!\n"HEX_WHITE"Wpisz poni¥ej now¥ nazw¥:\n", "Zmie¥", "Anuluj");
 				new duid = pVal[playerid];
 				new name[32]; format(name, sizeof(name), inputtext);
-				DoorCache[duid][dName] = name;
+			//	DoorCache[duid][dName] = name;
 				new msg[64]; format(msg, sizeof(msg), "~w~nazwa zmieniona:~n~%s", name);
 				return GameTextForPlayer(playerid, msg, 3000, 4);
 			}
@@ -3849,10 +3821,10 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 				return SendClientMessage(playerid, COLOR_GRAY, "Niepoprawna warto¥¥.");
 				new vw = strval(inputtext);
 				new duid =  pVal[playerid];
-				DoorCache[duid][dInsVW] = vw;
+				//DoorCache[duid][dInsVW] = vw;
 				if(vw == 0)
 				{
-					dPickupID[DoorCache[duid][dUID]] = CreateDynamicPickup(1239, 2, DoorCache[duid][dInsX],DoorCache[duid][dInsY], DoorCache[duid][dInsZ], DoorCache[duid][dInsVW], 0, -1);
+					//dPickupID[DoorCache[duid][dUID]] = CreateDynamicPickup(1239, 2, DoorCache[duid][dInsX],DoorCache[duid][dInsY], DoorCache[duid][dInsZ], DoorCache[duid][dInsVW], 0, -1);
 				}
 				new msg[128]; format(msg, sizeof(msg), "Wyj¥ciowy Virtual World tych drzwi zosta¥ poprawnie zmieniony na: %d", vw);
 				return SendClientMessage(playerid, COLOR_GRAY, msg);
@@ -4006,7 +3978,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 		}
 		case D_JOIN_GROUP:
 		{
-			new senderuid = pVal[playerid];
+			/*new senderuid = pVal[playerid];
 			new senderid;
 			for(new i; i<=GetPlayerPoolSize(); i++)
 			{
@@ -4039,13 +4011,13 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 			{
 				TextDrawForPlayerEx(senderid, 1, "Oferta ~r~anulowana.", 3000);
 				return TextDrawForPlayerEx(playerid, 1, "Oferta ~r~anulowana.", 3000);
-			}
+			}*/
 		}
 		case D_GROUP_MEMBERS:
 		{
 			if(response)
 			{
-				new guid = pVal[playerid];
+				/*new guid = pVal[playerid];
 				new uid = strval(inputtext);
 				if(uid)
 				{
@@ -4117,17 +4089,10 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 						}
 					}
 					strins(list, " \nWstecz", strlen(list));
-<<<<<<< HEAD
 					return ShowPlayerDialog(playerid, D_GROUP_MEMBERS, DIALOG_STYLE_TABLIST_HEADERS, "Cz¥onkowie (wybierz aby edytowa¥)", list, "Wybierz", "Anuluj");
 				}
 				pPage[playerid] = 0;*/
 				return ShowDialogInfo(playerid, "To ju¥ wszystko.");
-=======
-					return ShowPlayerDialog(playerid, D_GROUP_MEMBERS, DIALOG_STYLE_TABLIST_HEADERS, "Cz³onkowie (wybierz aby edytowaæ)", list, "Wybierz", "Anuluj");
-				}*/
-				pPage[playerid] = 0;
-				return ShowDialogInfo(playerid, "To ju¿ wszystko.");
->>>>>>> parent of 9085ba7 (Gamemode can be compiled now!)
 			}
 			else
 			{
@@ -4138,7 +4103,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 		{
 			if(response)
 			{
-				new option = strval(inputtext);
+				/*new option = strval(inputtext);
 				new guid = pVal[playerid];
 				switch(option)
 				{
@@ -4165,7 +4130,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 						}
 						return ShowDialogGroupOptions(playerid, guid);
 					}
-				}
+				}*/
 			}
 			return 1;
 		}
@@ -4183,13 +4148,13 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 					SendClientMessage(playerid, COLOR_WHITE, "Zakres op¥aty za przej¥cie mie¥ci si¥ pomi¥dzy 0 -1000$");
 					return ShowDialogDoorCost(playerid);
 				}
-				DoorCache[GetPlayerDoorUID(playerid)][dEnterCost] = cost;
+			//	DoorCache[GetPlayerDoorUID(playerid)][dEnterCost] = cost;
 			}
 			return ShowDialogGroupPanel(playerid);
 		}
 		case D_DOOR_GROUP:
 		{
-			if(response)
+			/*if(response)
 			{
 				if(Isnull(inputtext))
 				return ShowDialogDoorGroup(playerid);
@@ -4203,35 +4168,20 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 					case 1:
 					{
 						if(PlayerCache[playerid][pGroup] == 0)
-<<<<<<< HEAD
 						return SendClientMessage(playerid, COLOR_GRAY, "Pod tym slotem nie znajduje si¥ ¥adna grupa.");
 //						DoorCache[uid][dGroupUID] = PlayerCache[playerid][pGroup];
-=======
-						return SendClientMessage(playerid, COLOR_GRAY, "Pod tym slotem nie znajduje siê ¿adna grupa.");
-						DoorCache[uid][dGroupUID] = PlayerCache[playerid][pGroup];
->>>>>>> parent of 9085ba7 (Gamemode can be compiled now!)
 					}
 					case 2:
 					{
 						if(PlayerCache[playerid][pGroup2] == 0)
-<<<<<<< HEAD
 						return SendClientMessage(playerid, COLOR_GRAY, "Pod tym slotem nie znajduje si¥ ¥adna grupa.");
 					//	DoorCache[uid][dGroupUID] = PlayerCache[playerid][pGroup2];
-=======
-						return SendClientMessage(playerid, COLOR_GRAY, "Pod tym slotem nie znajduje siê ¿adna grupa.");
-						DoorCache[uid][dGroupUID] = PlayerCache[playerid][pGroup2];
->>>>>>> parent of 9085ba7 (Gamemode can be compiled now!)
 					}
 					case 3:
 					{
 						if(PlayerCache[playerid][pGroup3] == 0)
-<<<<<<< HEAD
 						return SendClientMessage(playerid, COLOR_GRAY, "Pod tym slotem nie znajduje si¥ ¥adna grupa.");
 					//	DoorCache[uid][dGroupUID] = PlayerCache[playerid][pGroup3];
-=======
-						return SendClientMessage(playerid, COLOR_GRAY, "Pod tym slotem nie znajduje siê ¿adna grupa.");
-						DoorCache[uid][dGroupUID] = PlayerCache[playerid][pGroup3];
->>>>>>> parent of 9085ba7 (Gamemode can be compiled now!)
 					}
 				}
 				DestroyDynamicPickup(dPickupID[uid]);
@@ -4240,10 +4190,10 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 				if(GetMapIcon(GroupCache[DoorCache[uid][dGroupUID]][gType]))
 				CreateDynamicMapIcon(DoorCache[uid][dOutX],DoorCache[uid][dOutY], DoorCache[uid][dOutZ], GetMapIcon(GroupCache[DoorCache[uid][dGroupUID]][gType]), -1, 0, -1, -1, STREAMER_MAP_ICON_SD, MAPICON_LOCAL);
 				return SendClientMessage(playerid, COLOR_WHITE, text);
-			}
+			}*/
 			return 1;
 		}
-		case D_COMMANDS:
+		/*case D_COMMANDS:
 		{
 			if(response)
 			{
@@ -4253,7 +4203,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 					"HEX_RED"/md"HEX_WHITE" by usun¥¥ aktualnie edytowany obiekt.\n/mmat by na¥o¥y¥ textur¥ na aktualnie edytowany obiekt\n\nRotacja obiektu:\n/rx [warto¥¥]\n/ry [warto¥¥]\n/rz [warto¥¥]", "Ok", "");
 				}
 			}
-		}
+		}*/
 		case D_HELP:
 		{
 			if(response)
@@ -4281,13 +4231,8 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 				GivePlayerMoney(playerid, -2000);
 				new name[32]; format(name, sizeof(name), inputtext);
 				new dooruid = pVal[playerid];
-<<<<<<< HEAD
 				//DoorCache[dooruid][dName] = name;
 				return SendClientMessage(playerid, COLOR_GRAY, "Nazwa drzwi zosta¥a zmieniona pomy¥lnie.");
-=======
-				DoorCache[dooruid][dName] = name;
-				return SendClientMessage(playerid, COLOR_GRAY, "Nazwa drzwi zosta³a zmieniona pomyœlnie.");
->>>>>>> parent of 9085ba7 (Gamemode can be compiled now!)
 			}
 			return 1;
 		}
@@ -4309,7 +4254,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 					}
 				}
 				new url[256]; format(url, sizeof(url), inputtext);
-				DoorCache[GetPlayerDoorUID(playerid)][dUrl] = url;
+				//DoorCache[GetPlayerDoorUID(playerid)][dUrl] = url;
 				new msg[128];
 				format(msg, sizeof(msg), "* %s zmienia p¥yt¥ w systemie nag¥a¥niaj¥cym audio.", strreplace(ReturnPlayerName(playerid), '_', ' '));
 				SendPlayerMe(playerid, msg);
@@ -4357,19 +4302,14 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 				{
 					case 1:
 					{
-						GetPlayerPos(playerid, DoorCache[uid][dInsX], DoorCache[uid][dInsY], DoorCache[uid][dInsZ]);
-						GetPlayerFacingAngle(playerid, DoorCache[uid][dFacingAngle]);
+						//GetPlayerPos(playerid, DoorCache[uid][dInsX], DoorCache[uid][dInsY], DoorCache[uid][dInsZ]);
+						//GetPlayerFacingAngle(playerid, DoorCache[uid][dFacingAngle]);
 						TextDrawForPlayerEx(playerid, 1, "Pozycja wejsciowa zostala zmieniona pomyslnie.", 3000);
 					}
 					case 2: 
 					{
-<<<<<<< HEAD
 					//	if(DoorCache[uid][dType])
 					//	return ShowDialogInfo(playerid, "Nie mo¥esz wybra¥ spawnu w tym budynku.");
-=======
-						if(DoorCache[uid][dType])
-						return ShowDialogInfo(playerid, "Nie mo¿esz wybraæ spawnu w tym budynku.");
->>>>>>> parent of 9085ba7 (Gamemode can be compiled now!)
 						if(PlayerCache[playerid][pHouseSpawn] == uid)
 						{
 							PlayerCache[playerid][pHouseSpawn] = 0;
@@ -4380,7 +4320,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 					}
 					case 3:
 					{
-						if(!Isnull(DoorCache[uid][dUrl]))
+					/*	if(!Isnull(DoorCache[uid][dUrl]))
 						{
 							return ShowDialogChangeUrl(playerid);
 						}
@@ -4393,15 +4333,11 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 						DoorCache[uid][dUrl] = str;
 						PlayerCache[playerid][pCash] -= 1200;
 						GivePlayerMoney(playerid, -1200);
-<<<<<<< HEAD
 						SendClientMessage(playerid, COLOR_GRAY, "Zakupiono system nag¥a¥niaj¥cy!");*/
-=======
-						SendClientMessage(playerid, COLOR_GRAY, "Zakupiono system nag³aœniaj¹cy!");
->>>>>>> parent of 9085ba7 (Gamemode can be compiled now!)
 					}
 					case 4:
 					{
-						SetPlayerPos(playerid, DoorCache[uid][dInsX], DoorCache[uid][dInsY], DoorCache[uid][dInsZ]);
+					//	SetPlayerPos(playerid, DoorCache[uid][dInsX], DoorCache[uid][dInsY], DoorCache[uid][dInsZ]);
 						return TextDrawForPlayerEx(playerid, 1, "Przeteleportowano do pozycji wyjsciowej.", 3000);
 					}
 					case 5:
@@ -4412,38 +4348,25 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 					}
 					case 6:
 					{
-<<<<<<< HEAD
 						/*if(DoorCache[uid][dGroupUID] != 0)
 						return ShowDialogInfo(playerid, ""HEX_WHITE"Ten budynek jest ju¥ podpisany pod jaki¥ biznes");
 						if(DoorCache[uid][dType])
 						return ShowDialogDoorGroup(playerid);
 						return ShowDialogInfo(playerid, ""HEX_WHITE"Nie mo¥esz podpisa¥ tego budynku pod grup¥.");*/
-=======
-						if(DoorCache[uid][dGroupUID] != 0)
-						return ShowDialogInfo(playerid, ""HEX_WHITE"Ten budynek jest ju¿ podpisany pod jakiœ biznes");
-						if(DoorCache[uid][dType])
-						return ShowDialogDoorGroup(playerid);
-						return ShowDialogInfo(playerid, ""HEX_WHITE"Nie mo¿esz podpisaæ tego budynku pod grupê.");
->>>>>>> parent of 9085ba7 (Gamemode can be compiled now!)
 					}
 					case 7:
 					{
-						if(DoorCache[uid][dType])
+					/*	if(DoorCache[uid][dType])
 						{
 							if(DoorCache[uid][dGroupUID] == 0)
 							return ShowDialogInfo(playerid, ""HEX_WHITE"Ten budynek nie jest podpisany pod ¥aden biznes.");
 							return ShowDialogDoorCost(playerid);
-<<<<<<< HEAD
 						}*/
 						return ShowDialogInfo(playerid, ""HEX_WHITE"Ten budynek jest domem - nie mo¥esz ustawi¥ op¥aty za przej¥cie.");
-=======
-						}
-						return ShowDialogInfo(playerid, ""HEX_WHITE"Ten budynek jest domem - nie mo¿esz ustawiæ op³aty za przejœcie.");
->>>>>>> parent of 9085ba7 (Gamemode can be compiled now!)
 					}
 					case 8:
 					{
-						if(DoorCache[uid][dVehicle])
+					/*	if(DoorCache[uid][dVehicle])
 						{
 							DoorCache[uid][dVehicle]=0;
 							TextDrawForPlayerEx(playerid, 1, "Przejazd pojazdami zostal ~r~~h~~h~wylaczony~w~.", 3000);
@@ -4452,25 +4375,20 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 						{
 							DoorCache[uid][dVehicle]=1;
 							TextDrawForPlayerEx(playerid, 1, "Przejazd pojazdami zostal ~g~~h~~h~wlaczony~w~.", 3000);
-						}
+						}*/
 						return ShowDialogDoorSettings(playerid);
 					}
 					case 9:
 					{
-						if(!DoorCache[uid][dAlarm])
+					/*	if(!DoorCache[uid][dAlarm])
 						{
 							if(PlayerCache[playerid][pCash] < 2500)
 							return ShowDialogInfo(playerid, "Nie posiadasz przy sobie $2500 na kupno alarmu.");
 							PlayerCache[playerid][pCash] -= 2500;
 							GivePlayerMoney(playerid, -2500);
 							DoorCache[uid][dAlarm] = true;
-<<<<<<< HEAD
 							return ShowDialogInfo(playerid, ""HEX_WHITE"Alarm zosta¥ zakupiony!\nOdpowiednie s¥u¥by zostan¥ poinformowane podczas pr¥by w¥amania do budynku.\nW¥amanie zostanie wykryte r¥wnie¥ przy strzelaniu w budynku z "HEX_DARKRED"g¥o¥nej "HEX_WHITE"broni palnej.");
 						}*/
-=======
-							return ShowDialogInfo(playerid, ""HEX_WHITE"Alarm zosta³ zakupiony!\nOdpowiednie s³u¿by zostan¹ poinformowane podczas próby w³amania do budynku.\nW³amanie zostanie wykryte równie¿ przy strzelaniu w budynku z "HEX_DARKRED"g³oœnej "HEX_WHITE"broni palnej.");
-						}
->>>>>>> parent of 9085ba7 (Gamemode can be compiled now!)
 						return ShowDialogInfo(playerid, "W tym budynku zamontowano alarm.");
 					}
 				}
@@ -4705,7 +4623,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 			}
 		}
 		case D_CREATEDOOR:
-		{
+		{/*
 			if(response)
 			{
 				new zone = GetPlayerZone(playerid);
@@ -4768,7 +4686,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 			else
 			{
 				return 1;
-			}
+			}*/
 		}
 		case D_ITEMS:
 		{
@@ -5189,7 +5107,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 		{
 			if(response)
 			{
-				new phone_number = strval(inputtext);
+				/*new phone_number = strval(inputtext);
 				switch(phone_number)
 				{
 					case 777:
@@ -5324,13 +5242,8 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 						}
 					}
 				}
-<<<<<<< HEAD
 				SendClientMessage(playerid, COLOR_GREEN, "#Operator Kom¥rkowy: "HEX_WHITE"Wprowadzono nieprawdi¥owy numer telefonu.");
 				return ShowDialogContacts(playerid);*/
-=======
-				SendClientMessage(playerid, COLOR_GREEN, "#Operator Komórkowy: "HEX_WHITE"Wprowadzono nieprawdi³owy numer telefonu.");
-				return ShowDialogContacts(playerid);
->>>>>>> parent of 9085ba7 (Gamemode can be compiled now!)
 			}
 			return ShowDialogContacts(playerid);
 		}
@@ -5766,7 +5679,7 @@ stock GetPlayersCountOnDuty(groupuid)
 
 stock GetUserPerms(useruid, groupuid)
 {
-	new perms[128];
+	/*new perms[128];
 	if(PlayerCache[useruid][pGroup] == groupuid)
 	{
 		if(PlayerCache[useruid][pGroupAdmin])
@@ -5812,7 +5725,7 @@ stock GetUserPerms(useruid, groupuid)
 		if(PlayerCache[useruid][pGroupProducts3])
 		strins(perms, "+F ", strlen(perms));
 	}
-	return perms;
+	return perms;*/
 }
 
 stock ReturnFavAnim(playerid)
@@ -6026,7 +5939,7 @@ stock ShowDialogGroupPayDay(playerid)
 
 stock ShowDialogVehicleGroup(playerid)
 {
-	new list[128] = "#\tGrupa\n", info[64], uid = PlayerCache[playerid][pUID];
+	/*new list[128] = "#\tGrupa\n", info[64], uid = PlayerCache[playerid][pUID];
 	if(PlayerCache[uid][pGroup])
 	{
 		format(info, sizeof(info), "%d %s\n", PlayerCache[uid][pGroup], GroupCache[PlayerCache[uid][pGroup]][gName]);
@@ -6041,13 +5954,8 @@ stock ShowDialogVehicleGroup(playerid)
 	{
 		format(info, sizeof(info), "%d %s\n", PlayerCache[uid][pGroup3], GroupCache[PlayerCache[uid][pGroup3]][gName]);
 		strins(list, info, strlen(list));
-<<<<<<< HEAD
 	}*/
 	//return ShowPlayerDialog(playerid, D_VEHICLE_GROUP, DIALOG_STYLE_TABLIST_HEADERS, "Wybierz grup¥", list, "Pod(od)pisz", "Anuluj");
-=======
-	}
-	return ShowPlayerDialog(playerid, D_VEHICLE_GROUP, DIALOG_STYLE_TABLIST_HEADERS, "Wybierz grupê", list, "Pod(od)pisz", "Anuluj");
->>>>>>> parent of 9085ba7 (Gamemode can be compiled now!)
 }
 
 stock ShowDialogGroupPanel(playerid)
@@ -6135,7 +6043,7 @@ stock SetPlayerCash(playerid, cash)
 
 stock CreateDoor(ownerid, outVW, type, Float:X, Float:Y, Float:Z)
 {
-	new VW=1, name[32];
+	/*new VW=1, name[32];
 	for(new i; i<LastdUID; i++)
 	{
 		if(VW == DoorCache[i][dInsVW])
@@ -6184,7 +6092,7 @@ stock CreateDoor(ownerid, outVW, type, Float:X, Float:Y, Float:Z)
 	new url[256];
 	url = "";
 	DoorCache[LastdUID][dUrl] = url;
-	LastdUID++;
+	LastdUID++;*/
 }
 
 stock IsListItemGroup(itemuid, groupuid)
@@ -6765,8 +6673,8 @@ public OnPlayerRequestClass(playerid, classid)
 	else if(PlayerCache[playerid][pHouseSpawn] != 0)
 	{
 		new duid = PlayerCache[playerid][pHouseSpawn];
-		SetSpawnInfoFix(playerid, 0, PlayerCache[playerid][pSkin],DoorCache[duid][dInsX], DoorCache[duid][dInsY], DoorCache[duid][dInsZ]);
-		SetPlayerVirtualWorld(playerid, DoorCache[duid][dInsVW]);
+	//	SetSpawnInfoFix(playerid, 0, PlayerCache[playerid][pSkin],DoorCache[duid][dInsX], DoorCache[duid][dInsY], DoorCache[duid][dInsZ]);
+		//SetPlayerVirtualWorld(playerid, DoorCache[duid][dInsVW]);
 	}
 	else
 	{
@@ -7132,6 +7040,7 @@ public OnPlayerKeyStateChange(playerid, newkeys, oldkeys)
 		}
 		return 1;
 	}
+	/*
 	else if(newkeys & KEY_YES)
 	{
 		new objid = GetPlayerCameraTargetDynObject(playerid);
@@ -7273,7 +7182,7 @@ public OnPlayerKeyStateChange(playerid, newkeys, oldkeys)
 				}
 				return ShowDialogInfo(playerid, "Nie znaleziono innych przystank¥w autobusowych.");
 			}
-		}*/
+		}
 		if(IsPlayerInAnyVehicle(playerid))
 		{
 			if(GetPlayerVehicleSeat(playerid) == 0)
@@ -7354,7 +7263,7 @@ public OnPlayerKeyStateChange(playerid, newkeys, oldkeys)
 			}
 			return 1;
 		}
-		/*if(GetPlayerCameraTargetDynActor(playerid) != 0)
+		if(GetPlayerCameraTargetDynActor(playerid) != 0)
 		{
 			new auid = GetActorUID(GetPlayerCameraTargetDynActor(playerid));
 
@@ -7449,8 +7358,9 @@ public OnPlayerKeyStateChange(playerid, newkeys, oldkeys)
 			}
 			MoveDynamicObject(objectid,ObjectCache[objuid][oX]+ObjectCache[objuid][oGateX], ObjectCache[objuid][oY]+ObjectCache[objuid][oGateY], ObjectCache[objuid][oZ]+ObjectCache[objuid][oGateZ], 4.1,  ObjectCache[objuid][orX]+ObjectCache[objuid][oGaterX],  ObjectCache[objuid][orY]+ObjectCache[objuid][oGaterY],  ObjectCache[objuid][orZ]+ObjectCache[objuid][oGaterZ]);
 			return TextDrawForPlayerEx(playerid, 1, "Brama ~g~~h~otwarta.~w~.", 3000);
-		}*/
-	}
+		}
+	}*/
+	
 	else if(newkeys & KEY_FIRE)
 	{
 		if(IsPlayerInAnyVehicle(playerid))
@@ -7489,7 +7399,7 @@ public OnPlayerKeyStateChange(playerid, newkeys, oldkeys)
 	else if(newkeys & KEY_WALK && newkeys & KEY_SPRINT)
 	{
 		new vw = GetPlayerVirtualWorld(playerid);
-		for(new i; i<LastdUID; i++)
+	/*	for(new i; i<LastdUID; i++)
 		{
 			if(!DoorCache[i][dDestroyed])
 			{
@@ -7564,6 +7474,7 @@ public OnPlayerKeyStateChange(playerid, newkeys, oldkeys)
 				}
 			}
 		}
+		*/
 	}
 	return 1;
 }
@@ -8287,14 +8198,9 @@ public OnPlayerText(playerid, text[])
 	if(text[0] == ':' && text[1] == 'o')
 	return !SendPlayerMe(playerid, "robi zaskoczon¥ min¥");
 	if(text[0] == ':' && text[1] == 'O')
-<<<<<<< HEAD
 	return !SendPlayerMe(playerid, "robi zaskoczon¥ min¥");
 
 	/*if(text[0] == '@')
-=======
-	return !SendPlayerMe(playerid, "robi zaskoczon¹ minê");
-	if(text[0] == '@')
->>>>>>> parent of 9085ba7 (Gamemode can be compiled now!)
 	{
 		new slot;
 		if(text[1] == '1')
@@ -8508,7 +8414,7 @@ public OnPlayerText(playerid, text[])
 			}
 		}
 		return 0;
-	}
+	}*/
 	if(text[0] == '.' && text[1] != ' ')
 	{
 		new finalmsg[256], playermsg[128];
@@ -9547,7 +9453,7 @@ public min_timer()
 			{
 				if(IsPlayerConnected(i))
 				{
-					if(pLogged[i])
+					/*if(pLogged[i])
 					{
 						if(PlayerCache[i][pGroupPayDay])
 						{
@@ -9562,13 +9468,8 @@ public min_timer()
 							PlayerCache[i][pGroupPayDay3] = false;
 						}
 						if(PlayerCache[i][pLevel] >= 7)
-<<<<<<< HEAD
 						SendClientMessage(i, COLOR_RED, "< Wybi¥a p¥noc. Mo¥liwo¥¥ otrzymania PD zosta¥a wznowiona >");
 					}*/
-=======
-						SendClientMessage(i, COLOR_RED, "< Wybi³a pó³noc. Mo¿liwoœæ otrzymania PD zosta³a wznowiona >");
-					}
->>>>>>> parent of 9085ba7 (Gamemode can be compiled now!)
 				}
 			}
 		}
@@ -9591,7 +9492,7 @@ public min_timer()
 			mysql_query(DB_HANDLE, query, false);
 		}
 	}
-	new Float:pH, guid;
+	new Float:pH, guid;/*
 	for(new i; i<=GetPlayerPoolSize(); i++)
 	{
 		if(IsPlayerConnected(i))
@@ -9658,7 +9559,7 @@ public min_timer()
 
 						//vuid = GetVehicleUID(GetPlayerVehicleID(i));
 
-					/*	if( PlayerCache[i][pCurrentVehicle][vState] == 0 &&  PlayerCache[i][pCurrentVehicle][vOwner] != PlayerCache[i][pUID])
+						if( PlayerCache[i][pCurrentVehicle][vState] == 0 &&  PlayerCache[i][pCurrentVehicle][vOwner] != PlayerCache[i][pUID])
 						{
 							AJPlayer(i, "System", "Vehicle Jack (A)", 30);
 						}
@@ -9685,7 +9586,7 @@ public min_timer()
 									AJPlayer(i, "System", "Vehicle Jack (A)", 30);
 								}
 							}
-						}*/
+						}
 					}
 				}
 				GetPlayerHealth(i, pH);
@@ -9752,8 +9653,8 @@ public min_timer()
 						else if(PlayerCache[i][pHouseSpawn] != 0)
 						{
 							new duid = PlayerCache[i][pHouseSpawn];
-							SetPlayerPos(i, DoorCache[duid][dInsX], DoorCache[duid][dInsY], DoorCache[duid][dInsZ]);
-							SetPlayerVirtualWorld(i, DoorCache[duid][dInsVW]);
+						//	SetPlayerPos(i, DoorCache[duid][dInsX], DoorCache[duid][dInsY], DoorCache[duid][dInsZ]);
+						//	SetPlayerVirtualWorld(i, DoorCache[duid][dInsVW]);
 						}
 						else if(PlayerCache[i][pHouseSpawn] == 0)
 						{
@@ -9786,6 +9687,7 @@ public min_timer()
 			}
 		}
 	}
+	*/
 }
 
 cmd:me (playerid, params[])
@@ -10603,8 +10505,8 @@ cmd:aj (playerid, params[])
 		else if(PlayerCache[targetid][pHouseSpawn] != 0)
 		{
 			new duid = PlayerCache[targetid][pHouseSpawn];
-			SetPlayerPos(targetid, DoorCache[duid][dInsX], DoorCache[duid][dInsY], DoorCache[duid][dInsZ]);
-			SetPlayerVirtualWorld(targetid, DoorCache[duid][dInsVW]);
+			//SetPlayerPos(targetid, DoorCache[duid][dInsX], DoorCache[duid][dInsY], DoorCache[duid][dInsZ]);
+			//SetPlayerVirtualWorld(targetid, DoorCache[duid][dInsVW]);
 		}
 		else if(PlayerCache[targetid][pHouseSpawn] == 0)
 		{
@@ -10806,7 +10708,7 @@ stock ShowDialogDoorCreate(playerid, yard)
 
 stock GetPlayerDoorUID(playerid)
 {
-	new playervw = GetPlayerVirtualWorld(playerid);
+	/*new playervw = GetPlayerVirtualWorld(playerid);
 	for(new i; i<LastdUID; i++)
 	{
 		if(!DoorCache[i][dDestroyed])
@@ -10819,37 +10721,25 @@ stock GetPlayerDoorUID(playerid)
 				}
 			}
 		}
-	}
+	}*/
 	return 0;
 }
 
 stock GetRadioState(dooruid)
 {
 	new str[64];
-<<<<<<< HEAD
 /*if(Isnull(DoorCache[dooruid][dUrl]))
 	format(str, sizeof(str), ""HEX_RED"Zakup system nag¥a¥niaj¥cy(1200$)");
 	else
 	format(str, sizeof(str), ""HEX_GREEN"Zarz¥dzaj systemem nag¥a¥niaj¥cym");*/
-=======
-	if(Isnull(DoorCache[dooruid][dUrl]))
-	format(str, sizeof(str), ""HEX_RED"Zakup system nag³aœniaj¹cy(1200$)");
-	else
-	format(str, sizeof(str), ""HEX_GREEN"Zarz¹dzaj systemem nag³aœniaj¹cym");
->>>>>>> parent of 9085ba7 (Gamemode can be compiled now!)
 	return str;
 }
 
 stock ShowDialogDoorSettings(playerid)
 {
 	new str[1025];
-<<<<<<< HEAD
 	//format(str, sizeof(str), ""HEX_WHITE"1\tZmie¥ pozycj¥ wej¥ciow¥ drzwi\n2\tWybierz ten dom jako Spawn\n3\t%s\n4\tTeleportuj do pozycji wyj¥ciowej\n5\tZmie¥ nazw¥ drzwi(2000$)\n6\tPodpisz budynek pod grup¥\n7\tUstaw op¥at¥ za przej¥cie\n8\tPrze¥¥cz przejazd pojazdami\n9\t%s", GetRadioState(GetPlayerDoorUID(playerid)), DoorCache[GetPlayerDoorUID(playerid)][dAlarm] ? ("Alarm przeciw-w¥amaniowy: "HEX_GREEN"Tak") : (""HEX_RED"Kup alarm przeciw-w¥amaniowy: ($2500)"));
 	return ShowPlayerDialog(playerid, D_DOOR_SETTINGS, DIALOG_STYLE_LIST, "Zarz¥dzaj drzwiami", str, "Wybierz", "Anuluj");
-=======
-	format(str, sizeof(str), ""HEX_WHITE"1\tZmieñ pozycjê wejœciow¹ drzwi\n2\tWybierz ten dom jako Spawn\n3\t%s\n4\tTeleportuj do pozycji wyjœciowej\n5\tZmieñ nazwê drzwi(2000$)\n6\tPodpisz budynek pod grupê\n7\tUstaw op³atê za przejœcie\n8\tPrze³¹cz przejazd pojazdami\n9\t%s", GetRadioState(GetPlayerDoorUID(playerid)), DoorCache[GetPlayerDoorUID(playerid)][dAlarm] ? ("Alarm przeciw-w³amaniowy: "HEX_GREEN"Tak") : (""HEX_RED"Kup alarm przeciw-w³amaniowy: ($2500)"));
-	return ShowPlayerDialog(playerid, D_DOOR_SETTINGS, DIALOG_STYLE_LIST, "Zarz¹dzaj drzwiami", str, "Wybierz", "Anuluj");
->>>>>>> parent of 9085ba7 (Gamemode can be compiled now!)
 }
 
 CMD:gname (playerid, params[])
@@ -10880,7 +10770,7 @@ CMD:gname (playerid, params[])
 
 cmd:drzwi (playerid, params[])
 {
-	new uid = GetPlayerDoorUID(playerid);
+	/*new uid = GetPlayerDoorUID(playerid);
 	pVal[playerid] = uid;
 	if(uid != 0)
 	{
@@ -10936,7 +10826,7 @@ cmd:drzwi (playerid, params[])
 	}
 	ShowDialogZone(playerid);
 	return 1;
-	
+	*/
 }
 
 stock GetQuitReason(reasonid)
@@ -10966,18 +10856,18 @@ stock GetLastVW()
 
 CMD:wejscie (playerid, params[])
 {
-	if(PlayerCache[playerid][pLevel] == 0)
+	/*if(PlayerCache[playerid][pLevel] == 0)
 	return 1;
 	new Float:X, Float:Y, Float:Z; GetPlayerPos(playerid, X, Y, Z);
 	CreateDoor(playerid, GetPlayerVirtualWorld(playerid), 1, X, Y, Z);
 	new msg[128]; format(msg, sizeof(msg), "Utworzono przej¥cie (UID przej¥cia: %d)", LastdUID-1);
 	DoorCache[LastdUID-1][dConnect] = 1;
-	return SendClientMessage(playerid, COLOR_GRAY, msg);
+	return SendClientMessage(playerid, COLOR_GRAY, msg);*/
 }
 
 CMD:wyjscie (playerid, params[])
 {
-	if(PlayerCache[playerid][pLevel] == 0)
+	/*if(PlayerCache[playerid][pLevel] == 0)
 	return 1;
 	new duid;
 	if(sscanf(params, "i", duid))
@@ -10988,25 +10878,12 @@ CMD:wyjscie (playerid, params[])
 	DestroyDynamicPickup(dPickupID2[duid]);
 	dPickupID2[duid] = CreateDynamicPickup(1239, 2, DoorCache[duid][dInsX], DoorCache[duid][dInsY], DoorCache[duid][dInsZ],GetPlayerVirtualWorld(playerid), -1, -1);
 	DoorCache[duid][dConnect] = 1;
-	return SendClientMessage(playerid, COLOR_GRAY, msg);
-}
-
-CMD:wyczyscprzejscia (playerid, params[])
-{
-	for(new i; i<LastdUID; i++)
-	{
-		if(DoorCache[i][dInsVW] == 0 && IsDoorInAnyDoor(i) || DoorCache[i][dInsVW] != 0 && IsDoorInAnyDoor(i) && DoorCache[i][dConnect])
-		{
-			DoorCache[i][dDestroyed] = 1;
-			DestroyDynamicPickup(dPickupID[i]);
-			DestroyDynamicPickup(dPickupID2[i]);
-		}
-	}
+	return SendClientMessage(playerid, COLOR_GRAY, msg);*/
 }
 
 CMD:dname (playerid, params[])
 {
-	if(PlayerCache[playerid][pLevel] == 0)
+/*	if(PlayerCache[playerid][pLevel] == 0)
 	return 1;
 	new duid, name[32];
 	if(sscanf(params, "is[32]", duid, name))
@@ -11015,7 +10892,7 @@ CMD:dname (playerid, params[])
 	return SendClientMessage(playerid, COLOR_GRAY, "Niepoprawna warto¥¥ UID drzwi.");
 	DoorCache[duid][dName] = name;
 	new msg[128]; format(msg, sizeof(msg), "~w~Nazwa zmieniona:~n~%s", name);
-	return GameTextForPlayer(playerid, msg, 3000, 4);
+	return GameTextForPlayer(playerid, msg, 3000, 4);*/
 }	
 
 stock ShowDialogZone(playerid)
@@ -11173,7 +11050,7 @@ public OnPlayerPickUpDynamicPickup(playerid, pickupid)
 
 cmd:zamknij (playerid, params[])
 {
-	new str[256];
+	/*new str[256];
 	format(str, sizeof(str), "SELECT playerUID, groupUID, open, explodeTime, insX, insY, insZ, outX, outY, outZ, outVW, insVW FROM doors WHERE uid = '%d' LIMIT 1", pPickupUID[playerid]);
 	new Cache:cache = mysql_query(DB_HANDLE, str);
 	
@@ -11247,7 +11124,7 @@ cmd:zamknij (playerid, params[])
 		return TextDrawForPlayerEx(playerid, 1, "Te drzwi zostaly niedawno wywazone.~n~Nie mozna narazie z nich skorzystac.", 50000);
 	}
 
-	return 1;
+	return 1;*/
 }
 
 cmd:b (playerid, params[])
@@ -11743,7 +11620,7 @@ CMD:aprodukt(playerid, params[])
 
 CMD:kup (playerid, params[])
 {
-	new guid = DoorCache[GetPlayerDoorUID(playerid)][dGroupUID];
+/*	new guid = DoorCache[GetPlayerDoorUID(playerid)][dGroupUID];
 	if(GroupCache[guid][gType] != 7)
 	return TextDrawForPlayerEx(playerid, 1, "Nie znajdujesz sie w budynku odpowiedniej grupy.", 5000);
 	new list[1025] = "#\tNazwa\tCena\tIlo¥¥\n", info[128], count;
@@ -11760,13 +11637,8 @@ CMD:kup (playerid, params[])
 		}
 	}
 	if(!count)
-<<<<<<< HEAD
 	return ShowDialogInfo(playerid, "Brak produkt¥w w magazynie.");
 	return ShowPlayerDialog(playerid, D_24, DIALOG_STYLE_TABLIST_HEADERS, "Dost¥pne produkty", list, "Kup", "Anuluj");*/
-=======
-	return ShowDialogInfo(playerid, "Brak produktów w magazynie.");
-	return ShowPlayerDialog(playerid, D_24, DIALOG_STYLE_TABLIST_HEADERS, "Dostêpne produkty", list, "Kup", "Anuluj");
->>>>>>> parent of 9085ba7 (Gamemode can be compiled now!)
 }
 
 forward CanPlayerUseItem(playerid, itemuid);
@@ -12217,7 +12089,7 @@ stock UseItem(playerid, itemuid)
 		}
 		case 14:
 		{
-			new vid = GetPlayerCameraTargetVehicle(playerid);
+		/*	new vid = GetPlayerCameraTargetVehicle(playerid);
 			if(vid != INVALID_VEHICLE_ID)
 			{
 				new Float:posX, Float:posY, Float:posZ, Float:angle, model, fuel, playerUID, groupUID, register, color, color2, Float:health;
@@ -12235,15 +12107,9 @@ stock UseItem(playerid, itemuid)
 				
 				UnSpawnVehicle(vid);
 				SpawnVehicle(vid);
-<<<<<<< HEAD
 				ShowDialogInfo(playerid, "Pomy¥lnie zamontowano rejstracj¥ pojazdu.");
 				ItemCache[itemuid][iState] = 2;
 			}*/
-=======
-				ShowDialogInfo(playerid, "Pomyœlnie zamontowano rejstracjê pojazdu.");
-				//ItemCache[itemuid][iState] = 2;
-			}
->>>>>>> parent of 9085ba7 (Gamemode can be compiled now!)
 			return TextDrawForPlayerEx(playerid, 1, "Spojrz na pojazd na, ktory chcesz nalozyc nowa rejestracje.", 3000);
 		}
 		case 15:
@@ -12308,7 +12174,7 @@ stock UseItem(playerid, itemuid)
 		}
 		case 17:
 		{
-			if(GroupCache[pDuty[playerid]][gType] == 1 || GroupCache[pDuty[playerid]][gType] == 16)
+		/*	if(GroupCache[pDuty[playerid]][gType] == 1 || GroupCache[pDuty[playerid]][gType] == 16)
 			{
 				if(pDetonatorTimer[playerid])
 				return GameTextForPlayer(playerid, "~r~juz wysadzasz jakies drzwi!", 3000, 4);
@@ -12352,7 +12218,7 @@ stock UseItem(playerid, itemuid)
 				}
 				return GameTextForPlayer(playerid, "~r~nie znajdujesz sie w poblizu zamknietych drzwi", 2000, 4);
 			}
-			return TextDrawForPlayerEx(playerid, 1, "Musisz znajdowac sie na sluzbie odpowiedniej grupy by moc uzyc ladunku wybuchowego.", 3000);
+			return TextDrawForPlayerEx(playerid, 1, "Musisz znajdowac sie na sluzbie odpowiedniej grupy by moc uzyc ladunku wybuchowego.", 3000);*/
 		}
 	}
 	return 1;
@@ -12400,7 +12266,7 @@ stock BWPlayer(playerid, bwtime, reason)
 forward DetonatorTimer(playerid, dooruid, groupuid);
 public DetonatorTimer(playerid, dooruid, groupuid)
 {
-	new time[32]; format(time, sizeof(time), "~r~~h~detonacja za:~n~~r~~h~%d", pDetonatorTime[playerid]);
+	/*new time[32]; format(time, sizeof(time), "~r~~h~detonacja za:~n~~r~~h~%d", pDetonatorTime[playerid]);
 	pDetonatorTime[playerid]--;
 	if(pDetonatorTime[playerid] == 0)
 	{
@@ -12482,7 +12348,7 @@ public DetonatorTimer(playerid, dooruid, groupuid)
 				}
 			}
 		}
-	}
+	}*/
 }
 
 forward RepairingVehicle(playerid);
@@ -12591,7 +12457,7 @@ stock ShowDialogUseWeap(playerid)
 forward TurnOffAlarm(dooruid);
 public TurnOffAlarm(dooruid)
 {
-	DoorCache[dooruid][dPlayingAlarm] = false;
+	//DoorCache[dooruid][dPlayingAlarm] = false;
 }
 
 public OnPlayerWeaponShot(playerid, weaponid, hittype, hitid, Float:fX, Float:fY, Float:fZ)
@@ -12606,7 +12472,7 @@ public OnPlayerWeaponShot(playerid, weaponid, hittype, hitid, Float:fX, Float:fY
 	}
 	if(weaponid != 23)
 	{
-		if(GetPlayerVirtualWorld(playerid) != 0)
+		/*if(GetPlayerVirtualWorld(playerid) != 0)
 		{
 			new duid = GetPlayerDoorUID(playerid);
 			if(DoorCache[duid][dAlarm] && !DoorCache[duid][dPlayingAlarm])
@@ -12632,7 +12498,7 @@ public OnPlayerWeaponShot(playerid, weaponid, hittype, hitid, Float:fX, Float:fY
 					}
 				}
 			}
-		}
+		}*/
 	}
 	new query[64];
 	if(WeaponCache[playerid][wcVal2] == 1)
@@ -12666,7 +12532,7 @@ public OnPlayerShootDynamicObject(playerid, weaponid, objectid, Float:x, Float:y
 		if(GetPlayerVirtualWorld(playerid) != 0)
 		{
 			new duid = GetPlayerDoorUID(playerid);
-			if(DoorCache[duid][dAlarm] && !DoorCache[duid][dPlayingAlarm])
+			/*if(DoorCache[duid][dAlarm] && !DoorCache[duid][dPlayingAlarm])
 			{
 				new msg[128];
 				format(msg, sizeof(msg), "** Pad¥y strza¥y! Zg¥oszenie zosta¥o oznaczone na radarze. **");
@@ -12688,7 +12554,7 @@ public OnPlayerShootDynamicObject(playerid, weaponid, objectid, Float:x, Float:y
 						SetTimerEx("DestroyIconZ", 60000*10, false, "i", id);
 					}
 				}
-			}
+			}*/
 		}
 	}
 	new query[64];
@@ -12881,7 +12747,7 @@ stock GetHPHex(Float:HP)
 
 CMD:g (playerid, params[])
 {
-	if(!Isnull(params))
+/*	if(!Isnull(params))
 	{
 		new slot, sub[32], targetid;
 		sscanf(params, "is[32]i", slot, sub, targetid);
@@ -13051,7 +12917,7 @@ CMD:g (playerid, params[])
 				new info[256]; format(info, sizeof(info),"Otrzymano zaproszenie do grupy %s przez gracza %s.\nMo¥esz do¥¥czy¥ do tej grupy wybieraj¥c tak lub nie.\nCzy akceptujesz t¥ ofert¥?",
 				GroupCache[guid][gName], RPName(playerid));
 				ShowPlayerDialog(targetid, D_JOIN_GROUP, DIALOG_STYLE_MSGBOX, header, info, "Tak", "Nie");
-				*/
+				
 				return TextDrawForPlayerEx(playerid, 1, "Oferta ~g~wyslana.", 3000);
 			}
 			else if(!strcmp(sub, "v", true))
@@ -13081,11 +12947,7 @@ CMD:g (playerid, params[])
 				}
 				if(count)
 				return ShowPlayerDialog(playerid, D_VEHICLES, DIALOG_STYLE_LIST, "Pojazdy grupy (* - zespawnowany)", list, "(Un)Spawn", "Anuluj");
-<<<<<<< HEAD
 				return ShowDialogInfo(playerid, "Do tej grupy nie zosta¥y przypisane jeszcze ¥adne pojazdy.");
-=======
-				return ShowDialogInfo(playerid, "Do tej grupy nie zosta³y przypisane jeszcze ¿adne pojazdy.");*/
->>>>>>> parent of 9085ba7 (Gamemode can be compiled now!)
 			}
 			else if(!strcmp(sub, "z", true))
 			{
@@ -13161,13 +13023,13 @@ CMD:g (playerid, params[])
 	PlayerTextDrawShow(playerid, Group2[playerid]);
 	PlayerTextDrawShow(playerid, Group[playerid]);
 	SelectTextDraw(playerid, 0x6088D2FF);
-	pChoosingTxd[playerid]=1;
+	pChoosingTxd[playerid]=1;*/
 	return 1;
 }
 
 public OnPlayerClickPlayerTextDraw(playerid, PlayerText:playertextid)
 {
-	new uid = PlayerCache[playerid][pUID];
+	/*new uid = PlayerCache[playerid][pUID];
 	if(playertextid == Group[playerid])
 	{
 		PlayerTextDrawHide(playerid, Group[playerid]);
@@ -13271,14 +13133,8 @@ public OnPlayerClickPlayerTextDraw(playerid, PlayerText:playertextid)
 			return 1;
 		}
 		return 1;
-	}
+	}*/
 	return 0;
-}
-stock GroupPath(id)
-{
-	new path[64];
-	format(path, sizeof(path), FOLDER_GROUPS"%d.ini", id);
-	return path;
 }
 
 stock LoadGroups()
@@ -13386,7 +13242,7 @@ CMD:adoc (playerid, params[]){
 
 CMD:adodaj (playerid, params[])
 {
-	if(PlayerCache[playerid][pLevel] < ADMINISTRATION)
+	/*if(PlayerCache[playerid][pLevel] < ADMINISTRATION)
 	return 1;
 	new targetid, groupuid;
 	if(sscanf(params, "ri", targetid, groupuid))
@@ -13411,13 +13267,8 @@ CMD:adodaj (playerid, params[])
 		PlayerCache[targetid][pGroupAdmin3] = true;
 		return SendClientMessage(playerid, COLOR_GRAY, "Dodano.");
 	}
-<<<<<<< HEAD
 	else*/
 	return SendClientMessage(playerid, COLOR_GRAY, "Ten gracz nie ma wolnych slot¥w grupowych.");
-=======
-	else
-	return SendClientMessage(playerid, COLOR_GRAY, "Ten gracz nie ma wolnych slotów grupowych.");
->>>>>>> parent of 9085ba7 (Gamemode can be compiled now!)
 }
 
 stock AddPlayerToGroup(playerid, groupuid)
@@ -13656,7 +13507,7 @@ public ObjectMoving(playerid)
 
 CMD:mc (playerid, params[])
 {
-	if(GetPlayerVirtualWorld(playerid) == 0)
+	/*if(GetPlayerVirtualWorld(playerid) == 0)
 	{
 		if(!PlayerCache[playerid][pLevel])
 		return GameTextForPlayer(playerid, "~r~~h~brak uprawnien", 3000, 4);
@@ -13746,7 +13597,7 @@ CMD:mc (playerid, params[])
 	format(str, sizeof(str), "UPDATE objects SET timer = '%d' WHERE id = '%d' LIMIT 1", SetTimerEx("ObjectMoving", 125, true, "i", playerid), objectid);
 	cache = mysql_query(DB_HANDLE, str);
 	cache_delete(cache);
-	
+	*/
 	return 1;
 }
 
@@ -13881,7 +13732,7 @@ return Streamer_GetIntData(STREAMER_TYPE_OBJECT, objectid, E_STREAMER_WORLD_ID);
 
 CMD:msel (playerid, params[])
 {
-	if(GetPlayerVirtualWorld(playerid) == 0)
+/*	if(GetPlayerVirtualWorld(playerid) == 0)
 	{
 		if(!PlayerCache[playerid][pLevel])
 		return GameTextForPlayer(playerid, "~r~~h~~h~brak uprawnien.", 3000, 4);
@@ -13948,13 +13799,13 @@ CMD:msel (playerid, params[])
 				}
 			}
 		}
-	}
+	}*/
 	return TextDrawForPlayerEx(playerid, 1, "Nie znaleziono takiego obiektu w poblizu.", 3000);
 }
 
 CMD:mpick (playerid, params[])
 {
-	new objectid = GetPlayerCameraTargetDynObject(playerid);
+/*	new objectid = GetPlayerCameraTargetDynObject(playerid);
 
 	if(!objectid)
 	return SendClientMessage(playerid, COLOR_GRAY, "Z¥ap obiekt (najed¥ kamer¥ na obiekt, kt¥ry chcesz edytowa¥)");
@@ -14016,13 +13867,8 @@ CMD:mpick (playerid, params[])
 
 	SetPlayerEditObject(playerid, objectid, uid);
 
-<<<<<<< HEAD
 	format(str, sizeof(str), "Rozpoczynasz edycj¥ obiektu: %d", model);
 	SendClientMessage(playerid, COLOR_WHITE, str);*/
-=======
-	format(str, sizeof(str), "Rozpoczynasz edycjê obiektu: %d", model);
-	SendClientMessage(playerid, COLOR_WHITE, str);
->>>>>>> parent of 9085ba7 (Gamemode can be compiled now!)
 	return 1;
 }
 
@@ -14175,14 +14021,14 @@ CMD:kick (playerid, params[])
 
 stock GetPlayerFreeSlot(playerid)
 {
-	new puid = PlayerCache[playerid][pUID];
+/*	new puid = PlayerCache[playerid][pUID];
 	if(PlayerCache[puid][pGroup] == 0)
 	return 1;
 	else if(PlayerCache[puid][pGroup2] == 0)
 	return 2;
 	else if(PlayerCache[puid][pGroup3] == 0)
 	return 3;
-	else return 0;
+	else return 0;*/
 }
 
 public OnPlayerClickTextDraw(playerid, Text:clickedid)
@@ -15092,7 +14938,7 @@ public OnVehicleDeath(vehicleid, killerid)
 
 CMD:adrzwi (playerid, params[])
 {
-	if(PlayerCache[playerid][pLevel] < ADMINISTRATION)
+	/*if(PlayerCache[playerid][pLevel] < ADMINISTRATION)
 	return 1;
 	new pvw = GetPlayerVirtualWorld(playerid);
 	for(new i; i<LastdUID; i++)
@@ -15116,13 +14962,8 @@ CMD:adrzwi (playerid, params[])
 				}
 			}
 		}
-<<<<<<< HEAD
 	}*/
 	return ShowDialogInfo(playerid, "Nie znajdujesz si¥ przy ¥adnych drzwiach.");
-=======
-	}
-	return ShowDialogInfo(playerid, "Nie znajdujesz siê przy ¿adnych drzwiach.");
->>>>>>> parent of 9085ba7 (Gamemode can be compiled now!)
 }
 
 public OnPlayerEnterVehicle(playerid, vehicleid, ispassenger)
@@ -15632,7 +15473,7 @@ CMD:brama (playerid, params[])
 
 					if(gate)
 					{
-						if(ownerType == 1)
+					/*	if(ownerType == 1)
 						{
 							if(PlayerCache[playerid][pUID] != owner)
 							return TextDrawForPlayerEx(playerid, 1, "Brak uprawnien.", 3000);
@@ -15663,7 +15504,7 @@ CMD:brama (playerid, params[])
 							return MoveDynamicObject(i,x, y, z, 4.1,  rx,  ry, rz);
 						}
 						MoveDynamicObject(i,X+db_x, Y+db_y, Z+db_z, 4.1, RX+db_rx,  RY+db_ry,  RZ+db_rz);
-						return TextDrawForPlayerEx(playerid, 1, "Brama ~g~~h~~h~otwarta~w~.", 3000);
+						return TextDrawForPlayerEx(playerid, 1, "Brama ~g~~h~~h~otwarta~w~.", 3000);*/
 					}
 				}
 			}
@@ -16054,7 +15895,7 @@ CMD:duty (playerid, params[])
 		return TextDrawForPlayerEx(playerid, 1, str, 3000);
 	}
 	new puid = PlayerCache[playerid][pUID];
-	switch(slot)
+/*	switch(slot)
 	{
 		case 1: 
 		{
@@ -16074,13 +15915,8 @@ CMD:duty (playerid, params[])
 			return SendClientMessage(playerid, COLOR_GRAY, "Pod wybranym slotem nie znajduje si¥ ¥adna grupa.");
 			pDuty[playerid] = GroupCache[PlayerCache[puid][pGroup3]][gUID];
 		}
-<<<<<<< HEAD
 		default: return SendClientMessage(playerid, COLOR_GRAY, "Nieprawid¥owy slot grupy.");
 	}*/
-=======
-		default: return SendClientMessage(playerid, COLOR_GRAY, "Nieprawid³owy slot grupy.");
-	}
->>>>>>> parent of 9085ba7 (Gamemode can be compiled now!)
 	UpdatePlayerInfo(playerid);
 	UpdatePlayerName(playerid);
 	new str[128];
@@ -16497,13 +16333,8 @@ CMD:sprobuj (playerid, params[])
 
 CMD:mowner (playerid, params[])
 {
-<<<<<<< HEAD
 /*	if(!ObjectCache[playerid][oUID])
 	return SendClientMessage(playerid, COLOR_GRAY, "Nie edytujesz teraz ¥adnego obiektu.");
-=======
-	if(!ObjectCache[playerid][oUID])
-	return SendClientMessage(playerid, COLOR_GRAY, "Nie edytujesz teraz ¿adnego obiektu.");
->>>>>>> parent of 9085ba7 (Gamemode can be compiled now!)
 
 	new ownertype;
 
@@ -16551,21 +16382,15 @@ CMD:mowner (playerid, params[])
 			strins(list, info, strlen(list));
 		}
 		if(Isnull(list))
-<<<<<<< HEAD
 		return ShowDialogInfo(playerid, "Nie znaleziono ¥adnych grup.");
 		return ShowPlayerDialog(playerid, D_OBJECTGROUP, DIALOG_STYLE_LIST, "Dost¥pne grupy", list, "Wybierz", "Anuluj");
 	}*/
-=======
-		return ShowDialogInfo(playerid, "Nie znaleziono ¿adnych grup.");
-		return ShowPlayerDialog(playerid, D_OBJECTGROUP, DIALOG_STYLE_LIST, "Dostêpne grupy", list, "Wybierz", "Anuluj");
-	}
->>>>>>> parent of 9085ba7 (Gamemode can be compiled now!)
 	return 1;
 }
 
 stock DestroyGroup(groupuid)
 {
-	new query[256];
+	/*new query[256];
 
 	for(new i; i<LastdUID; i++)
 	{
@@ -16612,7 +16437,7 @@ stock DestroyGroup(groupuid)
 	format(query, sizeof(query), "DELETE FROM groups WHERE groups.uid = '%d' LIMIT 1", groupuid);
 	mysql_query(DB_HANDLE, query);
 
-	return 1;
+	return 1;*/
 }
 
 stock SendMessageToAdmins(const message[])
@@ -16781,7 +16606,7 @@ public GPSTimer(playerid, guid)
 
 CMD:d (playerid, params[])
 {
-	if(GroupCache[pDuty[playerid]][gType] == 1 || GroupCache[pDuty[playerid]][gType]  == 2 ||  GroupCache[pDuty[playerid]][gType]  == 16)
+	/*if(GroupCache[pDuty[playerid]][gType] == 1 || GroupCache[pDuty[playerid]][gType]  == 2 ||  GroupCache[pDuty[playerid]][gType]  == 16)
 	{
 		new text[128];
 		if(sscanf(params, "s[128]", text))
@@ -16864,13 +16689,8 @@ CMD:d (playerid, params[])
 			}
 		}
 		return 1;
-<<<<<<< HEAD
 	}*/
 	return SendClientMessage(playerid, COLOR_GRAY, "Musisz by¥ na s¥u¥bie odpowiedniej grupy by u¥y¥ tej komendy.");
-=======
-	}
-	return SendClientMessage(playerid, COLOR_GRAY, "Musisz byæ na s³u¿bie odpowiedniej grupy by u¿yæ tej komendy.");
->>>>>>> parent of 9085ba7 (Gamemode can be compiled now!)
 }
 
 CMD:aplikuj (playerid, params[])
@@ -17216,7 +17036,7 @@ CMD:actortext (playerid, params[])
 
 CMD:getneardoor (playerid, params[])
 {
-	for(new i; i<LastdUID; i++)
+/*	for(new i; i<LastdUID; i++)
 	{
 		if(!DoorCache[i][dDestroyed])
 		{
@@ -17227,16 +17047,12 @@ CMD:getneardoor (playerid, params[])
 			}
 		}
 	}
-<<<<<<< HEAD
 	return SendClientMessage(playerid, COLOR_GRAY, "Nie znaleziono drzwi w pobli¥u.");*/
-=======
-	return SendClientMessage(playerid, COLOR_GRAY, "Nie znaleziono drzwi w pobli¿u.");
->>>>>>> parent of 9085ba7 (Gamemode can be compiled now!)
 }
 
 CMD:doorowner (playerid, params[])
 {
-	if(PlayerCache[playerid][pLevel] == 0)
+	/*if(PlayerCache[playerid][pLevel] == 0)
 	return 1;
 	new duid, targetid;
 	if(sscanf(params, "ir", duid, targetid))
@@ -17245,13 +17061,8 @@ CMD:doorowner (playerid, params[])
 	return SendClientMessage(playerid, COLOR_GRAY, "Wprowadzono nieprawid¥ow¥ warto¥¥.");
 	DoorCache[duid][dPlayerUID] = targetid;
 	DoorCache[duid][dGroupUID] = 0;
-<<<<<<< HEAD
 	new msg[128]; format(msg, sizeof(msg), "Drzwi(%d) zosta¥y podpisane. Nowy w¥a¥ciciel: %s", duid, RPName(targetid));
 	return SendClientMessage(playerid, COLOR_GRAY, msg);*/
-=======
-	new msg[128]; format(msg, sizeof(msg), "Drzwi(%d) zosta³y podpisane. Nowy w³aœciciel: %s", duid, RPName(targetid));
-	return SendClientMessage(playerid, COLOR_GRAY, msg);
->>>>>>> parent of 9085ba7 (Gamemode can be compiled now!)
 }
 
 CMD:gvlimit (playerid, params[])
@@ -17274,7 +17085,7 @@ CMD:gvlimit (playerid, params[])
 
 CMD:cennik (playerid, params[])
 {
-	new duid = GetPlayerDoorUID(playerid);
+/*	new duid = GetPlayerDoorUID(playerid);
 	if(duid == 0 || DoorCache[duid][dGroupUID] == 0)
 	return ShowDialogInfo(playerid, "Musisz znajdowa¥ si¥ w biznesie grupy by skorzysta¥ z tej funkcji.");
 
@@ -17314,12 +17125,12 @@ CMD:cennik (playerid, params[])
 	return ShowDialogInfo(playerid, "Brak produkt¥w w magazynie.");
 	new msg[64]; format(msg, sizeof(msg), "pokazuje cennik %s", RPName(targetid));
 	SendPlayerMe(playerid, msg);
-	return ShowPlayerDialog(targetid, D_PRODUCTS, DIALOG_STYLE_TABLIST_HEADERS, "Cennik", list, "Ok", "");
+	return ShowPlayerDialog(targetid, D_PRODUCTS, DIALOG_STYLE_TABLIST_HEADERS, "Cennik", list, "Ok", "");*/
 }
 
 CMD:podaj (playerid, params[])
 {
-	new duid = GetPlayerDoorUID(playerid);
+/*	new duid = GetPlayerDoorUID(playerid);
 	if(duid == 0 || DoorCache[duid][dGroupUID] == 0)
 	return ShowDialogInfo(playerid, "Nie znajdujesz si¥ w wewn¥trz budynku grupy.");
 
@@ -17360,7 +17171,7 @@ CMD:podaj (playerid, params[])
 	return ShowDialogInfo(playerid, "Brak produkt¥w w magazynie.");
 	pVal[playerid] = targetid;
 	pVal2[playerid] = amount;
-	return ShowPlayerDialog(playerid, D_GROUP_ITEMS, DIALOG_STYLE_TABLIST_HEADERS, "Produkty w magaznie", list, "Wybierz", "Anuluj");
+	return ShowPlayerDialog(playerid, D_GROUP_ITEMS, DIALOG_STYLE_TABLIST_HEADERS, "Produkty w magaznie", list, "Wybierz", "Anuluj");*/
 }
 
 stock IsPlayerInRangeOfVehicle(playerid, vehicleid, Float:range)
@@ -17424,15 +17235,10 @@ CMD:live (playerid, params[])
 
 CMD:ubranie (playerid, params[])
 {
-	new groupuid = DoorCache[GetPlayerDoorUID(playerid)][dGroupUID];
+/*	new groupuid = DoorCache[GetPlayerDoorUID(playerid)][dGroupUID];
 	if(GroupCache[groupuid][gType] == 12)
-<<<<<<< HEAD
 	return ShowPlayerDialog(playerid, D_CLOTCHES, DIALOG_STYLE_LIST, "Wybierz opcj¥", "1\tUbranie\n2\tAkcesoria", "Wybierz", "Anuluj");
 	return 1;*/
-=======
-	return ShowPlayerDialog(playerid, D_CLOTCHES, DIALOG_STYLE_LIST, "Wybierz opcjê", "1\tUbranie\n2\tAkcesoria", "Wybierz", "Anuluj");
-	return 1;
->>>>>>> parent of 9085ba7 (Gamemode can be compiled now!)
 }
 
 CMD:asound (playerid, params[])

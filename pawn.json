@@ -14,11 +14,10 @@
 	],
 	"local": true,
 	"runtime": {
-		"version": "0.3.DL",
+		"version": "0.3.7",
 		"mode": "server",
 		"rcon_password": "password",
 		"port": 7777,
-		"password": "sekret",
 		"hostname": "••• Szkodnik RolePlay •••",
 		"maxplayers": 1000,
 		"language": "",
