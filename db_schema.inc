@@ -1,11 +1,14 @@
 <<<<<<< HEAD
 #include <a_mysql>
+<<<<<<< HEAD
 
 #define MYSQL_HOST "127.0.0.1"
 #define MYSQL_USER "www"
 #define MYSQL_PASSWORD "123"
 #define MYSQL_DB "szkodnikrp"
 
+=======
+>>>>>>> parent of c751a93 (Added groups vars to player cache)
 new MySQL:DB_HANDLE;
 =======
 #include "szkodnik-rp2.pwn"
