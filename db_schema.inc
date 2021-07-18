@@ -3,12 +3,15 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 
 #define MYSQL_HOST "127.0.0.1"
 #define MYSQL_USER "www"
 #define MYSQL_PASSWORD "123"
 #define MYSQL_DB "szkodnikrp"
 
+=======
+>>>>>>> parent of c751a93 (Added groups vars to player cache)
 =======
 >>>>>>> parent of c751a93 (Added groups vars to player cache)
 =======
