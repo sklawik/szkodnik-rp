@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 #include <a_mysql>
 
 #define MYSQL_HOST "127.0.0.1"
@@ -6,9 +7,11 @@
 #define MYSQL_DB "szkodnikrp"
 
 new MySQL:DB_HANDLE;
+=======
+#include "szkodnik-rp2.pwn"
+>>>>>>> parent of 9085ba7 (Gamemode can be compiled now!)
 
-forward EnsureCreated();
-public EnsureCreated(){
+stock EnsureCreated(){
 	// db schema
 
 	// init
