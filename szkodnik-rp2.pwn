@@ -836,8 +836,8 @@ public db_timer(){
 		SetTimer("db_timer", 2000, false);
 	}
 	else{
-				LoadGameMode();
-			print(">>> Pomyslnie nawiazano polaczenie z baza danych.");
+		LoadGameMode();
+		print(">>> Pomyslnie nawiazano polaczenie z baza danych.");
 	}
 }
 
@@ -866,33 +866,33 @@ forward LoadGameMode();
 public LoadGameMode(){
 	EnsureCreated();
 		
-		CreateTextDraws();
+	CreateTextDraws();
 
-		AddAnimations();
-		SendRconCommand("hostname ••• Szkodnik RolePlay •••");
-		SendRconCommand("gamemodetext Szkodnik-RP v2.2");
-		SendRconCommand("mapname Los Santos");
-		gettime(ghour, gmin, gsec);
-		SetWorldTime(ghour);
-		
-		EnableStuntBonusForAll(0);
-		DisableInteriorEnterExits();
-		ManualVehicleEngineAndLights();
-		ShowNameTags(0);
-		
-		
-		
-		LoadGroups();
-		LoadDoors();
-
-		LoadTextures();
-
-		LoadActors();
-		LoadApps();
-		// LoadZones();
+	AddAnimations();
+	SendRconCommand("hostname ••• Szkodnik RolePlay •••");
+	SendRconCommand("gamemodetext Szkodnik-RP v2.2");
+	SendRconCommand("mapname Los Santos");
+	gettime(ghour, gmin, gsec);
+	SetWorldTime(ghour);
 	
-	
-		SetTimer("min_timer", 1000*60, true);
+	EnableStuntBonusForAll(0);
+	DisableInteriorEnterExits();
+	ManualVehicleEngineAndLights();
+	ShowNameTags(0);
+
+
+
+	LoadGroups();
+	LoadDoors();
+
+	LoadTextures();
+
+	LoadActors();
+	LoadApps();
+	// LoadZones();
+
+
+	SetTimer("min_timer", 1000*60, true);
 }
 
 #define DOC_TYPE_ID 0
@@ -1596,7 +1596,7 @@ stock RandomCamera(playerid)
 	cache_delete(cache);
 	SetPlayerName(playerid, RegisterCache[playerid][rName]);
 	LoadPlayerData(playerid);
-	if(DEV_MODE){
+	if( DEV_MODE == 1){
 		PlayerCache[playerid][pLevel] = DEVELOPER;
 	}
 	return ShowDialogLogin(playerid);
@@ -4015,7 +4015,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 					pVal2[playerid] = uid;
 					return ShowDialogManageMember(playerid);
 				}
-				/*if(!strcmp(inputtext, "Dalej", false))
+				if(!strcmp(inputtext, "Dalej", false))
 				{
 					
 				}
@@ -10954,12 +10954,13 @@ cmd:astrefa (playerid, params[])
 	{
 		if(uid){
 
-			
+			/*new query[258];
+			format(query, sizeof(query), "SELECT "
 
 			new header[128];
 			format(header, sizeof(header), "Zarz¹dzaj stref¹ %s (%d)", )
 
-			ShowPlayerDialog(playerid, D_PLAYER_ZONE_MANAGEMENT, DIALOG_STYLE_LIST, "Zarz¹dzaj stref¹")
+			ShowPlayerDialog(playerid, D_PLAYER_ZONE_MANAGEMENT, DIALOG_STYLE_LIST, "Zarz¹dzaj stref¹")*/
 			return 1;
 		}
 		SendClientMessage(playerid, COLOR_GRAY, "Poprawne u¿ycie: /astrefa [min. metra¿] [cena za min. metra¿ dla domu] [cena za min. metra¿ dla biznesu] [nazwa strefy]");
@@ -11034,7 +11035,7 @@ public OnPlayerPickUpDynamicPickup(playerid, pickupid)
 	cache_get_value_name_int(0, "uid", pPickupUID[playerid]);
 
 
-	cache_delete(cache);
+	cache_delete();
 
 	if(open)
 	{
@@ -12936,7 +12937,7 @@ CMD:g (playerid, params[])
 			}
 			else if(!strcmp(sub, "v", true))
 			{
-				/*new guid;
+				new guid;
 				switch(slot)
 				{
 					case 1: guid = PlayerCache[playerid][pGroup];
