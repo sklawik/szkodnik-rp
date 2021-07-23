@@ -135,6 +135,8 @@ main(){}
 #define D_PLAYER_REPORTS_OPTIONS 108
 #define D_PLAYER_REPORTS_PENALTY 109
 #define D_PLAYER_LOGS 110
+#define D_PLAYER_ZONE_MANAGEMENT 111
+
 
 #define LOG_TYPE_GAME_CONNECTION 0
 #define LOG_TYPE_GAME_CHAT 1
@@ -10936,6 +10938,7 @@ CMD:strefa (playerid, params[]){
 
 }
 
+
 cmd:astrefa (playerid, params[])
 {
 	if(PlayerCache[playerid][pLevel] < 7)
@@ -10943,16 +10946,28 @@ cmd:astrefa (playerid, params[])
 		return 1;
 	}
 
+	new uid, yard, priceHouse, priceBusiness, playerUID, groupUID;
+	GetPlayerZone(playerid, uid, yard, priceHouse, priceBusiness, playerUID, groupUID );
+
 	new zname[64], zyard, zcosth, zcostb;
 	if(sscanf(params, "iiis[64]", zyard, zcosth, zcostb, zname))
 	{
+		if(uid){
+
+			
+
+			new header[128];
+			format(header, sizeof(header), "Zarz¹dzaj stref¹ %s (%d)", )
+
+			ShowPlayerDialog(playerid, D_PLAYER_ZONE_MANAGEMENT, DIALOG_STYLE_LIST, "Zarz¹dzaj stref¹")
+			return 1;
+		}
 		SendClientMessage(playerid, COLOR_GRAY, "Poprawne u¿ycie: /astrefa [min. metra¿] [cena za min. metra¿ dla domu] [cena za min. metra¿ dla biznesu] [nazwa strefy]");
 		return 1;
 	}
 
 
-	new uid, yard, priceHouse, priceBusiness, playerUID, groupUID;
-	GetPlayerZone(playerid, uid, yard, priceHouse, priceBusiness, playerUID, groupUID );
+	
 
 	
 
