@@ -10894,12 +10894,6 @@ public GetPlayerZone(playerid,  &uid, &yard, &priceHouse, &priceBusiness, &playe
 
 	new rows = cache_num_rows();
 
-	/*
-	Okay, important note here.
-	We want get values outside of this function, and I spent like 2 hours fucking why the pawn.cmd plugin crashed whole server because the mysql plugin won't allow-
-	-cache_get_value_name_int directly to function parameter, instead you have to make it temps like below and then assign temps to parameters.
-	I swear to god pawn is fucking shit and samp must die along with all retarded plugins and lack of logs fuck you fuck you all fuck stupid fucks
-	*/
 
 	new temp_uid, temp_yard, temp_priceHouse, temp_priceBusiness, temp_playerUID, temp_groupUID;
 
@@ -10948,7 +10942,7 @@ cmd:astrefa (playerid, params[])
 	{
 		return 1;
 	}
-	print("test-pre");
+
 	new zname[64], zyard, zcosth, zcostb;
 	if(sscanf(params, "iiis[64]", zyard, zcosth, zcostb, zname))
 	{
@@ -10957,12 +10951,11 @@ cmd:astrefa (playerid, params[])
 	}
 
 
-	print("test");
 	new uid, yard, priceHouse, priceBusiness, playerUID, groupUID;
 	GetPlayerZone(playerid, uid, yard, priceHouse, priceBusiness, playerUID, groupUID );
 
 	
-	print("test2");
+
 	if(uid == 0){
 		new Float:minX, Float:minY, Float:playerZ;
 		GetPlayerPos(playerid, minX, minY, playerZ);
@@ -10971,7 +10964,7 @@ cmd:astrefa (playerid, params[])
 		minY = (floatround(minY) / 100) * 100;
 
 		new uid = CreateZone(minX, minY, zyard, zcosth, zcostb);
-		print("test3");
+
 		new message[520];
 		format(message, sizeof(message), "Strefa %s(%d) (100x100) zosta³a pomyœlnie utworzona/podpisana.\n\
 		"HEX_WHITE"Cena za 1m2 dla biznesu: "HEX_GRAY"%d\n\
@@ -10979,11 +10972,10 @@ cmd:astrefa (playerid, params[])
 		"HEX_WHITE"Min. metra¿ drzwi: "HEX_GRAY"%d\n\
 		", zname, uid,zcostb, zcosth, zyard);
 		ShowDialogInfo(playerid, message);
-	print("test4");
-	print("success");
+
 		return 1;
 	}
-		print("test5");
+
 	SendClientMessage(playerid, COLOR_GRAY, "Ta strefa zosta³a ju¿ podpisana przez jednego z Administratorów.");
 
 
