@@ -1,7 +1,7 @@
 #include <a_mysql>
 
 #define MYSQL_HOST "127.0.0.1"
-#define MYSQL_USER "root"
+#define MYSQL_USER "www"
 #define MYSQL_PASSWORD "123"
 #define MYSQL_DB "szkodnikrp"
 

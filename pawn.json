@@ -9,7 +9,8 @@
 		"maddinat0r/sscanf:v2.8.3",
 		"pBlueG/SA-MP-MySQL:R41-4",
 		"katursis/Pawn.CMD:3.3.3",
-		"Sreyas-Sreelal/samp-bcrypt:0.3.1"
+		"Sreyas-Sreelal/samp-bcrypt:0.3.1",
+		"Hype02/colors.inc:latest"
 	],
 	"local": true,
 	"runtime": {
@@ -49,6 +50,9 @@
 		"db_log_queries": false,
 		"conncookies": true,
 		"cookielogging": false,
-		"output": true
+		"output": true,
+		"extra":{
+			"useartwork": "1"
+		}
 	}
 }
