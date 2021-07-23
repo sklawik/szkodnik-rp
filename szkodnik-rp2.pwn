@@ -1,4 +1,5 @@
 #include <a_samp>
+//#include <YSI_Visual\y_commands>
 #include <streamer>
 #include <sscanf2>
 #include <Pawn.CMD>
@@ -20,7 +21,7 @@ main(){}
 
 #define COL_AC_CHAT 0x42D95EFF
 
-#define DEV_MODE 0
+#define DEV_MODE 1
 
 // defines dialogs
 #define D_LOGIN 0
@@ -690,14 +691,11 @@ enum E_PLAYER
 	pCurrentVehicle[E_VEHICLE],
 	pCurrentDoor[E_DOOR],
 	pLastUpdateTime,
-
-	pGroups[MAX_PLAYER_GROUPS][E_PLAYER_GROUP],
 	PlayerText:pGroupTxd[MAX_PLAYER_GROUPS]
-
 };
 
 
-
+	//pGroups[MAX_PLAYER_GROUPS][E_PLAYER_GROUP],
 
 new PlayerCache[MAX_PLAYERS][E_PLAYER];
 
@@ -1855,9 +1853,6 @@ stock LoadPlayerData(playerid)
 		cache_get_value_name_int(0, "drivingLicense", PlayerCache[playerid][pDrivingLicense]);
 		cache_get_value_name_int(0, "bankAccount", PlayerCache[playerid][pBankAccount]);
 		cache_get_value_name_int(0, "OOC", PlayerCache[playerid][pOOC]);
-		cache_get_value_name_int(0, "groupReward", PlayerCache[playerid][pGroupReward]);
-		cache_get_value_name_int(0, "groupReward2", PlayerCache[playerid][pGroupReward2]);
-		cache_get_value_name_int(0, "groupReward3", PlayerCache[playerid][pGroupReward3]);
 		cache_get_value_name_int(0, "favAnim", PlayerCache[playerid][pFavAnim]);
 		cache_get_value_name_int(0, "jailTime", PlayerCache[playerid][pJailTime]);
 		cache_get_value_name_float(0, "jailX", PlayerCache[playerid][pJailX]);
@@ -10364,7 +10359,7 @@ public HidePenalityTextDraw()
 forward GetVehicleData(vehicleid, &model, &fuel, &Float:posX, &Float:posY, &Float:posZ, &Float:angle, &playerUID, &groupUID, &register, &color, &color2, &Float:health);
 public GetVehicleData(vehicleid,  &model, &fuel, &Float:posX, &Float:posY, &Float:posZ, &Float:angle, &playerUID, &groupUID, &register, &color, &color2, &Float:health){
 	new query[256];
-	format(query, sizeof(query), "SELECT model, fuel, posX, posY, posZ, angle, playerUID, groupUID, register, color, color2, HP FROM vehicles WHERE gameId=%d LIMIT 1;", vehicleid);
+	format(query, sizeof(query), "SELECT model, fuel, posX, posY, posZ, angle, IFNULL(playerUID, 0), IFNULL(groupUID, 0), register, color, color2, HP FROM vehicles WHERE gameId=%d LIMIT 1;", vehicleid);
 	new Cache:cache = mysql_query(DB_HANDLE, query);
 	cache_get_value_name_int(0, "model", model);
 	cache_get_value_name_int(0, "playerUID", playerUID);
@@ -10522,6 +10517,10 @@ stock Teleport(playerid, Float:X, Float:Y, Float:Z)
 	pTeleport[playerid] = true;
 	SetTimerEx("ClearTeleport", 3000, false, "i", playerid);
 	GetPlayerPos(playerid, PlayerCache[playerid][pPosX], PlayerCache[playerid][pPosY], PlayerCache[playerid][pPosZ]); SetPlayerPos(playerid, X, Y, Z);
+}
+
+cmd:test (playerid, params[]){
+	
 }
 
 cmd:to (playerid, params[])
@@ -10879,31 +10878,63 @@ stock ShowDialogZone(playerid)
 }
 
 forward GetPlayerZone(playerid, &uid, &yard, &priceHouse, &priceBusiness, &playerUID, &groupUID );
-public GetPlayerZone(playerid, &uid, &yard, &priceHouse, &priceBusiness, &playerUID, &groupUID ){
+public GetPlayerZone(playerid,  &uid, &yard, &priceHouse, &priceBusiness, &playerUID, &groupUID){
 
 	new Float:minX, Float:minY, Float:playerZ;
 	GetPlayerPos(playerid, minX, minY, playerZ);
 
 	minX = (floatround(minX) / 100) * 100;
 	minY = (floatround(minY) / 100) * 100;
-	
-	new query[256];
-	format(query, sizeof(query), "SELECT uid, yard, priceHouse, priceBusiness, COALESCE(playerUID, 0) as playerUID, COALESCE(groupUID,0) as groupUID FROM gameZones WHERE minX=%f AND minY=%f",
+
+	new query[512];
+	format(query, sizeof(query), "SELECT uid, yard, priceHouse, priceBusiness, IFNULL(playerUID, 0) as playerUID, IFNULL(groupUID,0) as groupUID FROM gameZones WHERE minX=%f AND minY=%f LIMIT 1",
 	minX, minY);
+
 	new Cache:cache = mysql_query(DB_HANDLE, query);
+
 	new rows = cache_num_rows();
+
+	/*
+	Okay, important note here.
+	We want get values outside of this function, and I spent like 2 hours fucking why the pawn.cmd plugin crashed whole server because the mysql plugin won't allow-
+	-cache_get_value_name_int directly to function parameter, instead you have to make it temps like below and then assign temps to parameters.
+	I swear to god pawn is fucking shit and samp must die along with all retarded plugins and lack of logs fuck you fuck you all fuck stupid fucks
+	*/
+
+	new temp_uid, temp_yard, temp_priceHouse, temp_priceBusiness, temp_playerUID, temp_groupUID;
+
+
 	if(rows){
 
-		cache_get_value_name_int(0, "uid", uid);
-		cache_get_value_name_int(0, "yard", yard);
-		cache_get_value_name_int(0, "priceHouse", priceHouse);
-		cache_get_value_name_int(0, "priceBusiness", priceBusiness);
-		cache_get_value_name_int(0, "playerUID", playerUID);
-		cache_get_value_name_int(0, "groupUID", groupUID);
-		cache_delete();
+		cache_get_value_name_int(0, "uid", temp_uid);
+		cache_get_value_name_int(0, "yard", temp_yard);
+		cache_get_value_name_int(0, "priceHouse", temp_priceHouse);
+		cache_get_value_name_int(0, "priceBusiness", temp_priceBusiness);
+		cache_get_value_name_int(0, "playerUID", temp_playerUID);
+		cache_get_value_name_int(0, "groupUID", temp_groupUID);
+
+		uid=temp_uid;
+		yard=temp_yard;
+		priceHouse=temp_priceHouse;
+		priceBusiness=temp_priceBusiness;
+		playerUID=temp_playerUID;
+		groupUID=temp_groupUID;
+
+
+		cache_delete(cache);
+
 	
 	}
-
+	else{
+		uid=0;
+		yard=0;
+		priceHouse=0;
+		priceBusiness=0;
+		playerUID=0;
+		groupUID=0;
+	}
+	
+	return 0;
 
 }
 
@@ -10917,18 +10948,21 @@ cmd:astrefa (playerid, params[])
 	{
 		return 1;
 	}
+	print("test-pre");
 	new zname[64], zyard, zcosth, zcostb;
 	if(sscanf(params, "iiis[64]", zyard, zcosth, zcostb, zname))
 	{
 		SendClientMessage(playerid, COLOR_GRAY, "Poprawne u¿ycie: /astrefa [min. metra¿] [cena za min. metra¿ dla domu] [cena za min. metra¿ dla biznesu] [nazwa strefy]");
 		return 1;
 	}
-	
+
+
+	print("test");
 	new uid, yard, priceHouse, priceBusiness, playerUID, groupUID;
 	GetPlayerZone(playerid, uid, yard, priceHouse, priceBusiness, playerUID, groupUID );
 
 	
-
+	print("test2");
 	if(uid == 0){
 		new Float:minX, Float:minY, Float:playerZ;
 		GetPlayerPos(playerid, minX, minY, playerZ);
@@ -10937,17 +10971,19 @@ cmd:astrefa (playerid, params[])
 		minY = (floatround(minY) / 100) * 100;
 
 		new uid = CreateZone(minX, minY, zyard, zcosth, zcostb);
-
-		new message[256];
+		print("test3");
+		new message[520];
 		format(message, sizeof(message), "Strefa %s(%d) (100x100) zosta³a pomyœlnie utworzona/podpisana.\n\
 		"HEX_WHITE"Cena za 1m2 dla biznesu: "HEX_GRAY"%d\n\
 		"HEX_WHITE"Cena 1m2 dla domu: "HEX_GRAY"%d\n\
 		"HEX_WHITE"Min. metra¿ drzwi: "HEX_GRAY"%d\n\
 		", zname, uid,zcostb, zcosth, zyard);
 		ShowDialogInfo(playerid, message);
-
+	print("test4");
+	print("success");
 		return 1;
 	}
+		print("test5");
 	SendClientMessage(playerid, COLOR_GRAY, "Ta strefa zosta³a ju¿ podpisana przez jednego z Administratorów.");
 
 
@@ -14310,7 +14346,8 @@ CMD:m (playerid, params[])
 	return 1;
 }
 
-stock CuffPlayer(playerid, targetid)
+forward CuffPlayer(playerid, targetid);
+public CuffPlayer(playerid, targetid)
 {
 	new str[64];
 	PlayerPlaySoundInRange(playerid, 1190, 5.0);
@@ -14378,7 +14415,8 @@ CMD:skin (playerid, params[])
 
 CMD:skuj (playerid, params[])
 {
-	if(GroupCache[pDuty[playerid]][gType] == 1 || GroupCache[pDuty[playerid]][gType] == 16)
+	/*if(GroupCache[pDuty[playerid]][gType] == 1 || GroupCache[pDuty[playerid]][gType] == 16)*/
+	if(PlayerCache[playerid][pLevel] )
 	{
 
 	}
