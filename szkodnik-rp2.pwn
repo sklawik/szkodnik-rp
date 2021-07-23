@@ -13510,6 +13510,7 @@ public ObjectMoving(playerid)
 
 CMD:mc (playerid, params[])
 {
+	
 	/*if(GetPlayerVirtualWorld(playerid) == 0)
 	{
 		if(!PlayerCache[playerid][pLevel])
