@@ -12597,6 +12597,12 @@ return ShowDialogStats(playerid);
 
 stock ShowDialogStats(playerid)
 {
+
+	new zoneUID, yard, priceHouse, priceBusiness, playerUID, groupUID;
+	GetPlayerZone(playerid, zoneUID, yard, priceHouse, priceBusiness, playerUID, groupUID);
+	new zoneInfo[256];
+	format(zoneInfo, sizeof(zoneInfo), "Strefa: "HEX_BLUE"100x100"HEX_GRAY" (UID: %d)", zoneUID);
+
 	new info[1025];
 	format(info, sizeof(info), "Postaæ\tCzas gry\n%s\t%dh %dmin\n\
 	Zdrowie:\t%s%fHP\t \n\
@@ -12609,6 +12615,7 @@ stock ShowDialogStats(playerid)
 	Virtual World:\t"HEX_WHITE"%d\n\
 	Bank:\t"HEX_GREEN"$%d"HEX_BLUE"\n\
 	Si³a:\t%dj\n\
+	%s\n\
 	---\n\
 	1\tUstawienia postaci\n\
 	2\tUs³ugi\n\
@@ -12627,7 +12634,8 @@ stock ShowDialogStats(playerid)
 	PlayerCache[playerid][pScore],
 	GetPlayerVirtualWorld(playerid),
 	PlayerCache[playerid][pBank],
-	PlayerCache[playerid][pStrenght]);
+	PlayerCache[playerid][pStrenght],
+	zoneUID ? zoneInfo : "Strefa: "HEX_GRAY"Nie podpisana");
 	return ShowPlayerDialog(playerid, D_STATS, DIALOG_STYLE_TABLIST_HEADERS, "Statystyki", info, "Wybierz", "Anuluj");
 }
 
@@ -14169,7 +14177,7 @@ CMD:pokaz (playerid, params[]){
 	}
 
 	new str[420];
-	format(str,sizeof(str), "SELECT players1.uid as playerUID, players1.name as name, playerDocs.createdAt as createdAt, players1.gender as gender, players1.bornDate as bornDate FROM playerDocs INNER JOIN players players1 ON playerDocs.type = %d AND playerDocs.playerUID=%d WHERE playerDocs.playerUID=%d LIMIT 1;", type, PlayerCache[playerid][pUID], PlayerCache[playerid][pUID]);
+	format(str,sizeof(str), "SELECT players1.uid as playerUID, players1.name as name, playerDocs.createdAt as createdAt, players1.gender as gender, players1.bornDate as bornDate FROM playerDocs RIGHT JOIN players players1 ON playerDocs.type = %d AND playerDocs.playerUID=%d", type, PlayerCache[playerid][pUID]);
 	new Cache:cache = mysql_query(DB_HANDLE, str);
 	new createdAt[32], gender, bornDate, name[24];
 	cache_get_value_name(0, "createdAt", createdAt);
