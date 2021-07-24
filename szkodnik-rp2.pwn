@@ -14408,8 +14408,8 @@ CMD:skin (playerid, params[])
 	if(!pLogged[targetid])
 	return SendClientMessage(playerid, COLOR_GRAY, "Gracz nie jest zalogowany.");
 
-	if(skinid < 0 || skinid > 311)
-	return SendClientMessage(playerid, COLOR_GRAY, "Skin ID musi mieœciæ siê w przedziale 0-311.");
+	if(skinid < 0 || skinid > 300000)
+	return SendClientMessage(playerid, COLOR_GRAY, "Skin ID musi mieœciæ siê w przedziale 0-300000.");
 
 	SetPlayerSkin(targetid, skinid);
 
