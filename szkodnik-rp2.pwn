@@ -14425,7 +14425,7 @@ CMD:skin (playerid, params[])
 	}
 
 	format(msg, sizeof(msg), "UPDATE players SET skin = '%d' WHERE uid = '%d'", skinid, PlayerCache[targetid][pUID]);
-	cache_delete(mysql_query(DB_HANDLE, msg));
+	mysql_query(DB_HANDLE, msg, false);
 	return 1;
 }
 
