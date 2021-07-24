@@ -11320,10 +11320,10 @@ cmd:p (playerid, params[])
 		cache_get_value_name_int(i, "active", active);
 
 		if(active)
-		format(list, sizeof(list), "%s%d\t"HEX_GRAY"%s\t%d,%d,%d,%d,%d\n",
+		format(list, sizeof(list), "%s"HEX_BLACK"%d\t"HEX_GRAY"%s\t"HEX_BLACK"%d,%d,%d,%d,%d\n",
 		list, uid, name, type, val, val2, val3, val4);
 		else
-		format(list, sizeof(list), "%s%d\t%s\t%d,%d,%d,%d,%d\n",
+		format(list, sizeof(list), "%s"HEX_BLACK"%d\t%s\t"HEX_BLACK"%d,%d,%d,%d,%d\n",
 		list, uid, name, type, val, val2, val3, val4);
 	}
 
