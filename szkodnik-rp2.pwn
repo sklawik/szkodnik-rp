@@ -5474,8 +5474,8 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 		{
 			if(response)
 			{
-				new zoneid = GetPlayerZone(playerid);
-				ShowDialogDoorCreate(playerid, ZoneData[zoneid][zYard]);
+				//new zoneid = GetPlayerZone(playerid);
+			//	ShowDialogDoorCreate(playerid, ZoneData[zoneid][zYard]);
 				return 1;
 			}
 			else
@@ -5680,7 +5680,8 @@ stock GetPlayersCountOnDuty(groupuid)
 	return count;
 }
 
-stock GetUserPerms(useruid, groupuid)
+forward GetUserPerms(useruid, groupuid);
+public GetUserPerms(useruid, groupuid)
 {
 	/*new perms[128];
 	if(PlayerCache[useruid][pGroup] == groupuid)
@@ -5759,8 +5760,8 @@ stock LogoutPlayer(playerid)
 {
 	pLogged[playerid] = false;
 	// Killing detonator timer
-	KillTimer(pDetonatorTimer[playerid]);
-	pDetonatorTimer[playerid] = 0;
+//	KillTimer(pDetonatorTimer[playerid]);
+//	pDetonatorTimer[playerid] = 0;
 
 	// Killing choosing clotches timer
 	KillTimer(pClotchesTimer[playerid]);
@@ -6675,7 +6676,7 @@ public OnPlayerRequestClass(playerid, classid)
 	}
 	else if(PlayerCache[playerid][pHouseSpawn] != 0)
 	{
-		new duid = PlayerCache[playerid][pHouseSpawn];
+	//	new duid = PlayerCache[playerid][pHouseSpawn];
 	//	SetSpawnInfoFix(playerid, 0, PlayerCache[playerid][pSkin],DoorCache[duid][dInsX], DoorCache[duid][dInsY], DoorCache[duid][dInsZ]);
 		//SetPlayerVirtualWorld(playerid, DoorCache[duid][dInsVW]);
 	}
@@ -8806,8 +8807,8 @@ public HideIt(playerid)
 
 public OnPlayerDisconnect(playerid, reason)
 {
-	KillTimer(pDetonatorTimer[playerid]);
-	pDetonatorTimer[playerid] = 0;
+	//KillTimer(pDetonatorTimer[playerid]);
+	//pDetonatorTimer[playerid] = 0;
 	KillTimer(pClotchesTimer[playerid]);
 	pMessageCount[playerid] = 0;
 	pCommandCount[playerid] = 0;
@@ -14077,6 +14078,7 @@ stock GetPlayerFreeSlot(playerid)
 	else if(PlayerCache[puid][pGroup3] == 0)
 	return 3;
 	else return 0;*/
+	return 0;
 }
 
 public OnPlayerClickTextDraw(playerid, Text:clickedid)
