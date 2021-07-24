@@ -1656,8 +1656,8 @@ stock UseItemOption(playerid, option, uid)
 			SendPlayerMe(playerid, query);
 			ApplyAnimation(playerid, "bomber", "bom_plant", 4.1, 0, 0, 0, 0, 0, 0);
 
-			format(query, sizeof(query), "UPDATE items SET X = '%f', Y = '%f', Z = '%f', vw = '%f', state = '%d' WHERE uid = '%d'",
-			x, y, z , ITEM_STATE_ONFOOT, uid);
+			format(query, sizeof(query), "UPDATE items SET posX = '%f', posY = '%f', posZ = '%f', virtualWorld = '%d', state = '%d' WHERE uid = '%d'",
+			x, y, z , GetPlayerVirtualWorld(playerid) ,ITEM_STATE_ONFOOT, uid);
 			mysql_query(DB_HANDLE, query, false);
 
 
@@ -11745,11 +11745,14 @@ stock UseItem(playerid, itemuid)
 			format(itemQuery, sizeof(itemQuery), "SELECT * FROM items WHERE playerUID = '%d' AND type = '1' AND active = '1' AND uid != '%d' LIMIT 1", PlayerCache[playerid][pUID], itemuid);
 			cache = mysql_query(DB_HANDLE, itemQuery);
 			
+			
+
+			if(cache_num_rows()){
+				cache_delete(cache);
+				return SendClientMessage(playerid, COLOR_GRAY, "Masz ju¿ wyjêt¹ jak¹œ broñ.");
+
+			}
 			cache_delete(cache);
-
-			if(cache_num_rows())
-			return SendClientMessage(playerid, COLOR_GRAY, "Masz ju¿ wyjêt¹ jak¹œ broñ.");
-
 			return ShowDialogUseWeap(playerid);
 		}
 		case 2:
