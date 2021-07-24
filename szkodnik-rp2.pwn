@@ -12635,7 +12635,7 @@ stock ShowDialogStats(playerid)
 	GetPlayerVirtualWorld(playerid),
 	PlayerCache[playerid][pBank],
 	PlayerCache[playerid][pStrenght],
-	zoneUID ? zoneInfo : "Strefa: "HEX_GRAY"Nie podpisana");
+	zoneUID ? zoneInfo : "Strefa:\t"HEX_GRAY"Nie podpisana");
 	return ShowPlayerDialog(playerid, D_STATS, DIALOG_STYLE_TABLIST_HEADERS, "Statystyki", info, "Wybierz", "Anuluj");
 }
 
