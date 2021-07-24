@@ -21,7 +21,7 @@ main(){}
 
 #define COL_AC_CHAT 0x42D95EFF
 
-#define DEV_MODE 1
+#define DEV_MODE 0
 
 // defines dialogs
 #define D_LOGIN 0
@@ -905,7 +905,7 @@ public LoadGameMode(){
 forward HasPlayerDoc(playerid, docType);
 public HasPlayerDoc(playerid, docType){
 	new query[128];
-	format(query, sizeof(query), "SELECT playerUID FROM playerDocs WHERE playerUID = %d AND type = %d;", PlayerCache[playerid][pUID], docType);
+	format(query, sizeof(query), "SELECT null FROM playerDocs WHERE playerUID = %d AND type = %d;", PlayerCache[playerid][pUID], docType);
 	new Cache:cache = mysql_query(DB_HANDLE, query);
 	new rows = cache_num_rows();
 	cache_delete(cache);
@@ -1602,13 +1602,30 @@ stock RandomCamera(playerid)
 	return ShowDialogLogin(playerid);
  }
 
+forward GetItemInfo(itemUID, &type, &val, &val2, &val3, &val4, &active);
+public GetItemInfo(itemUID, &type, &val, &val2, &val3,&val4, &active){
+	new query[256];
+	format(query, sizeof(query), "SELECT type, val, val2, val3, val4, name, active FROM items WHERE uid ='%d'", itemUID);
+	new Cache:cache = mysql_query(DB_HANDLE,query );
+	cache_get_value_name_int(0, "type", type);
+	cache_get_value_name_int(0, "val", val);
+	cache_get_value_name_int(0, "val2", val2);
+	cache_get_value_name_int(0, "val3", val3);
+	cache_get_value_name_int(0, "val4", val4);
+	cache_get_value_name_int(0, "active", active);
+	cache_delete(cache);
+}
+
 stock UseItemOption(playerid, option, uid)
 {
-	if(ItemCache[uid][iActive])
+
+	new type, val, val2, val3, val4, active;
+	GetItemInfo(uid, type, val, val2, val3, val4, active);
+
+	if(active)
 	return GameTextForPlayer(playerid, "~b~~h~~h~~h~schowaj przedmiot", 3000, 4);
-	if(ItemCache[uid][iState] != ITEM_STATE_EQ)
-	return 1;
-	if(ItemCache[uid][iOwner] != PlayerCache[playerid][pUID])
+
+	if(CanPlayerUseItem(playerid, uid) == false)
 	return TextDrawForPlayerEx(playerid, 1, "Ten przedmiot nie nalezy do Ciebie.", 3000);
 	
 	new query[256];
@@ -1631,18 +1648,17 @@ stock UseItemOption(playerid, option, uid)
 
 				return SendPlayerMe(playerid, "odk³ada jakiœ przedmiot w pojeŸdzie.");
 			}
-			GetPlayerPos(playerid, ItemCache[uid][iX], ItemCache[uid][iY], ItemCache[uid][iZ]);
-			ItemCache[uid][iVW] = GetPlayerVirtualWorld(playerid);
-			ItemCache[uid][iState] = 1;
+			new Float:x, Float:y, Float:z;
+			GetPlayerPos(playerid, x, y ,z);
+			new vw =  GetPlayerVirtualWorld(playerid);
 
 			format(query, sizeof(query), "odk³ada jakiœ przedmiot.");
-
 			SendPlayerMe(playerid, query);
 			ApplyAnimation(playerid, "bomber", "bom_plant", 4.1, 0, 0, 0, 0, 0, 0);
 
-			format(query, sizeof(query), "UPDATE items SET X = '%f', Y = '%f', Z = '%f', vw = '%f', state = '1' WHERE uid = '%d'",
-			ItemCache[uid][iX], ItemCache[uid][iY], ItemCache[uid][iZ], ItemCache[uid][iVW], ItemCache[uid][iUID]);
-			mysql_query(DB_HANDLE, query);
+			format(query, sizeof(query), "UPDATE items SET X = '%f', Y = '%f', Z = '%f', vw = '%f', state = '%d' WHERE uid = '%d'",
+			x, y, z , ITEM_STATE_ONFOOT, uid);
+			mysql_query(DB_HANDLE, query, false);
 
 
 		}
@@ -11286,7 +11302,20 @@ stock GetPlayerItemsCount(playerid)
 	return count;
 }
 
+forward GetNearbyItems (playerid, items[]);
+public GetNearbyItems (playerid, items[]){
 
+	/*new Float:range = 5.0;
+	
+	new Float:x, Float:y, Float:z;
+	GetPlayerPos(playerid, x, y, z);
+
+	new query[512];
+	format(query, sizeof(query), "SELECT * FROM items WHERE virtualWorld=%d AND posX-5 >= %f AND posX+5 <= %f AND posY-5 >= %f AND posY+5 <= %f AND posZ-5 >= %f AND posZ+5 <= %f", 
+	GetPlayerVirtualWorld(playerid), x, x, y,y,z,z);
+
+	new Cache:cache = mysql_query(DB_HANDLE, query)/*/
+}
 
 cmd:p (playerid, params[])
 {	
@@ -11337,8 +11366,8 @@ cmd:p (playerid, params[])
 
 	return 1;
 	
-
-	/*new iname[32], rest[32];
+/*
+	new iname[32], rest[32];
 	sscanf(params, "s[32]s[32]", iname, rest);
 
 	if(!strlen(params))
@@ -11378,7 +11407,7 @@ cmd:p (playerid, params[])
 				}
 			}
 		}
-		else if(!strcmp(iname, "podnies", true))
+		if(!strcmp(iname, "podnies", true))
 		{
 			new pvw=GetPlayerVirtualWorld(playerid), list[1024];
 
@@ -11436,6 +11465,8 @@ cmd:p (playerid, params[])
 			}
 			else
 			{
+			
+
 				for(new i; i<MAX_ITEMS; i++)
 				{
 					if(ItemCache[i][iState]==1)
@@ -13205,7 +13236,7 @@ CMD:adoc (playerid, params[]){
 	}
 
 	new targetid, docType, action[64];
-	if(sscanf(params, "iis[64]", targetid, docType, action)){
+	if(sscanf(params, "ris[64]", targetid, docType, action)){
 
 		SendClientMessage(playerid, COLOR_GRAY, "Tip: /adoc [ID/Nazwa  gracza] [typ: 0-5] [nadaj/zabierz]");
 		SendClientMessage(playerid, COLOR_GRAY, "0 - dowód osobisty");
@@ -13234,7 +13265,7 @@ CMD:adoc (playerid, params[]){
 		return 1;
 	}
 	if(!strcmp(action, "nadaj")){
-		if(HasPlayerDoc(playerid, docType)){
+		if(HasPlayerDoc(targetid, docType)){
 			SendClientMessage(playerid, COLOR_GRAY, "Gracz posiada ju¿ ten dokument.");
 			return 1;
 		}
@@ -13244,7 +13275,7 @@ CMD:adoc (playerid, params[]){
 		return 1;
 	}
 	else if(!strcmp(action, "zabierz")){
-		if(!HasPlayerDoc(playerid, docType)){
+		if(!HasPlayerDoc(targetid, docType)){
 			SendClientMessage(playerid, COLOR_GRAY, "Gracz nie posiada takiego dokumentu.");
 			return 1;
 		}
@@ -14177,7 +14208,7 @@ CMD:pokaz (playerid, params[]){
 	}
 
 	new str[420];
-	format(str,sizeof(str), "SELECT players1.uid as playerUID, players1.name as name, playerDocs.createdAt as createdAt, players1.gender as gender, players1.bornDate as bornDate FROM playerDocs RIGHT JOIN players players1 ON playerDocs.type = %d AND playerDocs.playerUID=%d", type, PlayerCache[playerid][pUID]);
+	format(str,sizeof(str), "SELECT createdAt, gender, bornDate, name FROM playerDocs INNER JOIN players ON playerDocs.playerUID=players.uid AND players.uid=%d AND playerDocs.type=%d ", PlayerCache[playerid][pUID], type);
 	new Cache:cache = mysql_query(DB_HANDLE, str);
 	new createdAt[32], gender, bornDate, name[24];
 	cache_get_value_name(0, "createdAt", createdAt);
