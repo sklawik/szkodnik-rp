@@ -11366,7 +11366,7 @@ cmd:p (playerid, params[])
 
 	return 1;
 	
-/*
+
 	new iname[32], rest[32];
 	sscanf(params, "s[32]s[32]", iname, rest);
 
@@ -11544,7 +11544,7 @@ cmd:p (playerid, params[])
 		return ShowDialogInfo(playerid, "Nie posiadasz ¿adnych przedmiotów.\nMo¿esz rozejrzeæ siê po okolicy korzystaj¹c z komendy: /p podnies.");
 		else
 		return ShowPlayerDialog(playerid, D_ITEMS, DIALOG_STYLE_TABLIST, "Przedmioty", list, "Wybierz", "Zarz¹dzaj");
-	}*/
+	}
 }
 
 forward ShowingWeapon(playerid);
