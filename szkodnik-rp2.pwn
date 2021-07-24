@@ -5,7 +5,7 @@
 #include <Pawn.CMD>
 #include <a_mysql>
 #include <samp_bcrypt>
-
+#include <Pawn.Regex>
 
 #include "db_schema.inc"
 
@@ -8146,6 +8146,10 @@ public OnPlayerText(playerid, text[])
 {
 	if(PlayerCache[playerid][pAJ_Time] || !PlayerCache[playerid][pUID])
 	return 0;
+
+	new newText[256];
+	ReplaceString(text, "/kotek/g", "*{1}*", newText);
+
 	if(strfind(text, "pump up the jam", true) != -1){
 		
 		PumpUpTheJam[playerid] = true;
@@ -10972,6 +10976,17 @@ CMD:strefa (playerid, params[]){
 
 }
 
+stock ReplaceString(const str[], const regexp[], const fmt[], dest[], size = sizeof dest)
+{
+    new Regex:r = Regex_New(regexp);
+
+    if (r)
+    {
+        Regex_Replace(str, r, fmt, dest, MATCH_DEFAULT, size);
+
+        Regex_Delete(r);
+    }
+}
 
 cmd:astrefa (playerid, params[])
 {

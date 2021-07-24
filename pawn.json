@@ -9,7 +9,11 @@
 		"maddinat0r/sscanf:v2.8.3",
 		"pBlueG/SA-MP-MySQL:R41-4",
 		"katursis/Pawn.CMD:3.3.3",
-		"Sreyas-Sreelal/samp-bcrypt:0.3.1"
+		"Sreyas-Sreelal/samp-bcrypt:0.3.1",
+		"katursis/Pawn.Regex:late",
+		"katursis/Pawn.Regex:latest",
+		"katursis/Pawn.Regex:121",
+		"katursis/Pawn.Regex:1.2.1"
 	],
 	"local": true,
 	"runtime": {
@@ -17,13 +21,13 @@
 		"mode": "server",
 		"rcon_password": "password",
 		"port": 7777,
-		"password": "sekret",
 		"hostname": "••• Szkodnik RolePlay •••",
 		"maxplayers": 1000,
 		"language": "",
 		"mapname": "San Andreas",
 		"weburl": "https://discord.gg/5GQaaKkh2k",
 		"gamemodetext": "Szkodnik-RP 2.5",
+		"password": "sekret",
 		"announce": true,
 		"lanmode": false,
 		"query": true,
@@ -50,7 +54,7 @@
 		"conncookies": true,
 		"cookielogging": false,
 		"output": true,
-		"extra":{
+		"extra": {
 			"useartwork": "1"
 		}
 	}
