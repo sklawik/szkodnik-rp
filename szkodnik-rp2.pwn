@@ -8080,11 +8080,28 @@ stock LookForEmoji(const str[])
 
 stock SendFormattedMessage(playerid, const message[], const hexme[], const  hexnormal[], color)
 {
+
+	
 	new hex[128]; format(hex, sizeof(hex), hexme); // hexme
 	new hexnorm[128]; format(hexnorm, sizeof(hexnorm), hexnormal); // normal color hex
 
 	new msg[525]; format(msg, sizeof(msg), message);
-	if(strlen(msg) >= 100)
+
+	new Regex:r = Regex_New("\\*[a-zA-Z\\s¹œ³óê€¿Ÿæñ!@#$\\(\\)\\d]*\\*");
+	new newText[1024];
+		new regexStr[1024];
+		format(regexStr, sizeof(regexStr), "%s$&%s", hex, hexnorm);
+    if (r)
+    {
+	
+
+        Regex_Replace(message, r, regexStr,newText, MATCH_ANY);
+
+     
+    }
+
+
+	if(strlen(newText) >= 100)
 	{
 		new msg1[128];
 		format(msg1, sizeof(msg1), msg);
@@ -8092,28 +8109,28 @@ stock SendFormattedMessage(playerid, const message[], const hexme[], const  hexn
 		new msg2[128];
 		format(msg2, sizeof(msg2), msg);
 		strdel(msg2, 0, 100);
-		format(msg1, sizeof(msg1), RPFormatText(msg1, hexme, hexnormal));
-		format(msg2, sizeof(msg2), RPFormatText(msg2, hexme, hexnormal));
-		SendClientMessage(playerid, color, LookForEmoji(msg1) );
-		return SendClientMessage(playerid, color, LookForEmoji(msg2) );
+		format(msg1, sizeof(msg1), msg1, hexme, hexnormal);
+		format(msg2, sizeof(msg2),msg2, hexme, hexnormal);
+		
+		new formattedMsg1[128];
+		new formattedMsg2[128];
+  		Regex_Replace(msg1, r, regexStr,formattedMsg1, MATCH_ANY);
+		Regex_Replace(msg2, r, regexStr,formattedMsg2, MATCH_ANY);
+		SendClientMessage(playerid, color, msg1 );
+
+
+		
+
+		Regex_Delete(r);
+		return SendClientMessage(playerid, color, msg2 );
 	}
 
 
-	new newText[1024];
+
 	
-	new Regex:r = Regex_New("\\*[a-zA-Z\\s¹œ³óê€¿Ÿæñ!@#$\\%\\^\\&\\*\\\\\\]*\\*");
-    if (r)
-    {
-		new regexStr[1024];
-		format(regexStr, sizeof(regexStr), "%s$&%s", hex, hexnorm);
-		printf("teœcik: %s", regexStr);
 
-        Regex_Replace(message, r, regexStr,newText, MATCH_ANY);
-
-        Regex_Delete(r);
-    }
 	printf("THE TEXT: %s", newText);
-
+    Regex_Delete(r);
 	return SendClientMessage(playerid, color, newText);
 }
 
