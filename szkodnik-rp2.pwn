@@ -11,6 +11,8 @@
 
 main(){}
 
+
+
 #undef MAX_PLAYERS
 #define MAX_PLAYERS 1000
 
@@ -8095,7 +8097,24 @@ stock SendFormattedMessage(playerid, const message[], const hexme[], const  hexn
 		SendClientMessage(playerid, color, LookForEmoji(msg1) );
 		return SendClientMessage(playerid, color, LookForEmoji(msg2) );
 	}
-	return SendClientMessage(playerid, color, RPFormatText(LookForEmoji(msg), hexme, hexnormal));
+
+
+	new newText[1024];
+	
+	new Regex:r = Regex_New("\\*[a-zA-Z\\s]*\\*");
+    if (r)
+    {
+		new regexStr[1024];
+		format(regexStr, sizeof(regexStr), "%s$&%s", hex, hexnorm);
+		printf("teœcik: %s", regexStr);
+
+        Regex_Replace(message, r, regexStr,newText, MATCH_ANY);
+
+        Regex_Delete(r);
+    }
+	printf("THE TEXT: %s", newText);
+
+	return SendClientMessage(playerid, color, newText);
 }
 
 stock RPFormatText(const message[], const hexme[],const hexnormal[])
@@ -8147,9 +8166,8 @@ public OnPlayerText(playerid, text[])
 	if(PlayerCache[playerid][pAJ_Time] || !PlayerCache[playerid][pUID])
 	return 0;
 
-	new newText[256];
-	ReplaceString(text, "/kotek/g", "*{1}*", newText);
 
+	
 	if(strfind(text, "pump up the jam", true) != -1){
 		
 		PumpUpTheJam[playerid] = true;
@@ -8159,11 +8177,9 @@ public OnPlayerText(playerid, text[])
 	{
 		return !SendClientMessage(playerid, COLOR_GRAY, "Odczekaj chwilê przed ponownym wys³aniem wiadomoœci.");
 	}
-	// logs table
-	
+
 	new log[426];
 	format(log, sizeof(log), "%s: %s", ReturnPlayerName(playerid), text);
-
 	CreateLog(LOG_TYPE_GAME_CHAT, playerid, log);
 
 	if(ac[playerid])
@@ -8186,27 +8202,27 @@ public OnPlayerText(playerid, text[])
 		return 0;
 	}
 	if(PlayerCache[playerid][pBW_Time])
-	return !SendClientMessage(playerid, COLOR_GRAY, "Nie mo¿esz nic mówiæ podczas BW.");
+		return !SendClientMessage(playerid, COLOR_GRAY, "Nie mo¿esz nic mówiæ podczas BW.");
 	if(text[0] == ':' && text[1] == 'd' || text[1] == 'D' && text[0] == ':')
-	return !SendPlayerMe(playerid, "œmieje siê.");
+		return !SendPlayerMe(playerid, "œmieje siê.");
 	if(text[0] == 'x' && text[1] == 'd' || text[1] == 'D' && text[0] == 'X')
-	return !SendPlayerMe(playerid, "œmieje siê.");
+		return !SendPlayerMe(playerid, "œmieje siê.");
 	if(text[0] == ':' && text[1] == ')')
-	return !SendPlayerMe(playerid, "uœmiecha siê.");
+		return !SendPlayerMe(playerid, "uœmiecha siê.");
 	if(text[0] == ':' && text[1] == '(')
-	return !SendPlayerMe(playerid, "smuci siê.");
+		return !SendPlayerMe(playerid, "smuci siê.");
 	if(text[0] == ':' && text[1] == 'p')
-	return !SendPlayerMe(playerid, "wystawia jêzyk.");
+		return !SendPlayerMe(playerid, "wystawia jêzyk.");
 	if(text[0] == ':' && text[1] == 'P')
-	return !SendPlayerMe(playerid, "wystawia jêzyk.");
+		return !SendPlayerMe(playerid, "wystawia jêzyk.");
 	if(text[0] == ':' && text[1] == '>')
-	return !SendPlayerMe(playerid, "mró¿y oczy.");
+		return !SendPlayerMe(playerid, "mró¿y oczy.");
 	if(text[0] == ':' && text[1] == '/')
-	return !SendPlayerMe(playerid, "krzywi siê.");
+		return !SendPlayerMe(playerid, "krzywi siê.");
 	if(text[0] == ':' && text[1] == 'o')
-	return !SendPlayerMe(playerid, "robi zaskoczon¹ minê");
+		return !SendPlayerMe(playerid, "robi zaskoczon¹ minê");
 	if(text[0] == ':' && text[1] == 'O')
-	return !SendPlayerMe(playerid, "robi zaskoczon¹ minê");
+		return !SendPlayerMe(playerid, "robi zaskoczon¹ minê");
 
 	/*if(text[0] == '@')
 	{
@@ -8423,6 +8439,8 @@ public OnPlayerText(playerid, text[])
 		}
 		return 0;
 	}*/
+
+	// OOC chat
 	if(text[0] == '.' && text[1] != ' ')
 	{
 		new finalmsg[256], playermsg[128];
@@ -8470,9 +8488,12 @@ public OnPlayerText(playerid, text[])
 		}
 		return 0;
 	}
-	new msg[128];
+	new msg[521];
 	text[0] = toupper(text[0]);
 	format(msg, sizeof(msg), "%s mówi: %s", strreplace(ReturnPlayerName(playerid), '_', ' '), text);
+
+	printf("teœcik2: %s", msg);
+
 	if(pTalking[playerid] != -1)
 	format(msg, sizeof(msg), "%s (telefon): %s", strreplace(ReturnPlayerName(playerid), '_', ' '), text);
 	new Float:range=1;
@@ -10976,17 +10997,7 @@ CMD:strefa (playerid, params[]){
 
 }
 
-stock ReplaceString(const str[], const regexp[], const fmt[], dest[], size = sizeof dest)
-{
-    new Regex:r = Regex_New(regexp);
 
-    if (r)
-    {
-        Regex_Replace(str, r, fmt, dest, MATCH_DEFAULT, size);
-
-        Regex_Delete(r);
-    }
-}
 
 cmd:astrefa (playerid, params[])
 {
