@@ -8101,7 +8101,7 @@ stock SendFormattedMessage(playerid, const message[], const hexme[], const  hexn
 
 	new newText[1024];
 	
-	new Regex:r = Regex_New("\\*[a-zA-Z\\s]*\\*");
+	new Regex:r = Regex_New("\\*[a-zA-Z\\s¹œ³óê€¿Ÿæñ!@#$\\%\\^\\&\\*\\\\\\]*\\*");
     if (r)
     {
 		new regexStr[1024];
