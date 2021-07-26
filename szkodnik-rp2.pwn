@@ -8081,16 +8081,12 @@ stock LookForEmoji(const str[])
 stock SendFormattedMessage(playerid, const message[], const hexme[], const  hexnormal[], color)
 {
 
-	
-	new hex[128]; format(hex, sizeof(hex), hexme); // hexme
-	new hexnorm[128]; format(hexnorm, sizeof(hexnorm), hexnormal); // normal color hex
-
 	new msg[525]; format(msg, sizeof(msg), message);
 
-	new Regex:r = Regex_New("\\*[a-zA-Z\\s¹œ³óê€¿Ÿæñ!@#$\\(\\)\\d]*\\*");
-	new newText[1024];
-		new regexStr[1024];
-		format(regexStr, sizeof(regexStr), "%s$&%s", hex, hexnorm);
+	new Regex:r = Regex_New("\\*{1,2}[a-zA-Z\\s¹œ³óê€¿Ÿæñ!@#$\\(\\)\\d]*\\*{1,2}");
+	new newText[256];
+	new regexStr[64];
+	format(regexStr, sizeof(regexStr), "%s$&%s", hexme, hexnormal);
     if (r)
     {
 	
@@ -8103,26 +8099,28 @@ stock SendFormattedMessage(playerid, const message[], const hexme[], const  hexn
 
 	if(strlen(newText) >= 100)
 	{
-		new msg1[128];
+		new msg1[256];
 		format(msg1, sizeof(msg1), msg);
 		strdel(msg1, 100, strlen(msg1));
-		new msg2[128];
+		new msg2[256];
 		format(msg2, sizeof(msg2), msg);
 		strdel(msg2, 0, 100);
 		format(msg1, sizeof(msg1), msg1, hexme, hexnormal);
 		format(msg2, sizeof(msg2),msg2, hexme, hexnormal);
 		
-		new formattedMsg1[128];
-		new formattedMsg2[128];
+		new formattedMsg1[256];
+		new formattedMsg2[256];
   		Regex_Replace(msg1, r, regexStr,formattedMsg1, MATCH_ANY);
 		Regex_Replace(msg2, r, regexStr,formattedMsg2, MATCH_ANY);
-		SendClientMessage(playerid, color, msg1 );
+		
 
 
 		
 
 		Regex_Delete(r);
-		return SendClientMessage(playerid, color, msg2 );
+
+		SendClientMessage(playerid, color, formattedMsg1 );
+		return SendClientMessage(playerid, color, formattedMsg2 );
 	}
 
 
