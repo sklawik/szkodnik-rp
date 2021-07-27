@@ -11996,13 +11996,20 @@ stock UseItem(playerid, itemuid)
 		}
 		case 8:
 		{
+			new theQuery[256];
+			format(theQuery, sizeof(theQuery), "DELETE FROM items WHERE uid=%d LIMIT 1;", itemuid);
+			mysql_query(DB_HANDLE, theQuery, false);
+
 			new vehicleUID = CreateSystemVehicle(playerid, val, random(255), random(255),ServerSettings[magazinePosX], ServerSettings[magazinePosY], ServerSettings[magazinePosZ], PlayerCache[playerid][pUID], 0,178.2287, val2);
 			SpawnVehicle(vehicleUID);
 
+			
 
-			new query[256];
-			format(query, sizeof(query), "DELETE FROM items WHERE uid=%d LIMIT 1;", itemuid);
-			mysql_query(DB_HANDLE, query, false);
+			printf("my uid: %d", itemuid);
+			printf("%s", theQuery);
+		
+		
+		
 
 			return 1;
 		}
@@ -14766,7 +14773,7 @@ CMD:v (playerid, params[])
 	}
 		
 	ShowPlayerDialog(playerid, D_VEHICLES, DIALOG_STYLE_LIST, "Pojazdy (* - zespawnowany)", list, "(Un)Spawn", "Anuluj");
-	cache_delete(cache);
+
 	if(!rows){
 		
 		ShowDialogInfo(playerid, "Nie posiadasz ¿adnych pojazdów.\n\nPojazd mo¿esz nabyæ od innego gracza lub kupiæ jakiœ w salonie samochodowym.");
