@@ -1254,7 +1254,7 @@ stock LoadDoors()
 	expirationDate DATETIME DEFAULT (CURRENT_DATE + INTERVAL 1 MONTH),\n\
 	facingAngle FLOAT,\n\
 	gameId INT DEFAULT 0);"
-	,false);*/
+	,false);
 
 	new Cache:cache = mysql_query(DB_HANDLE, "SELECT doors.uid as uid, groups.type as groupType, outX, outY, outZ, outVirtualWorld, doors.type, COALESCE(groupUID, 0) FROM doors LEFT OUTER JOIN groups ON groups.uid=doors.groupUID;");
 	
@@ -1301,7 +1301,7 @@ stock LoadDoors()
 
 	cache_delete(cache);
 
-	printf(">>> Loaded %d doors.", rows);
+	printf(">>> Loaded %d doors.", rows);*/
 }
 
 stock ShowDialogMemberPayDay(playerid)
@@ -10439,7 +10439,7 @@ public HidePenalityTextDraw()
 forward GetVehicleData(vehicleid, &model, &fuel, &Float:posX, &Float:posY, &Float:posZ, &Float:angle, &playerUID, &groupUID, &register, &color, &color2, &Float:health);
 public GetVehicleData(vehicleid,  &model, &fuel, &Float:posX, &Float:posY, &Float:posZ, &Float:angle, &playerUID, &groupUID, &register, &color, &color2, &Float:health){
 	new query[256];
-	format(query, sizeof(query), "SELECT model, fuel, posX, posY, posZ, angle, IFNULL(playerUID, 0), IFNULL(groupUID, 0), register, color, color2, HP FROM vehicles WHERE gameId=%d LIMIT 1;", vehicleid);
+	format(query, sizeof(query), "SELECT model, fuel, posX, posY, posZ, angle, IFNULL(playerUID, 0) as playerUID, IFNULL(groupUID, 0) as groupUID, register, color, color2, HP FROM vehicles WHERE gameId=%d LIMIT 1;", vehicleid);
 	new Cache:cache = mysql_query(DB_HANDLE, query);
 	cache_get_value_name_int(0, "model", model);
 	cache_get_value_name_int(0, "playerUID", playerUID);
@@ -11759,7 +11759,7 @@ stock UseItem(playerid, itemuid)
 	pVal[playerid] = itemuid;
 
 	new itemQuery[256];
-	format(itemQuery, sizeof(itemQuery), "SELECT IFNULL(groupUID, 0), IFNULL(playerUID,0) , state, type, val, val2, val3, val4, active, name FROM items WHERE uid = '%d' LIMIT 1", itemuid);
+	format(itemQuery, sizeof(itemQuery), "SELECT IFNULL(groupUID, 0) as groupUID, IFNULL(playerUID,0) as playerUID , state, type, val, val2, val3, val4, active, name FROM items WHERE uid = '%d' LIMIT 1", itemuid);
 	new Cache:cache = mysql_query(DB_HANDLE, itemQuery);
 
 	new groupUID, playerUID, status, type, val, val2, val3, val4, active, name[128];
@@ -11996,12 +11996,15 @@ stock UseItem(playerid, itemuid)
 		}
 		case 8:
 		{
-			CreateSystemVehicle(playerid, ItemCache[itemuid][iVal], random(255), random(255),-199.4787,1223.2294,19.7113, playerid, 0,178.2287, ItemCache[itemuid][iVal2], 0);
-			SpawnVehicle(LastvUID-1);
-			ItemCache[itemuid][iState] = 3;
-			MapIcon[playerid] = CreateDynamicMapIcon(876.5847,-1259.2781,14.6456, 55,-1,  0, 0, playerid,60000, 3, 60000);
-			MapIconTimer[playerid] = SetTimerEx("DestroyIcon", 5000*60, false, "i", playerid);
-			return TextDrawForPlayerEx(playerid, 1, "Pojazd zostal zespawnowany!~n~Ikona samochodu pojawila sie na radarze.", 10000);
+			new vehicleUID = CreateSystemVehicle(playerid, val, random(255), random(255),ServerSettings[magazinePosX], ServerSettings[magazinePosY], ServerSettings[magazinePosZ], PlayerCache[playerid][pUID], 0,178.2287, val2);
+			SpawnVehicle(vehicleUID);
+
+
+			new query[256];
+			format(query, sizeof(query), "DELETE FROM items WHERE uid=%d LIMIT 1;", itemuid);
+			mysql_query(DB_HANDLE, query, false);
+
+			return 1;
 		}
 		case 9:
 		{
@@ -14210,7 +14213,7 @@ stock ReturnObjectUID(objectid)
 forward HasPlayerAccessToVehicle(playerid, vehicleid);
 public HasPlayerAccessToVehicle(playerid, vehicleid){
 	new query[256];
-	format(query, sizeof(query), "SELECT NULL FROM vehicles INNER JOIN players ON vehicles.playerUID=%d LEFT OUTER JOIN groupMembers ON vehicles.groupUID=groupMembers.groupUID and players.uid = groupMembers.playerUID  WHERE vehicles.gameId=%d;", PlayerCache[playerid][pUID], vehicleid);
+	format(query, sizeof(query), "SELECT null FROM vehicles LEFT JOIN players ON vehicles.playerUID=%d WHERE gameId=%d;", PlayerCache[playerid][pUID], vehicleid);
 	mysql_query(DB_HANDLE, query);
 	new Cache:cache = mysql_query(DB_HANDLE, query);
 	new rows = cache_num_rows();
@@ -14569,19 +14572,19 @@ public CuffedTimer(playerid, targetid)
 	}
 }
 
-stock CreateSystemVehicle(playerid, model, color, color2, Float:PosX, Float:PosY, Float:PosZ, ownerid, VW, Float:angle, siren, vehicleid)
+stock CreateSystemVehicle(playerid, model, color, color2, Float:x, Float:y, Float:z, playerUID, VW, Float:angle, siren, vehicleid)
 {
-	new query[512];
-	format(query, sizeof(query),"INSERT INTO vehicles (model, color, color2, vw, posX, posY, posZ, angle, owner, siren, id) VALUES ('%d', '%d', '%d', '%d', '%f', '%f', '%f', '%f', '%d', '%d', '%d')",
-	model, color, color2, VW, PosX, PosY, PosZ, angle, ownerid, siren, vehicleid);
-	mysql_query(DB_HANDLE, query);
+	new query[256];
+	format(query, sizeof(query), "INSERT INTO vehicles (playerUID, model, color, color2, posX, posY, posZ, siren, virtualWorld, register) VALUES ('%d', '%d', '%d', '%d', '%f', '%f', '%f', '%d', '%d', 0)",
+	playerUID, model, color, color2, x,y,z, siren, VW);
+	mysql_query(DB_HANDLE, query, false);
+	new uid;
+	format(query, sizeof(query), "SELECT max(uid) FROM vehicles");
+	new Cache:cache = mysql_query(DB_HANDLE, query);
+	cache_get_value_int(0, 0, uid);
+	cache_delete(cache);
 
-	if(vehicleid)
-	{
-		PutPlayerInVehicle(playerid, vehicleid, 0);
-	}
-
-	return 1;
+	return uid;
 }
 
 CMD:ap(playerid, params[])
@@ -14765,11 +14768,11 @@ CMD:v (playerid, params[])
 	ShowPlayerDialog(playerid, D_VEHICLES, DIALOG_STYLE_LIST, "Pojazdy (* - zespawnowany)", list, "(Un)Spawn", "Anuluj");
 	cache_delete(cache);
 	if(!rows){
-		cache_delete(cache);
+		
 		ShowDialogInfo(playerid, "Nie posiadasz ¿adnych pojazdów.\n\nPojazd mo¿esz nabyæ od innego gracza lub kupiæ jakiœ w salonie samochodowym.");
 		return 1;
 	}
-		
+	cache_delete(cache);
 	return 1;
 }
 
