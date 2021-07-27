@@ -10,7 +10,8 @@
 		"pBlueG/SA-MP-MySQL:R41-4",
 		"katursis/Pawn.CMD:3.3.3",
 		"Sreyas-Sreelal/samp-bcrypt:0.3.1",
-		"katursis/Pawn.Regex:1.2.1"
+		"katursis/Pawn.Regex:1.2.1",
+		"YSI-Visual/y_dialog"
 	],
 	"local": true,
 	"runtime": {

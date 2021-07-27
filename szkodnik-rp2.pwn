@@ -2706,6 +2706,10 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 				switch(option)
 				{
 					case 1: return ShowPlayerDialog(playerid, D_CONFIRM_POS, DIALOG_STYLE_MSGBOX, "Zmieñ pozycjê magazynu", ""HEX_WHITE"Miejsce w, którym stoisz bêdzie aktualnym miejscem\nodbierania paczek z magazynu.\nCzy jesteœ pewien(na), ¿e chcesz wybraæ to miejsce w, którym aktualnie stoisz?", "Ustaw", "Anuluj");
+					case 2: {
+						DEV_MODE = !DEV_MODE;
+						return ShowDialogServerSettings(playerid);
+					}
 				}
 			}
 		}
@@ -10669,6 +10673,20 @@ cmd:here (playerid, params[])
 	return 1;
 }
 
+cmd:opisy (playerid, params[]){
+
+}
+
+forward DestroyPlayerDescription3D(playerid);
+public DestroyPlayerDescription3D(playerid){
+
+	DestroyDynamic3DTextLabel(pDesc[playerid][dID]);
+	SendClientMessage(playerid, COLOR_GRAY, "Usuniêto opis.");
+	pDesc[playerid][dIsDescOnPlayer] = false;
+
+	return 1;
+}
+
 cmd:opis (playerid, params[])
 {
 	new desc[128];
@@ -10676,10 +10694,7 @@ cmd:opis (playerid, params[])
 	return SendClientMessage(playerid, COLOR_GRAY, "Poprawne u¿ycie: /opis [OPIS TWOJEJ POSTACI]");
 	if(!strcmp(desc, "usun", true) && pDesc[playerid][dIsDescOnPlayer] == true)
 	{
-		DestroyDynamic3DTextLabel(pDesc[playerid][dID]);
-		SendClientMessage(playerid, COLOR_GRAY, "Usuniêto opis.");
-		pDesc[playerid][dIsDescOnPlayer] = false;
-		return 1;
+		return DestroyPlayerDescription3D(playerid);
 	}
 	format(desc, sizeof(desc), strreplace(strreplace(desc, '(', '{'), ')', '}'));
 	for(new i; i<=strlen(desc); i++)
@@ -17046,7 +17061,14 @@ CMD:tog (playerid, params[])
 stock ShowDialogServerSettings(playerid)
 {
 	new list[525];
-	format(list, sizeof(list), ""HEX_GRAY"---\n"HEX_WHITE"1\tPozycja magazynu: %s", GetMagazineStatus());
+	format(list, sizeof(list), ""HEX_GRAY"---\n\
+	"HEX_WHITE"1\tPozycja magazynu: %s\n\
+	"HEX_WHITE"2\tTryb deweloperski: %s\n\
+	", GetMagazineStatus(),
+	DEV_MODE ? (""HEX_BLUE"W³¹czony") : (""HEX_RED"Wy³¹czony"));
+
+
+
 	return ShowPlayerDialog(playerid, D_SERVER_SETTINGS, DIALOG_STYLE_LIST, "Panel serwerowy", list, "Wybierz", "Zamknij");
 }
 
