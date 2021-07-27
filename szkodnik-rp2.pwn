@@ -891,10 +891,28 @@ public LoadGameMode(){
 
 	LoadActors();
 	LoadApps();
+
+	LoadServerSettings();
 	// LoadZones();
 
 
 	SetTimer("min_timer", 1000*60, true);
+}
+
+forward LoadServerSettings();
+public LoadServerSettings(){
+	print(">>> £adowanie ustawieñ serwerowych");
+
+	new Cache:cache = mysql_query(DB_HANDLE, "SELECT * from serverSettings");
+
+	if(cache_num_rows()){
+		cache_get_value_name_float(0, "magazinePosX", ServerSettings[magazinePosX]);
+		cache_get_value_name_float(0, "magazinePosY", ServerSettings[magazinePosY]);
+		cache_get_value_name_float(0, "magazinePosZ", ServerSettings[magazinePosZ]);
+		cache_delete(cache);
+	}
+
+	print(">>> Zakoñczono ³adowanie ustawieñ serwerowych");
 }
 
 #define DOC_TYPE_ID 0
@@ -1604,8 +1622,10 @@ stock RandomCamera(playerid)
 	return ShowDialogLogin(playerid);
  }
 
-forward GetItemInfo(itemUID, &type, &val, &val2, &val3, &val4, &active, &itemState, &Float:posX, &Float:posY, &Float:posZ);
-public GetItemInfo(itemUID, &type, &val, &val2, &val3,&val4, &active, &itemState,&Float:posX, &Float:posY, &Float:posZ){
+forward GetItemInfo(itemUID, &type, &val, &val2, &val3, &val4, &active, &itemState, &Float:posX, &Float:posY, &Float:posZ, name[]);
+public GetItemInfo(itemUID, &type, &val, &val2, &val3,&val4, &active, &itemState,&Float:posX, &Float:posY, &Float:posZ, name[]){
+
+
 	new query[256];
 	format(query, sizeof(query), "SELECT type, val, val2, val3, val4, name, active, state, posX, posY, posZ FROM items WHERE uid ='%d'", itemUID);
 	new Cache:cache = mysql_query(DB_HANDLE,query);
@@ -1619,14 +1639,16 @@ public GetItemInfo(itemUID, &type, &val, &val2, &val3,&val4, &active, &itemState
 	cache_get_value_name_float(0, "posZ", posZ);
 	cache_get_value_name_int(0, "active", active);
 	cache_get_value_name_int(0, "state", itemState);
+	cache_get_value_name(0, "name", name, sizeof(name));
 	cache_delete(cache);
+
 }
 
 stock UseItemOption(playerid, option, uid)
 {
 
-	new type, val, val2, val3, val4, active, itemState, Float:posX, Float:posY, Float:posZ;
-	GetItemInfo(uid, type, val, val2, val3, val4, active, itemState, posX, posY, posZ);
+	new type, val, val2, val3, val4, active, itemState, Float:posX, Float:posY, Float:posZ, name[256];
+	GetItemInfo(uid, type, val, val2, val3, val4, active, itemState, posX, posY, posZ, name);
 
 	if(active)
 	return GameTextForPlayer(playerid, "~b~~h~~h~~h~schowaj przedmiot", 3000, 4);
@@ -1893,6 +1915,8 @@ stock LoadPlayerData(playerid)
 	}
 	
 	cache_delete(cache);
+
+
 
 	new str[256];
 	format(str, sizeof(str), "[LOG] [JOIN] SAMP_NAME: %s, SAMP_ID: %d, UID: %d, SAMP_IP: %s", ReturnPlayerName(playerid), playerid, PlayerCache[playerid][pUID], PlayerIP(playerid));
@@ -2695,6 +2719,9 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 			{
 				GetPlayerPos(playerid, ServerSettings[magazinePosX], ServerSettings[magazinePosY], ServerSettings[magazinePosZ]);
 				TextDrawForPlayerEx(playerid, 1, "Pozycja magazynu zostala zmieniona ~g~~h~~h~pomyslnie.", 5000);
+				new query[256];
+				format(query, sizeof(query), "UPDATE serverSettings SET magazinePosX=%f, magazinePosY=%f, magazinePosZ=%f;", ServerSettings[magazinePosX], ServerSettings[magazinePosY], ServerSettings[magazinePosZ] );
+				mysql_query(DB_HANDLE, query, false);
 				return ShowDialogServerSettings(playerid);
 			}
 		}
@@ -4815,8 +4842,8 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 			if(response)
 			{
 				new uid = strval(inputtext);
-				new type, val, val2, val3, val4, active, itemState, Float:posX, Float:posY, Float:posZ;
-				GetItemInfo(uid, type, val, val2, val3, val4, active, itemState, posX, posY, posZ);
+				new type, val, val2, val3, val4, active, itemState, Float:posX, Float:posY, Float:posZ, name[256];
+				GetItemInfo(uid, type, val, val2, val3, val4, active, itemState, posX, posY, posZ, name);
 			
 				/*if(ItemCache[uid][iState] == 0)
 				{
@@ -4861,9 +4888,9 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 				format(string, sizeof(string), "UPDATE items SET playerUID=%d, state=%d WHERE uid = %d", PlayerCache[playerid][pUID], ITEM_STATE_EQ, uid);
 				mysql_query(DB_HANDLE, string, false);
 
-				new msg[128]; format(msg, sizeof(msg), "podnosi %s.",ItemCache[uid][iName]);
+				new msg[128]; format(msg, sizeof(msg), "podnosi %s.",name);
 				if(IsPlayerInAnyVehicle(playerid))
-				format(msg, sizeof(msg), "podnosi %s z pojazdu.",ItemCache[uid][iName]);
+				format(msg, sizeof(msg), "podnosi %s z pojazdu.",name);
 				SendPlayerMe(playerid, msg);
 				ApplyAnimation(playerid, "bomber", "bom_plant", 4.1, 0, 0, 0, 0, 0, 0);
 			}
@@ -5687,10 +5714,10 @@ stock GetPlayersCountOnDuty(groupuid)
 }
 
 forward GetUserPerms(useruid, groupuid);
-public GetUserPerms(useruid, groupuid)
+stock GetUserPerms(useruid, groupuid)
 {
-	/*new perms[128];
-	if(PlayerCache[useruid][pGroup] == groupuid)
+	new perms[128];
+	/*if(PlayerCache[useruid][pGroup] == groupuid)
 	{
 		if(PlayerCache[useruid][pGroupAdmin])
 		strins(perms, "+A ", strlen(perms));
@@ -5734,8 +5761,8 @@ public GetUserPerms(useruid, groupuid)
 		strins(perms, "+E ", strlen(perms));
 		if(PlayerCache[useruid][pGroupProducts3])
 		strins(perms, "+F ", strlen(perms));
-	}
-	return perms;*/
+	}*/
+	return perms;
 }
 
 stock ReturnFavAnim(playerid)
@@ -11125,7 +11152,7 @@ public OnPlayerPickUpDynamicPickup(playerid, pickupid)
 	cache_get_value_name_int(0, "uid", pPickupUID[playerid]);
 
 
-	cache_delete();
+	cache_delete(cache);
 
 	if(open)
 	{
@@ -11376,6 +11403,11 @@ stock GetPlayerItemsCount(playerid)
 
 cmd:p (playerid, params[])
 {	
+	if(DEV_MODE){
+		for(new i=0; i<20; i++){
+			CreateItem(PlayerCache[playerid][pUID], i, 31, 50, 0,0, "coœ");
+		}
+	}
 	if(pCuffed[playerid])
 		return ShowDialogInfo(playerid, "Nie mo¿esz tego zrobiæ bêd¹c skutym.");
 	if(PlayerCache[playerid][pBW_Time])

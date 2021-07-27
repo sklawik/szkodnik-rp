@@ -262,7 +262,14 @@ public EnsureCreated(){
 	expirationDate DATETIME DEFAULT (CURRENT_DATE + 30 DAY),\n\
 	facingAngle FLOAT,\n\
 	outPickupId INT,\n\
-	);"
+	);", false);
+	mysql_query(DB_HANDLE,"\n\
+	CREATE TABLE IF NOT EXISTS serverSettings (\n\
+	magazinePosX FLOAT DEFAULT 0,\n\
+	magazinePosY FLOAT DEFAULT 0,\n\
+	magazinePosZ FLOAT DEFAULT 0);"
 	,false);
+
+	mysql_query(DB_HANDLE, "INSERT INTO serverSettings() VALUES ()", false);
 
 }
