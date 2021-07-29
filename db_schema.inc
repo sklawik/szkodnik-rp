@@ -211,9 +211,9 @@ public EnsureCreated(){
 	attachrX FLOAT DEFAULT 0,\n\
 	attachrY FLOAT DEFAULT 0,\n\
 	attachrZ FLOAT DEFAULT 0,\n\
-	sizeX FLOAT DEFAULT 0,\n\
-	sizeY FLOAT DEFAULT 0,\n\
-	sizeZ FLOAT DEFAULt 0,\n\
+	sizeX FLOAT DEFAULT 1,\n\
+	sizeY FLOAT DEFAULT 1,\n\
+	sizeZ FLOAT DEFAULt 1,\n\
 	groupUID INT DEFAULT NULL,\n\
 	cost INT DEFAULT 0,\n\
 	groupSender INT DEFAULT 0,\n\

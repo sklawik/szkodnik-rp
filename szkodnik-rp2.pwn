@@ -738,7 +738,7 @@ new LoginAttempt[MAX_PLAYERS];
 
 new PlayerText:VehicleInfo[MAX_PLAYERS];
 
-new LastvUID;
+
 
 new VehicleMapIcon[MAX_VEHICLES];
 
@@ -1242,7 +1242,7 @@ stock GetMapIcon(grouptype)
 	return 0;
 }
 
-new dPickupID2[MAX_DOORS];
+//new dPickupID2[MAX_DOORS];
 
 stock LoadDoors()
 {
@@ -1622,12 +1622,14 @@ stock RandomCamera(playerid)
 	return ShowDialogLogin(playerid);
  }
 
-forward GetItemInfo(itemUID, &type, &val, &val2, &val3, &val4, &active, &itemState, &Float:posX, &Float:posY, &Float:posZ, name[]);
-public GetItemInfo(itemUID, &type, &val, &val2, &val3,&val4, &active, &itemState,&Float:posX, &Float:posY, &Float:posZ, name[]){
+forward GetItemInfo(itemUID, &type, &val, &val2, &val3, &val4, &active, &itemState, &Float:posX, &Float:posY, &Float:posZ, name[], &Float:attachX, &Float:attachY, &Float:attachZ, &Float:attachrX, &Float:attachrY, &Float:attachrZ, &Float:sizeX,   &Float:sizeY,  &Float:sizeZ);
+public GetItemInfo(itemUID, &type, &val, &val2, &val3,&val4, &active, &itemState,&Float:posX, &Float:posY, &Float:posZ,name[], &Float:attachX, &Float:attachY, &Float:attachZ, &Float:attachrX, &Float:attachrY, &Float:attachrZ, &Float:sizeX,   &Float:sizeY,  &Float:sizeZ){
 
 
-	new query[256];
-	format(query, sizeof(query), "SELECT type, val, val2, val3, val4, name, active, state, posX, posY, posZ FROM items WHERE uid ='%d'", itemUID);
+
+
+	new query[420];
+	format(query, sizeof(query), "SELECT * FROM items WHERE uid ='%d'", itemUID);
 	new Cache:cache = mysql_query(DB_HANDLE,query);
 	cache_get_value_name_int(0, "type", type);
 	cache_get_value_name_int(0, "val", val);
@@ -1639,16 +1641,28 @@ public GetItemInfo(itemUID, &type, &val, &val2, &val3,&val4, &active, &itemState
 	cache_get_value_name_float(0, "posZ", posZ);
 	cache_get_value_name_int(0, "active", active);
 	cache_get_value_name_int(0, "state", itemState);
-	cache_get_value_name(0, "name", name, sizeof(name));
+	cache_get_value_name(0, "name", name, 128);
+	cache_get_value_name_float(0, "attachX", attachX);
+	cache_get_value_name_float(0, "attachY", attachY);
+	cache_get_value_name_float(0, "attachZ", attachZ);
+	cache_get_value_name_float(0, "attachrX", attachrX);
+	cache_get_value_name_float(0, "attachrY", attachrY);
+	cache_get_value_name_float(0, "attachrZ", attachrZ);
+	cache_get_value_name_float(0, "sizeX", sizeX);
+	cache_get_value_name_float(0, "sizeY", sizeY);
+	cache_get_value_name_float(0, "sizeZ", sizeZ);
+	printf("the z: %f", sizeZ);
 	cache_delete(cache);
+
 
 }
 
 stock UseItemOption(playerid, option, uid)
 {
 
-	new type, val, val2, val3, val4, active, itemState, Float:posX, Float:posY, Float:posZ, name[256];
-	GetItemInfo(uid, type, val, val2, val3, val4, active, itemState, posX, posY, posZ, name);
+	new type, val, val2, val3, val4, active, itemState, Float:posX, Float:posY, Float:posZ, name[128],
+	Float:attachrX, Float:attachrY, Float:attachrZ, Float:sizeX, Float:sizeY, Float:sizeZ, Float:attachX, Float:attachY, Float:attachZ;
+	GetItemInfo(uid, type, val, val2, val3, val4, active, itemState, posX, posY, posZ, name, attachX, attachY, attachZ, attachrX, attachrY, attachrZ, sizeX, sizeY, sizeZ);
 
 	if(active)
 	return GameTextForPlayer(playerid, "~b~~h~~h~~h~schowaj przedmiot", 3000, 4);
@@ -1708,24 +1722,16 @@ stock UseItemOption(playerid, option, uid)
 		}
 		case 3:
 		{
-			if(ItemCache[uid][iType] == 12)
-			{
-				ItemCache[uid][iAttachX] = 0;
-				ItemCache[uid][iAttachY] = 0;
-				ItemCache[uid][iAttachZ] = 0;
-				ItemCache[uid][iSizeX] = 1;
-				ItemCache[uid][iSizeY] = 1;
-				ItemCache[uid][iSizeZ] = 1;
-				ItemCache[uid][iAttachrX] = 0;
-				ItemCache[uid][iAttachrY] = 0;
-				ItemCache[uid][iAttachrZ] = 0;
+			if(type == 12){
 
 				format(query, sizeof(query), "UPDATE items SET attachX = '0', attachY = '0', attachZ = '0', sizeX = '1', sizeY = '1', sizeZ = '1', attachrX = '0', attachrY = '0', attachrZ = '0' WHERE uid = '%d'",
-				ItemCache[uid][iUID]);
-				new Cache:cache = mysql_query(DB_HANDLE, query);
-				cache_delete(cache);
+				uid);
+				mysql_query(DB_HANDLE, query, false);
+
 				return ShowDialogInfo(playerid, "Akcesorium doczepiane zosta³o pomyœlnie zresetowane!");
 			}
+			
+			
 			return ShowDialogInfo(playerid, "Ten przedmiot nie jest doczepianym akcesorium, wiêc nie mo¿esz go zresetowaæ.");
 		}
 		case 4:
@@ -3746,7 +3752,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 					}
 					case 4:
 					{
-						return ShowDialogVehicleGroup(playerid);
+						//return ShowDialogVehicleGroup(playerid);
 					}
 					case 5:
 					{
@@ -4713,6 +4719,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 		case D_ITEMS:
 		{
 			new uid = strval(inputtext);
+			printf("uid from input: %d", uid);
 			if(response)
 			{
 				if(PlayerCache[playerid][pBW_Time])
@@ -4723,6 +4730,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 			else
 			{
 				pVal[playerid] = uid;
+				printf("the id: %d", pVal[playerid]);
 				return ShowPlayerDialog(playerid, D_ITEM_OPTIONS, DIALOG_STYLE_LIST, "Zarz¹dzaj przedmiotem", "1\tOd³ó¿ przedmiot\n2\tOddaj przedmiot za darmo graczowi\n"HEX_BLUE"3\tResetuj akcesorium doczepiane\n4\tSchowaj przedmiot do torby\n5\tZniszcz przedmiot", "Wybierz", "Zamknij");
 			}
 		}
@@ -4842,9 +4850,12 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 			if(response)
 			{
 				new uid = strval(inputtext);
-				new type, val, val2, val3, val4, active, itemState, Float:posX, Float:posY, Float:posZ, name[256];
-				GetItemInfo(uid, type, val, val2, val3, val4, active, itemState, posX, posY, posZ, name);
-			
+				new type, val, val2, val3, val4, active, itemState, Float:posX, Float:posY, Float:posZ, Float:sizeX, Float:sizeY, Float:sizeZ, Float:attachX, Float:attachY, Float:attachZ,\
+				name[256], Float:attachrX, Float:attachrY, Float:attachrZ;
+
+				GetItemInfo(uid, type, val,val2, val3, val4, active, itemState, posX, posY, posZ, name,
+				attachX, attachY, attachZ, attachrX, attachrY, attachrZ, sizeX, sizeY,  sizeZ);
+		
 				/*if(ItemCache[uid][iState] == 0)
 				{
 					new Float:targetX, Float:targetY, Float:targetZ;
@@ -5717,6 +5728,7 @@ forward GetUserPerms(useruid, groupuid);
 stock GetUserPerms(useruid, groupuid)
 {
 	new perms[128];
+	printf("%d%d", groupuid, useruid);
 	/*if(PlayerCache[useruid][pGroup] == groupuid)
 	{
 		if(PlayerCache[useruid][pGroupAdmin])
@@ -5974,7 +5986,7 @@ stock ShowDialogGroupPayDay(playerid)
 	To ile mo¿esz ustawiæ domyœlnej wyp³aty lub wyp³aty dla danego cz³onka jest zale¿ne od rodzaju Twojej grupy:", "Gotowe", "Anuluj");
 }
 
-stock ShowDialogVehicleGroup(playerid)
+stock ShowDialogVehicleGroup() // playerid
 {
 	/*new list[128] = "#\tGrupa\n", info[64], uid = PlayerCache[playerid][pUID];
 	if(PlayerCache[uid][pGroup])
@@ -5993,6 +6005,7 @@ stock ShowDialogVehicleGroup(playerid)
 		strins(list, info, strlen(list));
 	}*/
 	//return ShowPlayerDialog(playerid, D_VEHICLE_GROUP, DIALOG_STYLE_TABLIST_HEADERS, "Wybierz grupê", list, "Pod(od)pisz", "Anuluj");
+	return 1;
 }
 
 stock ShowDialogGroupPanel(playerid)
@@ -7148,7 +7161,7 @@ public OnPlayerKeyStateChange(playerid, newkeys, oldkeys)
 				}
 			}
 		}
-		/*if(ObjectCache[ouid][oModel] == 2629)
+		if(ObjectCache[ouid][oModel] == 2629)
 		{
 			for(new i; i<MAX_ITEMS; i++)
 			{
@@ -7435,7 +7448,7 @@ public OnPlayerKeyStateChange(playerid, newkeys, oldkeys)
 	}
 	else if(newkeys & KEY_WALK && newkeys & KEY_SPRINT)
 	{
-		new vw = GetPlayerVirtualWorld(playerid);
+		//new vw = GetPlayerVirtualWorld(playerid);
 	/*	for(new i; i<LastdUID; i++)
 		{
 			if(!DoorCache[i][dDestroyed])
@@ -9502,7 +9515,7 @@ public OnPlayerWeaponChange(playerid, weaponid)
 		case 29: SetPlayerAttachedObject(playerid, 6, GetWeaponModel(weapon), 1,-0.006000,-0.089000,-0.163999,-2.099997,-3.299997,-175.099960, 1, 1, 1, 0, 0);
 		case 32: SetPlayerAttachedObject(playerid, 6, GetWeaponModel(weapon), 1,-0.006000,-0.089000,-0.163999,-2.099997,-3.299997,-175.099960, 1, 1, 1, 0, 0);
 	}
-	
+	return 1;
 }
 
 forward min_timer();
@@ -9567,7 +9580,8 @@ public min_timer()
 			mysql_query(DB_HANDLE, query, false);
 		}
 	}
-	new Float:pH, guid;/*
+//	new Float:pH, guid;
+	/*
 	for(new i; i<=GetPlayerPoolSize(); i++)
 	{
 		if(IsPlayerConnected(i))
@@ -10579,7 +10593,7 @@ cmd:aj (playerid, params[])
 		}
 		else if(PlayerCache[targetid][pHouseSpawn] != 0)
 		{
-			new duid = PlayerCache[targetid][pHouseSpawn];
+//			new duid = PlayerCache[targetid][pHouseSpawn];
 			//SetPlayerPos(targetid, DoorCache[duid][dInsX], DoorCache[duid][dInsY], DoorCache[duid][dInsZ]);
 			//SetPlayerVirtualWorld(targetid, DoorCache[duid][dInsVW]);
 		}
@@ -10796,7 +10810,7 @@ stock ShowDialogDoorCreate(playerid, yard)
 	ShowPlayerDialog(playerid, D_CREATEDOOR, DIALOG_STYLE_INPUT, "Stwórz nowe drzwi", str, "Stwórz", "Anuluj");
 }
 
-stock GetPlayerDoorUID(playerid)
+stock GetPlayerDoorUID() // playerid
 {
 	/*new playervw = GetPlayerVirtualWorld(playerid);
 	for(new i; i<LastdUID; i++)
@@ -11096,14 +11110,14 @@ cmd:astrefa (playerid, params[])
 		minX = (floatround(minX) / 100) * 100;
 		minY = (floatround(minY) / 100) * 100;
 
-		new uid = CreateZone(minX, minY, zyard, zcosth, zcostb);
+		new zoneUID = CreateZone(minX, minY, zyard, zcosth, zcostb);
 
 		new message[520];
 		format(message, sizeof(message), "Strefa %s(%d) (100x100) zosta³a pomyœlnie utworzona/podpisana.\n\
 		"HEX_WHITE"Cena za 1m2 dla biznesu: "HEX_GRAY"%d\n\
 		"HEX_WHITE"Cena 1m2 dla domu: "HEX_GRAY"%d\n\
 		"HEX_WHITE"Min. metra¿ drzwi: "HEX_GRAY"%d\n\
-		", zname, uid,zcostb, zcosth, zyard);
+		", zname, zoneUID,zcostb, zcosth, zyard);
 		ShowDialogInfo(playerid, message);
 
 		return 1;
@@ -11403,17 +11417,14 @@ stock GetPlayerItemsCount(playerid)
 
 cmd:p (playerid, params[])
 {	
-	if(DEV_MODE){
-		for(new i=0; i<20; i++){
-			CreateItem(PlayerCache[playerid][pUID], i, 31, 50, 0,0, "coœ");
-		}
-	}
+
+	
 	if(pCuffed[playerid])
 		return ShowDialogInfo(playerid, "Nie mo¿esz tego zrobiæ bêd¹c skutym.");
 	if(PlayerCache[playerid][pBW_Time])
 		return ShowDialogInfo(playerid, "Nie mo¿esz tego teraz zrobiæ.");
 
-		new iname[32], rest[32];
+	new iname[32], rest[32];
 	sscanf(params, "s[32]s[32]", iname, rest);
 
 	if(strlen(params))
@@ -11462,7 +11473,7 @@ cmd:p (playerid, params[])
 			format(query, sizeof(query), "SELECT name, uid FROM items WHERE virtualWorld=%d AND posX >= %f-5 AND posX <= %f+5 AND posY >= %f-5 AND posY <= %f+5 AND posZ <= %f+5 AND posZ >= %f-5 AND state=%d", 
 			GetPlayerVirtualWorld(playerid), x, x, y,y,z,z, ITEM_STATE_ONFOOT);
 
-			new Cache:cache = mysql_query(DB_HANDLE, query);
+			//new Cache:cache = mysql_query(DB_HANDLE, query);
 
 			new list[1024];
 
@@ -11582,7 +11593,7 @@ cmd:p (playerid, params[])
 	}
 	else
 	{	
-			new param1[16], param2[16];
+	new param1[16], param2[16];
 	sscanf(params, "s[16]s[16]", param1, param2);
 
 	new items_query[256];
@@ -11628,7 +11639,7 @@ cmd:p (playerid, params[])
 
 
 	
-
+	return 1;
 
 }
 
@@ -11733,7 +11744,7 @@ CMD:ai(playerid, params[])
 
 CMD:aprodukt(playerid, params[])
 {
-	if(PlayerCache[playerid][pLevel] == ADMINISTRATION || pDuty[playerid] == 16 || PlayerCache[playerid][pLevel] == DEVELOPER)
+/*	if(PlayerCache[playerid][pLevel] == ADMINISTRATION || pDuty[playerid] == 16 || PlayerCache[playerid][pLevel] == DEVELOPER)
 	{
 		new grouptype, price, type, val, val2, val3, val4, group, name[128];
 		if(sscanf(params, "iiiiiiiis[128]", grouptype, price, type, val, val2, val3,val4, group, name))
@@ -11747,7 +11758,7 @@ CMD:aprodukt(playerid, params[])
 
 		format(name, sizeof(name), "Stworzono produkt dla rodzaju grupy: "HEX_BLUE"%s"HEX_WHITE" o nazwie: %s z cen¹ %d za sztukê.",GetGroupType(ItemCache[MAX_ITEMS-1][iOwner]), ItemCache[MAX_ITEMS-1][iName], ItemCache[MAX_ITEMS-1][iCost]);
 		SendClientMessage(playerid, -1, name);
-	}
+	}*/
 	return 1;
 }
 
@@ -11776,8 +11787,9 @@ CMD:kup (playerid, params[])
 
 forward CanPlayerUseItem(playerid, itemuid);
 public CanPlayerUseItem(playerid, itemuid){
+	printf("itme to be used: %d", itemuid);
 	new query[256];
-	format(query, sizeof(query), "SELECT NULL FROM items INNER JOIN players ON players.uid=items.playerUID AND players.uid=%d LEFT OUTER JOIN groupMembers ON groupMembers.playerUID=%d AND groupMembers.groupUID=items.groupUID WHERE items.uid=%d LIMIT 1;", PlayerCache[playerid][pUID], PlayerCache[playerid][pUID], itemuid);
+	format(query, sizeof(query), "SELECT NULL FROM items RIGHT JOIN players ON items.playerUID=%d and items.uid=%d;", PlayerCache[playerid][pUID], itemuid);
 	new Cache:cache = mysql_query(DB_HANDLE, query);
 	new rows = cache_num_rows();
 	cache_delete(cache);
@@ -11790,32 +11802,25 @@ stock UseItem(playerid, itemuid)
 {
 	pVal[playerid] = itemuid;
 
-	new itemQuery[256];
-	format(itemQuery, sizeof(itemQuery), "SELECT IFNULL(groupUID, 0) as groupUID, IFNULL(playerUID,0) as playerUID , state, type, val, val2, val3, val4, active, name FROM items WHERE uid = '%d' LIMIT 1", itemuid);
-	new Cache:cache = mysql_query(DB_HANDLE, itemQuery);
+	new type, val, val2, val3, val4, active, itemState,
+	Float:posX, Float:posY, Float:posZ, Float:attachX, Float:attachY, Float:attachZ, Float:attachrX, Float:attachrY, Float:attachrZ, Float:sizeX, Float:sizeY, Float:sizeZ,
+	name[128];
 
-	new groupUID, playerUID, status, type, val, val2, val3, val4, active, name[128];
-
-	cache_get_value_name_int(0, "state", status);
-	cache_get_value_name_int(0, "type", type);
-	cache_get_value_name_int(0, "val", val);
-	cache_get_value_name_int(0, "val2", val2);
-	cache_get_value_name_int(0, "val3", val3);
-	cache_get_value_name_int(0, "val4", val4);
-	cache_get_value_name_int(0, "active", active);
-	cache_get_value_name_int(0, "groupUID", groupUID);
-	cache_get_value_name_int(0, "playerUID", playerUID);
-	cache_get_value_name(0, "name", name);
-
-	cache_delete(cache);
-
-
+	GetItemInfo(itemuid,
+	type,val, val2, val3, val4, active, itemState,
+	posX, posY, posZ,
+	name, 
+	attachX, attachY, attachZ,
+	attachrX, attachrY,attachrZ,
+	sizeX,   sizeY,  sizeZ);
+	
+	printf("name: %s %f", name, sizeZ);
 
 	if(!CanPlayerUseItem(playerid, itemuid))
 		return TextDrawForPlayerEx(playerid, 1, "Ten przedmiot nie nalezy do Ciebie.", 3000);
 	
 
-	if(status != ITEM_STATE_EQ)
+	if(itemState != ITEM_STATE_EQ)
 	return 1;
 
 	switch(type)
@@ -11825,9 +11830,9 @@ stock UseItem(playerid, itemuid)
 		{
 			if(val2 == 0)
 			return SendClientMessage(playerid, COLOR_GRAY, "W tej broni skoñczy³a siê amunicja.");
-			
+			new itemQuery[256];
 			format(itemQuery, sizeof(itemQuery), "SELECT * FROM items WHERE playerUID = '%d' AND type = '1' AND active = '1' AND uid != '%d' LIMIT 1", PlayerCache[playerid][pUID], itemuid);
-			cache = mysql_query(DB_HANDLE, itemQuery);
+			new Cache:cache = mysql_query(DB_HANDLE, itemQuery);
 			
 			
 
@@ -11891,9 +11896,10 @@ stock UseItem(playerid, itemuid)
 				seat = GetPlayerVehicleSeat(playerid);
 				id = GetPlayerVehicleID(playerid);
 			}
+			new itemQuery[256];
 			format(itemQuery, sizeof(itemQuery), "SELECT type FROM items WHERE type = '3' AND active = '1' AND uid != '%d' LIMIT 1",
 			itemuid);
-			cache = mysql_query(DB_HANDLE, itemQuery);
+			new Cache:cache = mysql_query(DB_HANDLE, itemQuery);
 
 			if(cache_num_rows())
 			{
@@ -11904,6 +11910,7 @@ stock UseItem(playerid, itemuid)
 			{
 				if(active)
 				{
+				
 					format(itemQuery, sizeof(itemQuery), "UPDATE items SET active = '0' WHERE uid = '%d' LIMIT 1", itemuid);
 					mysql_query(DB_HANDLE, itemQuery);
 					ClearAnimations(playerid);
@@ -11913,6 +11920,7 @@ stock UseItem(playerid, itemuid)
 				{
 					ClearAnimations(playerid);
 					SetPlayerSkin(playerid, val);
+				
 					format(itemQuery, sizeof(itemQuery), "UPDATE items SET active = '1' WHERE uid = '%d' LIMIT 1", itemuid);
 					mysql_query(DB_HANDLE, itemQuery);
 				}
@@ -11926,7 +11934,7 @@ stock UseItem(playerid, itemuid)
 		{
 			new str[256];
 			format(str, sizeof(str), "spo¿ywa %s", name);
-
+			SendPlayerMe(playerid, str);
 			switch(val3)
 			{
 				case 1:
@@ -11937,9 +11945,9 @@ stock UseItem(playerid, itemuid)
 						SetPlayerHealth(playerid, PlayerCache[playerid][pHealth]);
 						format(str, sizeof(str), "UPDATE players SET health = '%f' WHERE uid = '%d' LIMIT 1", PlayerCache[playerid][pHealth],
 						PlayerCache[playerid][pUID]);
-						mysql_query(DB_HANDLE, str);
+						mysql_query(DB_HANDLE, str, false);
 						format(str, sizeof(str), "DELETE FROM items WHERE items.uid = '%d' LIMIT 1", itemuid);
-						mysql_query(DB_HANDLE,str);
+						mysql_query(DB_HANDLE,str, false);
 					}
 					else
 					{
@@ -11949,6 +11957,7 @@ stock UseItem(playerid, itemuid)
 				case 2:
 				{
 					new h,m,s;
+					new itemQuery[256];
 					format(itemQuery, sizeof(itemQuery), "UPDATE players SET gym_boost_time = '%d' where uid = '%d' LIMIT 1", gettime(h,m,s), PlayerCache[playerid][pUID]);
 					mysql_query(DB_HANDLE, itemQuery);
 
@@ -11974,7 +11983,7 @@ stock UseItem(playerid, itemuid)
 				case 3: SetPlayerSpecialAction(playerid, 23);
 			}
 
-			SendPlayerMe(playerid, str);
+			
 		}
 		case 5:
 		{
@@ -12032,7 +12041,7 @@ stock UseItem(playerid, itemuid)
 			format(theQuery, sizeof(theQuery), "DELETE FROM items WHERE uid=%d LIMIT 1;", itemuid);
 			mysql_query(DB_HANDLE, theQuery, false);
 
-			new vehicleUID = CreateSystemVehicle(playerid, val, random(255), random(255),ServerSettings[magazinePosX], ServerSettings[magazinePosY], ServerSettings[magazinePosZ], PlayerCache[playerid][pUID], 0,178.2287, val2);
+			new vehicleUID = CreateSystemVehicle( val, random(255), random(255),ServerSettings[magazinePosX], ServerSettings[magazinePosY], ServerSettings[magazinePosZ], PlayerCache[playerid][pUID], 0,178.2287, val2);
 			SpawnVehicle(vehicleUID);
 
 			
@@ -12144,40 +12153,36 @@ stock UseItem(playerid, itemuid)
 			return ShowDialogInfo(playerid, "Brak pasuj¹cych przedmiotów do tego rodzaju amunicji.");
 		}
 		case 12:
-		{
-			for(new i; i<MAX_ITEMS; i++)
-			{
-				if(ItemCache[i][iType] == 12)
+		{	
+			
+			if(active){
+				if(val4)
 				{
-					if(ItemCache[i][iState] == 0)
-					{
-						if(ItemCache[i][iOwner] == PlayerCache[playerid][pUID])
-						{
-							if(ItemCache[i][iActive])
-							{
-								if(ItemCache[i][iUID] == itemuid)
-								{
-									ItemCache[i][iActive] = 0;
-									if(ItemCache[i][iVal4])
-									{
-										new hideMsg[128];
-										format(hideMsg, sizeof(hideMsg), "zdejmuje %s.", ItemCache[itemuid][iName]);
-										SendPlayerMe(playerid, hideMsg);
-										SetPlayerName(playerid, PlayerCache[playerid][pName]);
-										UpdatePlayerName(playerid);
-										SetPlayerScore(playerid, PlayerCache[playerid][pScore]);																		
-									}
-									return RemovePlayerAttachedObject(playerid, ItemCache[i][iVal2]);
-								}
-							}
-						}
-					}
+					new hideMsg[128];
+					format(hideMsg, sizeof(hideMsg), "zdejmuje %s.", name);
+
+					SendPlayerMe(playerid, hideMsg);
+					SetPlayerName(playerid, PlayerCache[playerid][pName]);
+					UpdatePlayerName(playerid);
+					SetPlayerScore(playerid, PlayerCache[playerid][pScore]);																		
 				}
+				new query[256];
+				format(query, sizeof(query), "UPDATE items SET active=0 WHERE uid=%d", itemuid);
+				mysql_query(DB_HANDLE, query, false);
+				return RemovePlayerAttachedObject(playerid, val2);
 			}
-			new model = ItemCache[itemuid][iVal];
+			
+							
+								
+					
+			
+			new model = val;
+
 			new Float:X, Float:Y, Float:Z;
 			GetPlayerPos(playerid, X, Y, Z);
+
 			new index;
+
 			if(!IsPlayerAttachedObjectSlotUsed(playerid, 0))
 			index = 0;
 			else if(!IsPlayerAttachedObjectSlotUsed(playerid, 1))
@@ -12189,20 +12194,27 @@ stock UseItem(playerid, itemuid)
 			else if(!IsPlayerAttachedObjectSlotUsed(playerid, 4))
 			index = 4;
 			else return ShowDialogInfo(playerid, "Posiadasz ju¿ limit doczepianych akcesorium na raz.");
-			ItemCache[itemuid][iVal2] = index;
-			new bone = ItemCache[itemuid][iVal3];
 
-			SetPlayerAttachedObject(playerid, index, model, bone, ItemCache[itemuid][iAttachX], ItemCache[itemuid][iAttachY], ItemCache[itemuid][iAttachZ], ItemCache[itemuid][iAttachrX], ItemCache[itemuid][iAttachrY],
-			ItemCache[itemuid][iAttachrZ], ItemCache[itemuid][iSizeX], ItemCache[itemuid][iSizeY], ItemCache[itemuid][iSizeZ],0, 0);
-
-			if(!ItemCache[itemuid][iAttachX] && !ItemCache[itemuid][iAttachY] && !ItemCache[itemuid][iAttachZ] && !ItemCache[itemuid][iAttachrX] && !ItemCache[itemuid][iAttachrY] && !ItemCache[itemuid][iAttachrZ] &&
-			ItemCache[itemuid][iSizeX]==1 && ItemCache[itemuid][iSizeY]==1 && ItemCache[itemuid][iSizeZ]==1)
+			val2 = index;
+			new bone = val3;
+	
+			SetPlayerAttachedObject(playerid, index, model, bone, attachX, attachY, attachZ,attachrX, attachrY, attachrZ,
+			sizeX, sizeY, sizeZ,0, 0);
+	
+			if(floatround(attachX) && !floatround(attachY) && !floatround(attachZ) && !floatround(attachrX) && !floatround(attachrY) && !floatround(attachrZ) &&
+			floatround(sizeX)==1 && floatround(sizeY)==1 && floatround(sizeZ)==1){
+			print("123123");
 			EditAttachedObject(playerid, index);
+			}
+			
 
-			if(ItemCache[itemuid][iVal4])
+			printf("%f %f %f %f %f %f %f %f %f", attachX, attachY, attachZ, attachrX, attachrY, attachrZ, sizeX, sizeY, sizeZ);
+
+			if(val4)
 			{
 				new msg[128];
-				format(msg, sizeof(msg), "zak³ada %s.", ItemCache[itemuid][iName]);
+				printf("the name: %s", name);
+				format(msg, sizeof(msg), "zak³ada %s.", name);
 				SendPlayerMe(playerid, msg);
 				format(msg, sizeof(msg), "Nieznajomy_%d", playerid+7542);
 				if(PlayerCache[playerid][pGender])
@@ -12211,8 +12223,9 @@ stock UseItem(playerid, itemuid)
 				UpdatePlayerName(playerid);
 				SetPlayerScore(playerid, 0);
 			}
-
-			ItemCache[itemuid][iActive] = 1;
+			new query[256];
+			format(query, sizeof(query), "UPDATE items SET active=1, val2=%d WHERE uid=%d", index, itemuid);
+			mysql_query(DB_HANDLE, query, false);
 		}
 		case 13:
 		{
@@ -12611,8 +12624,7 @@ public OnPlayerWeaponShot(playerid, weaponid, hittype, hitid, Float:fX, Float:fY
 	{
 		return !KickPlayer(playerid, "System", "Weapon Cheat (A)");
 	}
-	if(hittype == BULLET_HIT_TYPE_VEHICLE)
-		return 0;
+
 	if(weaponid != 23)
 	{
 		/*if(GetPlayerVirtualWorld(playerid) != 0)
@@ -12674,7 +12686,7 @@ public OnPlayerShootDynamicObject(playerid, weaponid, objectid, Float:x, Float:y
 	{
 		if(GetPlayerVirtualWorld(playerid) != 0)
 		{
-			new duid = GetPlayerDoorUID(playerid);
+			//new duid = GetPlayerDoorUID(playerid);
 			/*if(DoorCache[duid][dAlarm] && !DoorCache[duid][dPlayingAlarm])
 			{
 				new msg[128];
@@ -13011,7 +13023,7 @@ CMD:g (playerid, params[])
 			}
 			else if(!strcmp(sub, "zapros", true))
 			{
-				/*new guid;
+				new guid;
 				switch(slot)
 				{
 					case 1: guid = PlayerCache[playerid][pGroup];
@@ -14176,6 +14188,7 @@ stock GetPlayerFreeSlot(playerid)
 	else if(PlayerCache[puid][pGroup3] == 0)
 	return 3;
 	else return 0;*/
+	printf("%d", playerid);
 	return 0;
 }
 
@@ -14611,11 +14624,11 @@ public CuffedTimer(playerid, targetid)
 	}
 }
 
-stock CreateSystemVehicle(playerid, model, color, color2, Float:x, Float:y, Float:z, playerUID, VW, Float:angle, siren, vehicleid)
+stock CreateSystemVehicle(model, color, color2, Float:x, Float:y, Float:z, playerUID, VW, Float:angle, siren)
 {
 	new query[256];
-	format(query, sizeof(query), "INSERT INTO vehicles (playerUID, model, color, color2, posX, posY, posZ, siren, virtualWorld, register) VALUES ('%d', '%d', '%d', '%d', '%f', '%f', '%f', '%d', '%d', 0)",
-	playerUID, model, color, color2, x,y,z, siren, VW);
+	format(query, sizeof(query), "INSERT INTO vehicles (playerUID, model, color, color2, posX, posY, posZ, siren, virtualWorld, register, angle) VALUES ('%d', '%d', '%d', '%d', '%f', '%f', '%f', '%d', '%d', 0, %f)",
+	playerUID, model, color, color2, x,y,z, siren, VW, angle);
 	mysql_query(DB_HANDLE, query, false);
 	new uid;
 	format(query, sizeof(query), "SELECT max(uid) FROM vehicles");
@@ -14817,7 +14830,7 @@ CMD:v (playerid, params[])
 
 stock ShowDialogVInfo(playerid, vuid)
 {
-
+	printf("%d%d", vuid, playerid);
 	new info[525];
 	format(info, sizeof(info), "Marka: ~y~%s~w~ Paliwo: ~y~%d/100~w~ Kolor: ~y~%d %d ~w~Przebieg: ~y~%dkm",
 	GetVehicleName( PlayerCache[playerid][pCurrentVehicle][vModel]),  PlayerCache[playerid][pCurrentVehicle][vFuel],  PlayerCache[playerid][pCurrentVehicle][vColor],  PlayerCache[playerid][pCurrentVehicle][vColor2], floatround( PlayerCache[playerid][pCurrentVehicle][vMileAge])/1000);
@@ -16537,7 +16550,8 @@ CMD:mowner (playerid, params[])
 }
 
 stock DestroyGroup(groupuid)
-{
+{	
+	printf("%d", groupuid);
 	/*new query[256];
 
 	for(new i; i<LastdUID; i++)
