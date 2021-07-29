@@ -1623,7 +1623,7 @@ stock RandomCamera(playerid)
  }
 
 forward GetItemInfo(itemUID, &type, &val, &val2, &val3, &val4, &active, &itemState, &Float:posX, &Float:posY, &Float:posZ, name[], &Float:attachX, &Float:attachY, &Float:attachZ, &Float:attachrX, &Float:attachrY, &Float:attachrZ, &Float:sizeX,   &Float:sizeY,  &Float:sizeZ);
-public GetItemInfo(itemUID, &type, &val, &val2, &val3,&val4, &active, &itemState,&Float:posX, &Float:posY, &Float:posZ,name[], &Float:attachX, &Float:attachY, &Float:attachZ, &Float:attachrX, &Float:attachrY, &Float:attachrZ, &Float:sizeX,   &Float:sizeY,  &Float:sizeZ){
+public GetItemInfo(itemUID, &type, &val, &val2, &val3, &val4, &active, &itemState, &Float:posX, &Float:posY, &Float:posZ, name[], &Float:attachX, &Float:attachY, &Float:attachZ, &Float:attachrX, &Float:attachrY, &Float:attachrZ, &Float:sizeX,   &Float:sizeY,  &Float:sizeZ){
 
 
 
@@ -10477,8 +10477,8 @@ public HidePenalityTextDraw()
 	PenalityTimer = 0;
 }
 
-forward GetVehicleData(vehicleid, &model, &fuel, &Float:posX, &Float:posY, &Float:posZ, &Float:angle, &playerUID, &groupUID, &register, &color, &color2, &Float:health);
-public GetVehicleData(vehicleid,  &model, &fuel, &Float:posX, &Float:posY, &Float:posZ, &Float:angle, &playerUID, &groupUID, &register, &color, &color2, &Float:health){
+forward GetVehicleData(vehicleid, &model, &fuel, Float:posX, Float:posY, Float:posZ, Float:angle, &playerUID, &groupUID, &register, &color, &color2, Float:health);
+public GetVehicleData(vehicleid,  &model, &fuel, Float:posX, Float:posY, Float:posZ, Float:angle, &playerUID, &groupUID, &register, &color, &color2, Float:health){
 	new query[256];
 	format(query, sizeof(query), "SELECT model, fuel, posX, posY, posZ, angle, IFNULL(playerUID, 0) as playerUID, IFNULL(groupUID, 0) as groupUID, register, color, color2, HP FROM vehicles WHERE gameId=%d LIMIT 1;", vehicleid);
 	new Cache:cache = mysql_query(DB_HANDLE, query);
@@ -12201,15 +12201,11 @@ stock UseItem(playerid, itemuid)
 			SetPlayerAttachedObject(playerid, index, model, bone, attachX, attachY, attachZ,attachrX, attachrY, attachrZ,
 			sizeX, sizeY, sizeZ,0, 0);
 	
-			if(floatround(attachX) && !floatround(attachY) && !floatround(attachZ) && !floatround(attachrX) && !floatround(attachrY) && !floatround(attachrZ) &&
+			if(!floatround(attachX) && !floatround(attachY) && !floatround(attachZ) && !floatround(attachrX) && !floatround(attachrY) && !floatround(attachrZ) &&
 			floatround(sizeX)==1 && floatround(sizeY)==1 && floatround(sizeZ)==1){
-			print("123123");
 			EditAttachedObject(playerid, index);
 			}
 			
-
-			printf("%f %f %f %f %f %f %f %f %f", attachX, attachY, attachZ, attachrX, attachrY, attachrZ, sizeX, sizeY, sizeZ);
-
 			if(val4)
 			{
 				new msg[128];
@@ -16316,54 +16312,48 @@ CMD:id (playerid, params[])
 
 public OnPlayerEditAttachedObject(playerid, response, index, modelid, boneid, Float:fOffsetX, Float:fOffsetY, Float:fOffsetZ, Float:fRotX, Float:fRotY, Float:fRotZ, Float:fScaleX, Float:fScaleY, Float:fScaleZ)
 {
-	for(new i; i<MAX_ITEMS; i++)
+	new uid = pVal[playerid];
+	new type, val, val2, val3, val4, active, itemState,
+	Float:posX, Float:posY, Float:posZ, name[128],
+	Float:attachX, Float:attachY, Float:attachZ,
+	Float:attachrX, Float:attachrY, Float:attachrZ,
+	Float:sizeX, Float:sizeY, Float:sizeZ;
+
+	GetItemInfo(uid, type, val, val2, val3, val4, active, itemState, posX, posY, posZ, name, attachX, attachY, attachZ, attachrX, attachrY, attachrZ, sizeX,   sizeY,  sizeZ);
+	
+
+
+	
+						
+	if(response)
 	{
-		if(ItemCache[i][iState] == 0)
-		{
-			if(ItemCache[i][iOwner] == PlayerCache[playerid][pUID])
-			{
-				if(ItemCache[i][iType] == 12)
-				{
-					if(ItemCache[i][iActive])
-					{
-						if(ItemCache[i][iVal2] == index)
-						{
-							if(response)
-							{
-								ItemCache[i][iAttachX] = fOffsetX;
-								ItemCache[i][iAttachY] = fOffsetY;
-								ItemCache[i][iAttachZ] = fOffsetZ;
-								ItemCache[i][iAttachrX] = fRotX;
-								ItemCache[i][iAttachrY] = fRotY;
-								ItemCache[i][iAttachrZ] = fRotZ;
-								ItemCache[i][iSizeX] = fScaleX;
-								ItemCache[i][iSizeY] = fScaleY;
-								ItemCache[i][iSizeZ] = fScaleZ;
-								SetPlayerAttachedObject(playerid, index, modelid, boneid, fOffsetX, fOffsetY, fOffsetZ,fRotX, fRotY,fRotZ, fScaleX ,fScaleY,fScaleZ, 0, 0);
-								return ShowDialogInfo(playerid, "Przedmiot doczepiany zosta³ ustawiony pomyœlnie.");
-							}
-							else
-							{
-								if(ItemCache[i][iVal4])
-								{
-									new msg[128];
-									format(msg, sizeof(msg), "zdejmuje %s.", ItemCache[i][iName]);
-									SendPlayerMe(playerid, msg);
-									SetPlayerName(playerid, PlayerCache[playerid][pName]);
-									UpdatePlayerName(playerid);
-									SetPlayerScore(playerid, PlayerCache[playerid][pScore]);				
-								}			
-								ItemCache[i][iActive] = 0;
-								RemovePlayerAttachedObject(playerid, ItemCache[i][iVal2]);
-								return ShowDialogInfo(playerid, "Edycja przedmiotu doczepianego zosta³a anulowana.\nZmiany nie zosta³y zapisane.");
-							}
-						}
-					}
-				}
-			}
-		}
+		new query[256];
+		format(query, sizeof(query), "UPDATE items SET attachX=%f, attachY=%f, attachZ=%f, attachrX=%f, attachrY=%f, attachrZ=%f, sizeX=%f, sizeY=%f, sizeZ=%f WHERE uid=%d",
+		fOffsetX, fOffsetY, fOffsetZ, fRotX, fRotY,fRotZ,fScaleX ,fScaleY,fScaleZ, uid);
+		mysql_query(DB_HANDLE, query, false);
+		SetPlayerAttachedObject(playerid, index, modelid, boneid, fOffsetX, fOffsetY, fOffsetZ,fRotX, fRotY,fRotZ, fScaleX ,fScaleY,fScaleZ, 0, 0);
+		return ShowDialogInfo(playerid, "Przedmiot doczepiany zosta³ ustawiony pomyœlnie.");
 	}
-	return 1;
+	else
+	{
+		if(val4)
+		{
+			new msg[128];
+			format(msg, sizeof(msg), "zdejmuje %s.", name);
+			SendPlayerMe(playerid, msg);
+			SetPlayerName(playerid, PlayerCache[playerid][pName]);
+			UpdatePlayerName(playerid);
+			SetPlayerScore(playerid, PlayerCache[playerid][pScore]);				
+		}			
+		new query[256];
+		RemovePlayerAttachedObject(playerid, val2);
+		format(query, sizeof(query), "UPDATE items SET active=0 WHERE uid =%d", uid);
+		mysql_query(DB_HANDLE, query, false);
+
+		return ShowDialogInfo(playerid, "Edycja przedmiotu doczepianego zosta³a anulowana.\nZmiany nie zosta³y zapisane.");
+	}
+	
+
 }
 
 stock GetWeaponModel(weaponid)
