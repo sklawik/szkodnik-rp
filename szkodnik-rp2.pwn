@@ -894,7 +894,7 @@ public LoadGameMode(){
 
 	LoadServerSettings();
 	// LoadZones();
-
+	print("Zakoñczono ³adowanie serwera");
 
 	SetTimer("min_timer", 1000*60, true);
 }
@@ -2990,7 +2990,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 
 				new str[128], guid = strval(inputtext), gname[32];
 
-				format(str, sizeof(str), "SELECT name FROM groups WHERE uid = '%d' LIMIT 1", guid);
+				format(str, sizeof(str), "SELECT name FROM server_groups WHERE uid = '%d' LIMIT 1", guid);
 				new Cache:cache = mysql_query(DB_HANDLE, str);
 				if(cache_num_rows())
 				{
@@ -13299,7 +13299,7 @@ public OnPlayerClickPlayerTextDraw(playerid, PlayerText:playertextid)
 stock LoadGroups()
 {
 	
-	new Cache:cache = mysql_query(DB_HANDLE, "SELECT * FROM groups;");
+	new Cache:cache = mysql_query(DB_HANDLE, "SELECT * FROM server_groups ;");
 
 	new rows = cache_num_rows();
 	for(new i=0; i<rows; i++){
@@ -14608,7 +14608,10 @@ public CuffedTimer(playerid, targetid)
 		pCuffed[targetid] = false;
 		KillTimer(pCuffedTimer[targetid]); 
 	}
-	else if(!IsPlayerInAnyVehicle(targetid) && !PlayerCache[targetid][pJailTime])
+	if(IsPlayerInAnyVehicle(targetid)){
+		RemovePlayerFromVehicle(targetid);
+	}
+	if(!IsPlayerInAnyVehicle(targetid) && !PlayerCache[targetid][pJailTime])
 	{
 		new Float:X, Float:Y, Float:Z; GetPlayerPos(playerid, X, Y, Z);
 		if(!IsPlayerInRangeOfPoint(targetid, 3.0, X, Y, Z))
@@ -18156,3 +18159,13 @@ public AreAnyPlayersInVehicle(vehicleid){
 	}
 	return false;
 }
+
+
+// register hash: $2y$12$vhZ36SsMhkji.yVfF7HLn.ujbfSPjO.Mf14u1KKupq/tutQt41RbC
+// register salt: m28kWXYIFs
+// free(): invalid next size (fast)
+
+
+// [log-core] fatal signal '6' (SIGABRT) catched
+
+// Aborted
