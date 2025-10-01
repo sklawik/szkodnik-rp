@@ -1377,3 +1377,585 @@ v0.3.DL-R1, (C)2005-2018 SA-MP Team
 [17:55:18] >>> Wystapil blad w probie polaczenia z baza danych, kod bledu: 1524
 [17:55:20] >>> Wystapil blad w probie polaczenia z baza danych, kod bledu: 1524
 [17:55:22] >>> Wystapil blad w probie polaczenia z baza danych, kod bledu: 1524
+
+----------
+Loaded log file: "server_log.txt".
+----------
+
+SA-MP Dedicated Server
+----------------------
+v0.3.DL-R1, (C)2005-2018 SA-MP Team
+
+[19:22:27] language = ""  (string)
+[19:22:27] 
+[19:22:27] Server Plugins
+[19:22:27] --------------
+[19:22:27]  Loading plugin: streamer.so
+[19:22:27] 
+
+*** Streamer Plugin v2.9.5 by Incognito loaded ***
+
+[19:22:27]   Loaded.
+[19:22:27]  Loading plugin: sscanf.so
+[19:22:27] 
+
+[19:22:27]  ===============================
+
+[19:22:27]       sscanf plugin loaded.     
+
+[19:22:27]          Version:  2.8.3        
+
+[19:22:27]   (c) 2018 Alex "Y_Less" Cole  
+
+[19:22:27]  ===============================
+
+[19:22:27]   Loaded.
+[19:22:27]  Loading plugin: mysql.so
+[19:22:27]  >> plugin.mysql: R41-4 successfully loaded.
+[19:22:27]   Loaded.
+[19:22:27]  Loading plugin: pawncmd.so
+[19:22:27] [Pawn.CMD] plugin v3.3.3 by urShadow loaded
+[19:22:27]   Loaded.
+[19:22:27]  Loading plugin: samp_bcrypt.so
+[19:22:27] [SampBcrypt] [info]: Version: 0.3.1
+[19:22:27]   Loaded.
+[19:22:27]  Loading plugin: pawnregex.so
+[19:22:27] [Pawn.Regex] 
+
+    | Pawn.Regex 1.2.1 | 2016 - 2021
+    |--------------------------------
+    | Author and maintainer: katursis
+
+
+    | Compiled: Jul 18 2021 at 17:46:19
+    |--------------------------------------------------------------
+    | Repository: https://github.com/katursis/Pawn.Regex
+
+[19:22:27]   Loaded.
+[19:22:27]  Loaded 6 plugins.
+
+[19:22:27] [artwork:crc] bfylcpd1.dff CRC = 0x237D059D
+[19:22:27] [artwork:crc] bfylcpd1.txd CRC = 0x7CE23A9D
+[19:22:27] [artwork:crc] bmylcpd1.dff CRC = 0x7CB85D2C
+[19:22:27] [artwork:crc] bmylcpd1.txd CRC = 0x767B1B8C
+[19:22:27] [artwork:crc] hmylcpd1.dff CRC = 0x6484F730
+[19:22:27] [artwork:crc] hmylcpd1.txd CRC = 0x9B8B2D7B
+[19:22:27] [artwork:crc] noose.dff CRC = 0xF3D17C31
+[19:22:27] [artwork:crc] noose.txd CRC = 0x44E06804
+[19:22:27] [artwork:crc] ofylcpd1.dff CRC = 0xB05C29F5
+[19:22:27] [artwork:crc] ofylcpd1.txd CRC = 0x1D590654
+[19:22:27] [artwork:crc] omylcpd1.dff CRC = 0x5FC25DFE
+[19:22:27] [artwork:crc] omylcpd1.txd CRC = 0xE875191F
+[19:22:27] [artwork:crc] wfylcpd1.dff CRC = 0x6E441003
+[19:22:27] [artwork:crc] wfylcpd1.txd CRC = 0x47D3E39B
+[19:22:27] [artwork:crc] wfylcpd2.dff CRC = 0x6E441003
+[19:22:27] [artwork:crc] wfylcpd2.txd CRC = 0x23EA4B8A
+[19:22:27] [artwork:crc] wmylcpd1.dff CRC = 0xCDA0C806
+[19:22:27] [artwork:crc] wmylcpd1.txd CRC = 0x40E1CD0A
+[19:22:27] [artwork:crc] wallzzz.dff CRC = 0x4BC6EDFF
+[19:22:27] [artwork:crc] wallzzz.txd CRC = 0x235E3EEB
+[19:22:27] 
+[19:22:27] Filterscripts
+[19:22:27] ---------------
+[19:22:27]   Loaded 0 filterscripts.
+
+[19:22:27] Rozpoczynam ³adowanie Szkodnik-RP
+[19:22:27] >>> Wystapil blad w probie polaczenia z baza danych, kod bledu: 2003
+[19:22:27] Number of vehicle models: 0
+[19:22:29] >>> Wystapil blad w probie polaczenia z baza danych, kod bledu: 2003
+[19:22:31] >>> Wystapil blad w probie polaczenia z baza danych, kod bledu: 2003
+[19:22:33] >>> Wystapil blad w probie polaczenia z baza danych, kod bledu: 2003
+[19:22:35] >>> Wystapil blad w probie polaczenia z baza danych, kod bledu: 2003
+[19:22:37] >>> Wystapil blad w probie polaczenia z baza danych, kod bledu: 2003
+[19:22:39] >>> Wystapil blad w probie polaczenia z baza danych, kod bledu: 2003
+[19:22:41] >>> Wystapil blad w probie polaczenia z baza danych, kod bledu: 2003
+[19:22:43] >>> Wystapil blad w probie polaczenia z baza danych, kod bledu: 2003
+[19:22:45] >>> Wystapil blad w probie polaczenia z baza danych, kod bledu: 2003
+[19:22:47] >>> Wystapil blad w probie polaczenia z baza danych, kod bledu: 2003
+[19:22:49] >>> Wystapil blad w probie polaczenia z baza danych, kod bledu: 2003
+[19:22:51] >>> Wystapil blad w probie polaczenia z baza danych, kod bledu: 2003
+[19:22:53] >>> Wystapil blad w probie polaczenia z baza danych, kod bledu: 2003
+[19:22:55] >>> Wystapil blad w probie polaczenia z baza danych, kod bledu: 2003
+[19:22:57] >>> Wystapil blad w probie polaczenia z baza danych, kod bledu: 2003
+[19:22:59] >>> Wystapil blad w probie polaczenia z baza danych, kod bledu: 2003
+[19:23:02] >>> Wystapil blad w probie polaczenia z baza danych, kod bledu: 2003
+[19:23:04] >>> Wystapil blad w probie polaczenia z baza danych, kod bledu: 2003
+[19:23:06] >>> Wystapil blad w probie polaczenia z baza danych, kod bledu: 2003
+[19:23:08] >>> Wystapil blad w probie polaczenia z baza danych, kod bledu: 2003
+[19:23:10] >>> Wystapil blad w probie polaczenia z baza danych, kod bledu: 2003
+[19:23:12] >>> Wystapil blad w probie polaczenia z baza danych, kod bledu: 2003
+[19:23:14] >>> Wystapil blad w probie polaczenia z baza danych, kod bledu: 2003
+[19:23:16] >>> Wystapil blad w probie polaczenia z baza danych, kod bledu: 2003
+[19:23:18] >>> Wystapil blad w probie polaczenia z baza danych, kod bledu: 2003
+[19:23:20] >>> Wystapil blad w probie polaczenia z baza danych, kod bledu: 2003
+[19:23:22] >>> Wystapil blad w probie polaczenia z baza danych, kod bledu: 2003
+[19:23:24] >>> Wystapil blad w probie polaczenia z baza danych, kod bledu: 2003
+[19:23:26] >>> Wystapil blad w probie polaczenia z baza danych, kod bledu: 2003
+[19:23:28] >>> Wystapil blad w probie polaczenia z baza danych, kod bledu: 2003
+[19:23:30] >>> Wystapil blad w probie polaczenia z baza danych, kod bledu: 2003
+[19:23:32] >>> Wystapil blad w probie polaczenia z baza danych, kod bledu: 2003
+[19:23:34] >>> Wystapil blad w probie polaczenia z baza danych, kod bledu: 2003
+[19:23:36] >>> Wystapil blad w probie polaczenia z baza danych, kod bledu: 2003
+[19:23:38] >>> Wystapil blad w probie polaczenia z baza danych, kod bledu: 2003
+[19:23:41] >>> Wystapil blad w probie polaczenia z baza danych, kod bledu: 2003
+[19:23:43] >>> Wystapil blad w probie polaczenia z baza danych, kod bledu: 2003
+[19:23:45] >>> Wystapil blad w probie polaczenia z baza danych, kod bledu: 2003
+[19:23:47] >>> Wystapil blad w probie polaczenia z baza danych, kod bledu: 2003
+[19:23:49] >>> Wystapil blad w probie polaczenia z baza danych, kod bledu: 2003
+[19:23:51] >>> Wystapil blad w probie polaczenia z baza danych, kod bledu: 2003
+[19:23:53] >>> Wystapil blad w probie polaczenia z baza danych, kod bledu: 2003
+[19:23:55] >>> Wystapil blad w probie polaczenia z baza danych, kod bledu: 2003
+[19:23:57] >>> Wystapil blad w probie polaczenia z baza danych, kod bledu: 2003
+[19:23:59] >>> Wystapil blad w probie polaczenia z baza danych, kod bledu: 2003
+[19:24:01] >>> Wystapil blad w probie polaczenia z baza danych, kod bledu: 2003
+[19:24:03] >>> Wystapil blad w probie polaczenia z baza danych, kod bledu: 2003
+[19:24:05] >>> Wystapil blad w probie polaczenia z baza danych, kod bledu: 2003
+[19:24:07] >>> Wystapil blad w probie polaczenia z baza danych, kod bledu: 2003
+[19:24:09] >>> Wystapil blad w probie polaczenia z baza danych, kod bledu: 2003
+[19:24:11] >>> Wystapil blad w probie polaczenia z baza danych, kod bledu: 2003
+[19:24:13] >>> Wystapil blad w probie polaczenia z baza danych, kod bledu: 2003
+[19:24:15] >>> Wystapil blad w probie polaczenia z baza danych, kod bledu: 2003
+[19:24:17] >>> Wystapil blad w probie polaczenia z baza danych, kod bledu: 2003
+[19:24:19] >>> Wystapil blad w probie polaczenia z baza danych, kod bledu: 2003
+[19:24:21] >>> Wystapil blad w probie polaczenia z baza danych, kod bledu: 2003
+[19:24:24] >>> Wystapil blad w probie polaczenia z baza danych, kod bledu: 2003
+[19:24:26] >>> Wystapil blad w probie polaczenia z baza danych, kod bledu: 2003
+[19:24:28] >>> Wystapil blad w probie polaczenia z baza danych, kod bledu: 2003
+[19:24:30] >>> Wystapil blad w probie polaczenia z baza danych, kod bledu: 2003
+[19:24:32] >>> Wystapil blad w probie polaczenia z baza danych, kod bledu: 2003
+[19:24:34] >>> Wystapil blad w probie polaczenia z baza danych, kod bledu: 2003
+[19:24:36] >>> Wystapil blad w probie polaczenia z baza danych, kod bledu: 2003
+[19:24:38] >>> Wystapil blad w probie polaczenia z baza danych, kod bledu: 2003
+[19:24:40] >>> Wystapil blad w probie polaczenia z baza danych, kod bledu: 2003
+[19:24:42] >>> Wystapil blad w probie polaczenia z baza danych, kod bledu: 2003
+[19:24:44] >>> Wystapil blad w probie polaczenia z baza danych, kod bledu: 2003
+[19:24:46] >>> Wystapil blad w probie polaczenia z baza danych, kod bledu: 2003
+[19:24:48] >>> Wystapil blad w probie polaczenia z baza danych, kod bledu: 2003
+[19:24:50] >>> Wystapil blad w probie polaczenia z baza danych, kod bledu: 2003
+[19:24:52] >>> Wystapil blad w probie polaczenia z baza danych, kod bledu: 2003
+[19:24:54] >>> Wystapil blad w probie polaczenia z baza danych, kod bledu: 2003
+[19:24:56] >>> Wystapil blad w probie polaczenia z baza danych, kod bledu: 2003
+[19:24:59] >>> Wystapil blad w probie polaczenia z baza danych, kod bledu: 2003
+[19:25:01] >>> Wystapil blad w probie polaczenia z baza danych, kod bledu: 2003
+[19:25:03] >>> Wystapil blad w probie polaczenia z baza danych, kod bledu: 2003
+[19:25:05] >>> Wystapil blad w probie polaczenia z baza danych, kod bledu: 2003
+[19:25:07] >>> Wystapil blad w probie polaczenia z baza danych, kod bledu: 2003
+[19:25:09] >>> Wystapil blad w probie polaczenia z baza danych, kod bledu: 2003
+[19:25:11] >>> Wystapil blad w probie polaczenia z baza danych, kod bledu: 2003
+[19:25:13] >>> Wystapil blad w probie polaczenia z baza danych, kod bledu: 2003
+[19:25:15] >>> Wystapil blad w probie polaczenia z baza danych, kod bledu: 2003
+[19:25:17] >>> Wystapil blad w probie polaczenia z baza danych, kod bledu: 2003
+[19:25:19] >>> Wystapil blad w probie polaczenia z baza danych, kod bledu: 2003
+[19:25:21] >>> Wystapil blad w probie polaczenia z baza danych, kod bledu: 2003
+[19:25:23] >>> Wystapil blad w probie polaczenia z baza danych, kod bledu: 2003
+[19:25:25] >>> Wystapil blad w probie polaczenia z baza danych, kod bledu: 2003
+[19:25:27] >>> Wystapil blad w probie polaczenia z baza danych, kod bledu: 2003
+[19:25:29] >>> Wystapil blad w probie polaczenia z baza danych, kod bledu: 2003
+[19:25:32] >>> Wystapil blad w probie polaczenia z baza danych, kod bledu: 2003
+[19:25:34] >>> Wystapil blad w probie polaczenia z baza danych, kod bledu: 2003
+[19:25:36] >>> Wystapil blad w probie polaczenia z baza danych, kod bledu: 2003
+[19:25:38] >>> Wystapil blad w probie polaczenia z baza danych, kod bledu: 2003
+[19:25:40] >>> Wystapil blad w probie polaczenia z baza danych, kod bledu: 2003
+[19:25:42] >>> Wystapil blad w probie polaczenia z baza danych, kod bledu: 2003
+[19:25:44] >>> Wystapil blad w probie polaczenia z baza danych, kod bledu: 2003
+[19:25:46] >>> Wystapil blad w probie polaczenia z baza danych, kod bledu: 2003
+[19:25:48] >>> Wystapil blad w probie polaczenia z baza danych, kod bledu: 2003
+[19:25:50] >>> Wystapil blad w probie polaczenia z baza danych, kod bledu: 2003
+[19:25:52] >>> Wystapil blad w probie polaczenia z baza danych, kod bledu: 2003
+[19:25:54] >>> Wystapil blad w probie polaczenia z baza danych, kod bledu: 2003
+[19:25:56] >>> Wystapil blad w probie polaczenia z baza danych, kod bledu: 2003
+[19:25:58] >>> Wystapil blad w probie polaczenia z baza danych, kod bledu: 2003
+[19:26:00] >>> Wystapil blad w probie polaczenia z baza danych, kod bledu: 2003
+[19:26:02] >>> Wystapil blad w probie polaczenia z baza danych, kod bledu: 2003
+[19:26:05] >>> Wystapil blad w probie polaczenia z baza danych, kod bledu: 2003
+[19:26:07] >>> Wystapil blad w probie polaczenia z baza danych, kod bledu: 2003
+[19:26:09] >>> Wystapil blad w probie polaczenia z baza danych, kod bledu: 2003
+[19:26:11] >>> Wystapil blad w probie polaczenia z baza danych, kod bledu: 2003
+[19:26:13] >>> Wystapil blad w probie polaczenia z baza danych, kod bledu: 2003
+[19:26:15] >>> Wystapil blad w probie polaczenia z baza danych, kod bledu: 2003
+[19:26:17] >>> Wystapil blad w probie polaczenia z baza danych, kod bledu: 2003
+[19:26:19] >>> Wystapil blad w probie polaczenia z baza danych, kod bledu: 2003
+[19:26:21] >>> Wystapil blad w probie polaczenia z baza danych, kod bledu: 2003
+[19:26:23] >>> Wystapil blad w probie polaczenia z baza danych, kod bledu: 2003
+[19:26:25] >>> Wystapil blad w probie polaczenia z baza danych, kod bledu: 2003
+[19:26:27] >>> Wystapil blad w probie polaczenia z baza danych, kod bledu: 2003
+[19:26:29] >>> Wystapil blad w probie polaczenia z baza danych, kod bledu: 2003
+[19:26:31] >>> Wystapil blad w probie polaczenia z baza danych, kod bledu: 2003
+[19:26:33] >>> Wystapil blad w probie polaczenia z baza danych, kod bledu: 2003
+[19:26:35] >>> Wystapil blad w probie polaczenia z baza danych, kod bledu: 2003
+[19:26:38] >>> Wystapil blad w probie polaczenia z baza danych, kod bledu: 2003
+[19:26:40] >>> Wystapil blad w probie polaczenia z baza danych, kod bledu: 2003
+[19:26:42] >>> Wystapil blad w probie polaczenia z baza danych, kod bledu: 2003
+[19:26:44] >>> Wystapil blad w probie polaczenia z baza danych, kod bledu: 2003
+[19:26:46] >>> Wystapil blad w probie polaczenia z baza danych, kod bledu: 2003
+[19:26:48] >>> Wystapil blad w probie polaczenia z baza danych, kod bledu: 2003
+[19:26:50] >>> Wystapil blad w probie polaczenia z baza danych, kod bledu: 2003
+[19:26:52] >>> Wystapil blad w probie polaczenia z baza danych, kod bledu: 2003
+[19:26:54] >>> Wystapil blad w probie polaczenia z baza danych, kod bledu: 2003
+[19:26:56] >>> Wystapil blad w probie polaczenia z baza danych, kod bledu: 2003
+[19:26:58] >>> Wystapil blad w probie polaczenia z baza danych, kod bledu: 2003
+[19:27:00] >>> Wystapil blad w probie polaczenia z baza danych, kod bledu: 2003
+[19:27:02] >>> Wystapil blad w probie polaczenia z baza danych, kod bledu: 2003
+[19:27:04] >>> Wystapil blad w probie polaczenia z baza danych, kod bledu: 2003
+[19:27:06] >>> Wystapil blad w probie polaczenia z baza danych, kod bledu: 2003
+[19:27:08] >>> Wystapil blad w probie polaczenia z baza danych, kod bledu: 2003
+[19:27:10] >>> Wystapil blad w probie polaczenia z baza danych, kod bledu: 2003
+[19:27:12] >>> Wystapil blad w probie polaczenia z baza danych, kod bledu: 2003
+[19:27:15] >>> Wystapil blad w probie polaczenia z baza danych, kod bledu: 2003
+[19:27:17] >>> Wystapil blad w probie polaczenia z baza danych, kod bledu: 2003
+[19:27:19] >>> Wystapil blad w probie polaczenia z baza danych, kod bledu: 2003
+[19:27:21] >>> Wystapil blad w probie polaczenia z baza danych, kod bledu: 2003
+[19:27:23] >>> Wystapil blad w probie polaczenia z baza danych, kod bledu: 2003
+[19:27:25] >>> Wystapil blad w probie polaczenia z baza danych, kod bledu: 2003
+[19:27:27] >>> Wystapil blad w probie polaczenia z baza danych, kod bledu: 2003
+[19:27:29] >>> Wystapil blad w probie polaczenia z baza danych, kod bledu: 2003
+[19:27:31] >>> Wystapil blad w probie polaczenia z baza danych, kod bledu: 2003
+[19:27:33] >>> Wystapil blad w probie polaczenia z baza danych, kod bledu: 2003
+[19:27:35] >>> Wystapil blad w probie polaczenia z baza danych, kod bledu: 2003
+[19:27:37] >>> Wystapil blad w probie polaczenia z baza danych, kod bledu: 2003
+[19:27:39] >>> Wystapil blad w probie polaczenia z baza danych, kod bledu: 2003
+[19:27:41] >>> Wystapil blad w probie polaczenia z baza danych, kod bledu: 2003
+[19:27:43] >>> Wystapil blad w probie polaczenia z baza danych, kod bledu: 2003
+[19:27:45] >>> Wystapil blad w probie polaczenia z baza danych, kod bledu: 2003
+[19:27:47] >>> Wystapil blad w probie polaczenia z baza danych, kod bledu: 2003
+[19:27:49] >>> Wystapil blad w probie polaczenia z baza danych, kod bledu: 2003
+[19:27:51] >>> Wystapil blad w probie polaczenia z baza danych, kod bledu: 2003
+[19:27:54] >>> Wystapil blad w probie polaczenia z baza danych, kod bledu: 2003
+[19:27:56] >>> Wystapil blad w probie polaczenia z baza danych, kod bledu: 2003
+
+----------
+Loaded log file: "server_log.txt".
+----------
+
+SA-MP Dedicated Server
+----------------------
+v0.3.DL-R1, (C)2005-2018 SA-MP Team
+
+[19:28:08] language = ""  (string)
+[19:28:08] 
+[19:28:08] Server Plugins
+[19:28:08] --------------
+[19:28:08]  Loading plugin: streamer.so
+[19:28:08] 
+
+*** Streamer Plugin v2.9.5 by Incognito loaded ***
+
+[19:28:08]   Loaded.
+[19:28:08]  Loading plugin: sscanf.so
+[19:28:08] 
+
+[19:28:08]  ===============================
+
+[19:28:08]       sscanf plugin loaded.     
+
+[19:28:08]          Version:  2.8.3        
+
+[19:28:08]   (c) 2018 Alex "Y_Less" Cole  
+
+[19:28:08]  ===============================
+
+[19:28:08]   Loaded.
+[19:28:08]  Loading plugin: mysql.so
+[19:28:08]  >> plugin.mysql: R41-4 successfully loaded.
+[19:28:08]   Loaded.
+[19:28:08]  Loading plugin: pawncmd.so
+[19:28:08] [Pawn.CMD] plugin v3.3.3 by urShadow loaded
+[19:28:08]   Loaded.
+[19:28:08]  Loading plugin: samp_bcrypt.so
+[19:28:08] [SampBcrypt] [info]: Version: 0.3.1
+[19:28:08]   Loaded.
+[19:28:08]  Loading plugin: pawnregex.so
+[19:28:08] [Pawn.Regex] 
+
+    | Pawn.Regex 1.2.1 | 2016 - 2021
+    |--------------------------------
+    | Author and maintainer: katursis
+
+
+    | Compiled: Jul 18 2021 at 17:46:19
+    |--------------------------------------------------------------
+    | Repository: https://github.com/katursis/Pawn.Regex
+
+[19:28:08]   Loaded.
+[19:28:08]  Loaded 6 plugins.
+
+[19:28:08] [artwork:crc] bfylcpd1.dff CRC = 0x237D059D
+[19:28:08] [artwork:crc] bfylcpd1.txd CRC = 0x7CE23A9D
+[19:28:08] [artwork:crc] bmylcpd1.dff CRC = 0x7CB85D2C
+[19:28:08] [artwork:crc] bmylcpd1.txd CRC = 0x767B1B8C
+[19:28:08] [artwork:crc] hmylcpd1.dff CRC = 0x6484F730
+[19:28:08] [artwork:crc] hmylcpd1.txd CRC = 0x9B8B2D7B
+[19:28:08] [artwork:crc] noose.dff CRC = 0xF3D17C31
+[19:28:08] [artwork:crc] noose.txd CRC = 0x44E06804
+[19:28:08] [artwork:crc] ofylcpd1.dff CRC = 0xB05C29F5
+[19:28:08] [artwork:crc] ofylcpd1.txd CRC = 0x1D590654
+[19:28:08] [artwork:crc] omylcpd1.dff CRC = 0x5FC25DFE
+[19:28:08] [artwork:crc] omylcpd1.txd CRC = 0xE875191F
+[19:28:08] [artwork:crc] wfylcpd1.dff CRC = 0x6E441003
+[19:28:08] [artwork:crc] wfylcpd1.txd CRC = 0x47D3E39B
+[19:28:08] [artwork:crc] wfylcpd2.dff CRC = 0x6E441003
+[19:28:08] [artwork:crc] wfylcpd2.txd CRC = 0x23EA4B8A
+[19:28:08] [artwork:crc] wmylcpd1.dff CRC = 0xCDA0C806
+[19:28:08] [artwork:crc] wmylcpd1.txd CRC = 0x40E1CD0A
+[19:28:08] [artwork:crc] wallzzz.dff CRC = 0x4BC6EDFF
+[19:28:08] [artwork:crc] wallzzz.txd CRC = 0x235E3EEB
+[19:28:08] 
+[19:28:08] Filterscripts
+[19:28:08] ---------------
+[19:28:08]   Loaded 0 filterscripts.
+
+[19:28:08] Rozpoczynam ³adowanie Szkodnik-RP
+[19:28:41] >>> Wystapil blad w probie polaczenia z baza danych, kod bledu: 2005
+[19:28:41] Number of vehicle models: 0
+[19:28:43] >>> Wystapil blad w probie polaczenia z baza danych, kod bledu: 2005
+[19:28:45] >>> Wystapil blad w probie polaczenia z baza danych, kod bledu: 2005
+[19:28:47] >>> Wystapil blad w probie polaczenia z baza danych, kod bledu: 2005
+[19:28:49] >>> Wystapil blad w probie polaczenia z baza danych, kod bledu: 2005
+[19:28:51] >>> Wystapil blad w probie polaczenia z baza danych, kod bledu: 2005
+[19:28:53] >>> Wystapil blad w probie polaczenia z baza danych, kod bledu: 2005
+[19:28:55] >>> Wystapil blad w probie polaczenia z baza danych, kod bledu: 2005
+[19:28:57] >>> Wystapil blad w probie polaczenia z baza danych, kod bledu: 2005
+[19:28:59] >>> Wystapil blad w probie polaczenia z baza danych, kod bledu: 2005
+[19:29:01] >>> Wystapil blad w probie polaczenia z baza danych, kod bledu: 2005
+[19:29:03] >>> Wystapil blad w probie polaczenia z baza danych, kod bledu: 2005
+[19:29:05] >>> Wystapil blad w probie polaczenia z baza danych, kod bledu: 2005
+
+----------
+Loaded log file: "server_log.txt".
+----------
+
+SA-MP Dedicated Server
+----------------------
+v0.3.DL-R1, (C)2005-2018 SA-MP Team
+
+[19:29:37] language = ""  (string)
+[19:29:37] 
+[19:29:37] Server Plugins
+[19:29:37] --------------
+[19:29:37]  Loading plugin: streamer.so
+[19:29:37] 
+
+*** Streamer Plugin v2.9.5 by Incognito loaded ***
+
+[19:29:37]   Loaded.
+[19:29:37]  Loading plugin: sscanf.so
+[19:29:37] 
+
+[19:29:37]  ===============================
+
+[19:29:37]       sscanf plugin loaded.     
+
+[19:29:37]          Version:  2.8.3        
+
+[19:29:37]   (c) 2018 Alex "Y_Less" Cole  
+
+[19:29:37]  ===============================
+
+[19:29:37]   Loaded.
+[19:29:37]  Loading plugin: mysql.so
+[19:29:37]  >> plugin.mysql: R41-4 successfully loaded.
+[19:29:37]   Loaded.
+[19:29:37]  Loading plugin: pawncmd.so
+[19:29:37] [Pawn.CMD] plugin v3.3.3 by urShadow loaded
+[19:29:37]   Loaded.
+[19:29:37]  Loading plugin: samp_bcrypt.so
+[19:29:37] [SampBcrypt] [info]: Version: 0.3.1
+[19:29:37]   Loaded.
+[19:29:37]  Loading plugin: pawnregex.so
+[19:29:37] [Pawn.Regex] 
+
+    | Pawn.Regex 1.2.1 | 2016 - 2021
+    |--------------------------------
+    | Author and maintainer: katursis
+
+
+    | Compiled: Jul 18 2021 at 17:46:19
+    |--------------------------------------------------------------
+    | Repository: https://github.com/katursis/Pawn.Regex
+
+[19:29:37]   Loaded.
+[19:29:37]  Loaded 6 plugins.
+
+[19:29:37] [artwork:crc] bfylcpd1.dff CRC = 0x237D059D
+[19:29:37] [artwork:crc] bfylcpd1.txd CRC = 0x7CE23A9D
+[19:29:37] [artwork:crc] bmylcpd1.dff CRC = 0x7CB85D2C
+[19:29:37] [artwork:crc] bmylcpd1.txd CRC = 0x767B1B8C
+[19:29:37] [artwork:crc] hmylcpd1.dff CRC = 0x6484F730
+[19:29:37] [artwork:crc] hmylcpd1.txd CRC = 0x9B8B2D7B
+[19:29:37] [artwork:crc] noose.dff CRC = 0xF3D17C31
+[19:29:37] [artwork:crc] noose.txd CRC = 0x44E06804
+[19:29:37] [artwork:crc] ofylcpd1.dff CRC = 0xB05C29F5
+[19:29:37] [artwork:crc] ofylcpd1.txd CRC = 0x1D590654
+[19:29:37] [artwork:crc] omylcpd1.dff CRC = 0x5FC25DFE
+[19:29:37] [artwork:crc] omylcpd1.txd CRC = 0xE875191F
+[19:29:38] [artwork:crc] wfylcpd1.dff CRC = 0x6E441003
+[19:29:38] [artwork:crc] wfylcpd1.txd CRC = 0x47D3E39B
+[19:29:38] [artwork:crc] wfylcpd2.dff CRC = 0x6E441003
+[19:29:38] [artwork:crc] wfylcpd2.txd CRC = 0x23EA4B8A
+[19:29:38] [artwork:crc] wmylcpd1.dff CRC = 0xCDA0C806
+[19:29:38] [artwork:crc] wmylcpd1.txd CRC = 0x40E1CD0A
+[19:29:38] [artwork:crc] wallzzz.dff CRC = 0x4BC6EDFF
+[19:29:38] [artwork:crc] wallzzz.txd CRC = 0x235E3EEB
+[19:29:38] 
+[19:29:38] Filterscripts
+[19:29:38] ---------------
+[19:29:38]   Loaded 0 filterscripts.
+
+[19:29:38] Rozpoczynam ³adowanie Szkodnik-RP
+[19:29:38] >>> Wystapil blad w probie polaczenia z baza danych, kod bledu: 2003
+[19:29:38] Number of vehicle models: 0
+[19:29:40] >>> Wystapil blad w probie polaczenia z baza danych, kod bledu: 2003
+[19:29:42] >>> Wystapil blad w probie polaczenia z baza danych, kod bledu: 2003
+[19:29:44] >>> Wystapil blad w probie polaczenia z baza danych, kod bledu: 2003
+[19:29:46] >>> Wystapil blad w probie polaczenia z baza danych, kod bledu: 2003
+[19:29:48] >>> Wystapil blad w probie polaczenia z baza danych, kod bledu: 2003
+[19:29:50] >>> Wystapil blad w probie polaczenia z baza danych, kod bledu: 2003
+[19:29:52] >>> Wystapil blad w probie polaczenia z baza danych, kod bledu: 2003
+[19:29:54] >>> Wystapil blad w probie polaczenia z baza danych, kod bledu: 2003
+[19:29:56] >>> Wystapil blad w probie polaczenia z baza danych, kod bledu: 2003
+[19:29:58] >>> Wystapil blad w probie polaczenia z baza danych, kod bledu: 2003
+[19:30:00] >>> Wystapil blad w probie polaczenia z baza danych, kod bledu: 2003
+[19:30:02] >>> Wystapil blad w probie polaczenia z baza danych, kod bledu: 2003
+[19:30:04] >>> Wystapil blad w probie polaczenia z baza danych, kod bledu: 2003
+[19:30:06] >>> Wystapil blad w probie polaczenia z baza danych, kod bledu: 2003
+[19:30:08] >>> Wystapil blad w probie polaczenia z baza danych, kod bledu: 2003
+[19:30:10] >>> Wystapil blad w probie polaczenia z baza danych, kod bledu: 2003
+[19:30:12] >>> Wystapil blad w probie polaczenia z baza danych, kod bledu: 2003
+[19:30:14] >>> Wystapil blad w probie polaczenia z baza danych, kod bledu: 2003
+[19:30:16] >>> Wystapil blad w probie polaczenia z baza danych, kod bledu: 2003
+[19:30:18] >>> Wystapil blad w probie polaczenia z baza danych, kod bledu: 2003
+[19:30:20] >>> Wystapil blad w probie polaczenia z baza danych, kod bledu: 2003
+[19:30:22] >>> Wystapil blad w probie polaczenia z baza danych, kod bledu: 2003
+[19:30:24] >>> Wystapil blad w probie polaczenia z baza danych, kod bledu: 2003
+[19:30:26] >>> Wystapil blad w probie polaczenia z baza danych, kod bledu: 2003
+[19:30:28] >>> Wystapil blad w probie polaczenia z baza danych, kod bledu: 2003
+[19:30:30] >>> Wystapil blad w probie polaczenia z baza danych, kod bledu: 2003
+[19:30:32] >>> Wystapil blad w probie polaczenia z baza danych, kod bledu: 2003
+[19:30:34] >>> Wystapil blad w probie polaczenia z baza danych, kod bledu: 2003
+[19:30:37] >>> Wystapil blad w probie polaczenia z baza danych, kod bledu: 2003
+
+----------
+Loaded log file: "server_log.txt".
+----------
+
+SA-MP Dedicated Server
+----------------------
+v0.3.DL-R1, (C)2005-2018 SA-MP Team
+
+[19:31:11] language = ""  (string)
+[19:31:11] 
+[19:31:11] Server Plugins
+[19:31:11] --------------
+[19:31:11]  Loading plugin: streamer.so
+[19:31:11] 
+
+*** Streamer Plugin v2.9.5 by Incognito loaded ***
+
+[19:31:11]   Loaded.
+[19:31:11]  Loading plugin: sscanf.so
+[19:31:11] 
+
+[19:31:11]  ===============================
+
+[19:31:11]       sscanf plugin loaded.     
+
+[19:31:11]          Version:  2.8.3        
+
+[19:31:11]   (c) 2018 Alex "Y_Less" Cole  
+
+[19:31:11]  ===============================
+
+[19:31:11]   Loaded.
+[19:31:11]  Loading plugin: mysql.so
+[19:31:11]  >> plugin.mysql: R41-4 successfully loaded.
+[19:31:11]   Loaded.
+[19:31:11]  Loading plugin: pawncmd.so
+[19:31:11] [Pawn.CMD] plugin v3.3.3 by urShadow loaded
+[19:31:11]   Loaded.
+[19:31:11]  Loading plugin: samp_bcrypt.so
+[19:31:11] [SampBcrypt] [info]: Version: 0.3.1
+[19:31:11]   Loaded.
+[19:31:11]  Loading plugin: pawnregex.so
+[19:31:11] [Pawn.Regex] 
+
+    | Pawn.Regex 1.2.1 | 2016 - 2021
+    |--------------------------------
+    | Author and maintainer: katursis
+
+
+    | Compiled: Jul 18 2021 at 17:46:19
+    |--------------------------------------------------------------
+    | Repository: https://github.com/katursis/Pawn.Regex
+
+[19:31:11]   Loaded.
+[19:31:11]  Loaded 6 plugins.
+
+[19:31:11] [artwork:crc] bfylcpd1.dff CRC = 0x237D059D
+[19:31:11] [artwork:crc] bfylcpd1.txd CRC = 0x7CE23A9D
+[19:31:12] [artwork:crc] bmylcpd1.dff CRC = 0x7CB85D2C
+[19:31:12] [artwork:crc] bmylcpd1.txd CRC = 0x767B1B8C
+[19:31:12] [artwork:crc] hmylcpd1.dff CRC = 0x6484F730
+[19:31:12] [artwork:crc] hmylcpd1.txd CRC = 0x9B8B2D7B
+[19:31:12] [artwork:crc] noose.dff CRC = 0xF3D17C31
+[19:31:12] [artwork:crc] noose.txd CRC = 0x44E06804
+[19:31:12] [artwork:crc] ofylcpd1.dff CRC = 0xB05C29F5
+[19:31:12] [artwork:crc] ofylcpd1.txd CRC = 0x1D590654
+[19:31:12] [artwork:crc] omylcpd1.dff CRC = 0x5FC25DFE
+[19:31:12] [artwork:crc] omylcpd1.txd CRC = 0xE875191F
+[19:31:12] [artwork:crc] wfylcpd1.dff CRC = 0x6E441003
+[19:31:12] [artwork:crc] wfylcpd1.txd CRC = 0x47D3E39B
+[19:31:12] [artwork:crc] wfylcpd2.dff CRC = 0x6E441003
+[19:31:12] [artwork:crc] wfylcpd2.txd CRC = 0x23EA4B8A
+[19:31:12] [artwork:crc] wmylcpd1.dff CRC = 0xCDA0C806
+[19:31:12] [artwork:crc] wmylcpd1.txd CRC = 0x40E1CD0A
+[19:31:12] [artwork:crc] wallzzz.dff CRC = 0x4BC6EDFF
+[19:31:12] [artwork:crc] wallzzz.txd CRC = 0x235E3EEB
+[19:31:12] 
+[19:31:12] Filterscripts
+[19:31:12] ---------------
+[19:31:12]   Loaded 0 filterscripts.
+
+[19:31:12] Rozpoczynam ³adowanie Szkodnik-RP
+[19:31:12] >>> Wystapil blad w probie polaczenia z baza danych, kod bledu: 2003
+[19:31:12] Number of vehicle models: 0
+[19:31:14] >>> Wystapil blad w probie polaczenia z baza danych, kod bledu: 2003
+[19:31:16] >>> Wystapil blad w probie polaczenia z baza danych, kod bledu: 2003
+[19:31:18] >>> Wystapil blad w probie polaczenia z baza danych, kod bledu: 2003
+[19:31:20] >>> Wystapil blad w probie polaczenia z baza danych, kod bledu: 2003
+[19:31:22] >>> Wystapil blad w probie polaczenia z baza danych, kod bledu: 2003
+[19:31:24] >>> Wystapil blad w probie polaczenia z baza danych, kod bledu: 2003
+[19:31:26] >>> Wystapil blad w probie polaczenia z baza danych, kod bledu: 2003
+[19:31:28] >>> Wystapil blad w probie polaczenia z baza danych, kod bledu: 2003
+[19:31:30] >>> Wystapil blad w probie polaczenia z baza danych, kod bledu: 2003
+[19:31:32] >>> Wystapil blad w probie polaczenia z baza danych, kod bledu: 2003
+[19:31:34] >>> Wystapil blad w probie polaczenia z baza danych, kod bledu: 2003
+[19:31:36] >>> Wystapil blad w probie polaczenia z baza danych, kod bledu: 2003
+[19:31:38] >>> Wystapil blad w probie polaczenia z baza danych, kod bledu: 2003
+[19:31:40] >>> Wystapil blad w probie polaczenia z baza danych, kod bledu: 2003
+[19:31:42] >>> Wystapil blad w probie polaczenia z baza danych, kod bledu: 2003
+[19:31:44] >>> Wystapil blad w probie polaczenia z baza danych, kod bledu: 2003
+[19:31:46] >>> Wystapil blad w probie polaczenia z baza danych, kod bledu: 2003
+[19:31:48] >>> Wystapil blad w probie polaczenia z baza danych, kod bledu: 2003
+[19:31:50] >>> Wystapil blad w probie polaczenia z baza danych, kod bledu: 2003
+[19:31:52] >>> Wystapil blad w probie polaczenia z baza danych, kod bledu: 2003
+[19:31:54] >>> Wystapil blad w probie polaczenia z baza danych, kod bledu: 2003
+[19:31:56] >>> Wystapil blad w probie polaczenia z baza danych, kod bledu: 2003
+[19:31:58] >>> Wystapil blad w probie polaczenia z baza danych, kod bledu: 2003
+[19:32:00] >>> Wystapil blad w probie polaczenia z baza danych, kod bledu: 2003
+[19:32:02] >>> Wystapil blad w probie polaczenia z baza danych, kod bledu: 2003
+[19:32:04] >>> Wystapil blad w probie polaczenia z baza danych, kod bledu: 2003
+[19:32:07] >>> Wystapil blad w probie polaczenia z baza danych, kod bledu: 2003
+[19:32:09] >>> Wystapil blad w probie polaczenia z baza danych, kod bledu: 2003
+[19:32:11] >>> Wystapil blad w probie polaczenia z baza danych, kod bledu: 2003
+[19:32:13] >>> Wystapil blad w probie polaczenia z baza danych, kod bledu: 2003
+[19:32:15] >>> Wystapil blad w probie polaczenia z baza danych, kod bledu: 2003
+[19:32:17] >>> Wystapil blad w probie polaczenia z baza danych, kod bledu: 2003
+[19:32:19] >>> Wystapil blad w probie polaczenia z baza danych, kod bledu: 2003
+[19:32:21] >>> Wystapil blad w probie polaczenia z baza danych, kod bledu: 2003
+[19:32:23] >>> Wystapil blad w probie polaczenia z baza danych, kod bledu: 2003
+[19:32:25] >>> Wystapil blad w probie polaczenia z baza danych, kod bledu: 2003
+[19:32:27] >>> Wystapil blad w probie polaczenia z baza danych, kod bledu: 2003
+[19:32:29] >>> Wystapil blad w probie polaczenia z baza danych, kod bledu: 2003
+[19:32:31] >>> Wystapil blad w probie polaczenia z baza danych, kod bledu: 2003
+[19:32:33] >>> Wystapil blad w probie polaczenia z baza danych, kod bledu: 2003
+[19:32:35] >>> Wystapil blad w probie polaczenia z baza danych, kod bledu: 2003
