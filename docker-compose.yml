@@ -32,5 +32,4 @@ services:
       DB_NAME: szkodnikrp
     networks:
       - szkodnikrp-net
-volumes:
-  szkodnikrp-db_data:
+
