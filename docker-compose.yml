@@ -1,5 +1,8 @@
 
 
+networks:
+  szkodnikrp-net:
+
 services:
   db:
     image: mysql:8
@@ -7,13 +10,11 @@ services:
     restart: unless-stopped
     environment:
       MYSQL_ROOT_PASSWORD: example
-      MYSQL_DATABASE: szkodnikrp
     volumes:
       - szkodnikrp-db_data:/var/lib/mysql
+      - ./mysql-init:/docker-entrypoint-initdb.d
     networks:
-      - szkodnikrp-network
-    ports:
-      - "3307:3306"  # port hosta zmieniony na 3307, żeby nie kolidował
+      - szkodnikrp-net
 
   samp:
     build: .
@@ -21,16 +22,17 @@ services:
     restart: unless-stopped
     depends_on:
       - db
-    networks:
-      - szkodnikrp-network
     ports:
       - "7777:7777/udp"
     volumes:
       - .:/app
+    environment:
+      DB_HOST: db
+      DB_USER: samp
+      DB_PASS: example
+      DB_NAME: szkodnikrp
+    networks:
+      - szkodnikrp-net
 
 volumes:
   szkodnikrp-db_data:
-
-networks:
-  szkodnikrp-network:
-    driver: bridge
