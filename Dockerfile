@@ -18,7 +18,7 @@ COPY sampctl_1.11.3_linux_amd64.tar.gz /tmp/sampctl.tar.gz
 RUN tar -xzf /tmp/sampctl.tar.gz -C /usr/local/bin && rm /tmp/sampctl.tar.gz
 
 # Ensure dependencies and build
-RUN sampctl ensure
+# RUN sampctl ensure
 RUN sampctl build
 
 # Expose default SA:MP port

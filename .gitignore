@@ -8,7 +8,7 @@
 *.asm
 
 # Vendor directory for dependencies
-dependencies/
+
 
 # Dependency versions lockfile
 pawn.lock
