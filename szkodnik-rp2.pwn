@@ -14176,14 +14176,14 @@ CMD:kick (playerid, params[])
 
 stock GetPlayerFreeSlot(playerid)
 {
-/*	new puid = PlayerCache[playerid][pUID];
-	if(PlayerCache[puid][pGroup] == 0)
-	return 1;
-	else if(PlayerCache[puid][pGroup2] == 0)
-	return 2;
-	else if(PlayerCache[puid][pGroup3] == 0)
-	return 3;
-	else return 0;*/
+	// new puid = PlayerCache[playerid][pUID];
+	// if(PlayerCache[puid][pGroup] == 0)
+	// return 1;
+	// else if(PlayerCache[puid][pGroup2] == 0)
+	// return 2;
+	// else if(PlayerCache[puid][pGroup3] == 0)
+	// return 3;
+	// else return 0;
 	printf("%d", playerid);
 	return 0;
 }

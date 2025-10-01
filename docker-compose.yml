@@ -17,5 +17,19 @@ services:
     volumes:
       - db_data:/var/lib/mysql
 
+  samp:
+    container_name: szkodnikrp-samp
+    build: ./samp
+    restart: unless-stopped
+    depends_on:
+      - mysql
+    volumes:
+      - ./gamemodes:/usr/src/app/gamemodes
+      - ./pawn.json:/usr/src/app/pawn.json
+    ports:
+      - "7777:7777/udp"
+    command: >
+      bash -c "sampctl package ensure && sampctl server run"
+
 volumes:
   db_data:
