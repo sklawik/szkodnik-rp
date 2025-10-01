@@ -10,8 +10,10 @@ services:
       MYSQL_DATABASE: szkodnikrp
     volumes:
       - szkodnikrp-db_data:/var/lib/mysql
+    networks:
+      - szkodnikrp-network
     ports:
-      - "3306:3306"
+      - "3307:3306"  # port hosta zmieniony na 3307, żeby nie kolidował
 
   samp:
     build: .
@@ -19,6 +21,8 @@ services:
     restart: unless-stopped
     depends_on:
       - db
+    networks:
+      - szkodnikrp-network
     ports:
       - "7777:7777/udp"
     volumes:
@@ -26,3 +30,7 @@ services:
 
 volumes:
   szkodnikrp-db_data:
+
+networks:
+  szkodnikrp-network:
+    driver: bridge
