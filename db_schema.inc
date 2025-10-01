@@ -1,6 +1,6 @@
 #define MYSQL_HOST "db"
 #define MYSQL_USER "www"
-#define MYSQL_PASSWORD "123"
+#define MYSQL_PASSWORD "example"
 #define MYSQL_DB "szkodnikrp"
 
 new MySQL:DB_HANDLE;
