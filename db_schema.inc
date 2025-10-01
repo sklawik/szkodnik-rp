@@ -1,4 +1,4 @@
-#define MYSQL_HOST "127.0.0.1"
+#define MYSQL_HOST "samp"
 #define MYSQL_USER "www"
 #define MYSQL_PASSWORD "123"
 #define MYSQL_DB "szkodnikrp"

@@ -1,35 +1,28 @@
-version: '3.8'
+
 
 services:
-  mysql:
+  db:
     image: mysql:8
     container_name: szkodnikrp-db
     restart: unless-stopped
     environment:
-      MYSQL_ROOT_PASSWORD: 1234
+      MYSQL_ROOT_PASSWORD: example
       MYSQL_DATABASE: szkodnikrp
-      MYSQL_USER: www
-      MYSQL_PASSWORD: 123
+    volumes:
+      - szkodnikrp-db_data:/var/lib/mysql
     ports:
       - "3306:3306"
-    command: >
-      --default-authentication-plugin=mysql_native_password
-    volumes:
-      - db_data:/var/lib/mysql
 
   samp:
+    build: .
     container_name: szkodnikrp-samp
-    build: ./samp
     restart: unless-stopped
     depends_on:
-      - mysql
-    volumes:
-      - ./gamemodes:/usr/src/app/gamemodes
-      - ./pawn.json:/usr/src/app/pawn.json
+      - db
     ports:
       - "7777:7777/udp"
-    command: >
-      bash -c "sampctl package ensure && sampctl server run"
+    volumes:
+      - .:/app
 
 volumes:
-  db_data:
+  szkodnikrp-db_data:
