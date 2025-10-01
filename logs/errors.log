@@ -1,0 +1,4 @@
+[10/01/25 17:54:41] [plugins/mysql] CConnection::CConnection - establishing connection to MySQL database failed: #1524 'Plugin 'mysql_native_password' is not loaded'
+[10/01/25 17:54:41] [plugins/mysql] CConnection::CConnection - establishing connection to MySQL database failed: #1524 'Plugin 'mysql_native_password' is not loaded'
+[10/01/25 17:54:41] [plugins/mysql] CConnection::CConnection - establishing connection to MySQL database failed: #1524 'Plugin 'mysql_native_password' is not loaded'
+[10/01/25 17:54:41] [plugins/mysql] CConnection::CConnection - establishing connection to MySQL database failed: #1524 'Plugin 'mysql_native_password' is not loaded'

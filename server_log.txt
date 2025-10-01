@@ -1010,3 +1010,370 @@ v0.3.DL-R1, (C)2005-2018 SA-MP Team
 
 [18:23:53] Script[gamemodes/szkodnik-rp2.amx]: Run time error 19: "File or function is not found"
 [18:23:53] Number of vehicle models: 0
+
+----------
+Loaded log file: "server_log.txt".
+----------
+
+SA-MP Dedicated Server
+----------------------
+v0.3.DL-R1, (C)2005-2018 SA-MP Team
+
+[17:44:40] language = ""  (string)
+[17:44:40] 
+[17:44:40] Server Plugins
+[17:44:40] --------------
+[17:44:40]  Loaded 0 plugins.
+
+[17:44:40] [artwork:crc] bfylcpd1.dff CRC = 0x237D059D
+[17:44:40] [artwork:crc] bfylcpd1.txd CRC = 0x7CE23A9D
+[17:44:40] [artwork:crc] bmylcpd1.dff CRC = 0x7CB85D2C
+[17:44:40] [artwork:crc] bmylcpd1.txd CRC = 0x767B1B8C
+[17:44:40] [artwork:crc] hmylcpd1.dff CRC = 0x6484F730
+[17:44:40] [artwork:crc] hmylcpd1.txd CRC = 0x9B8B2D7B
+[17:44:40] [artwork:crc] noose.dff CRC = 0xF3D17C31
+[17:44:40] [artwork:crc] noose.txd CRC = 0x44E06804
+[17:44:40] [artwork:crc] ofylcpd1.dff CRC = 0xB05C29F5
+[17:44:40] [artwork:crc] ofylcpd1.txd CRC = 0x1D590654
+[17:44:40] [artwork:crc] omylcpd1.dff CRC = 0x5FC25DFE
+[17:44:40] [artwork:crc] omylcpd1.txd CRC = 0xE875191F
+[17:44:40] [artwork:crc] wfylcpd1.dff CRC = 0x6E441003
+[17:44:40] [artwork:crc] wfylcpd1.txd CRC = 0x47D3E39B
+[17:44:40] [artwork:crc] wfylcpd2.dff CRC = 0x6E441003
+[17:44:40] [artwork:crc] wfylcpd2.txd CRC = 0x23EA4B8A
+[17:44:40] [artwork:crc] wmylcpd1.dff CRC = 0xCDA0C806
+[17:44:40] [artwork:crc] wmylcpd1.txd CRC = 0x40E1CD0A
+[17:44:40] [artwork:crc] wallzzz.dff CRC = 0x4BC6EDFF
+[17:44:40] [artwork:crc] wallzzz.txd CRC = 0x235E3EEB
+[17:44:40] 
+[17:44:40] Filterscripts
+[17:44:40] ---------------
+[17:44:40]   Loaded 0 filterscripts.
+
+[17:44:40] Script[gamemodes/szkodnik-rp2.amx]: Run time error 19: "File or function is not found"
+[17:44:40] Number of vehicle models: 0
+[17:46:48] --- Server Shutting Down.
+
+----------
+Loaded log file: "server_log.txt".
+----------
+
+SA-MP Dedicated Server
+----------------------
+v0.3.DL-R1, (C)2005-2018 SA-MP Team
+
+[17:46:54] language = ""  (string)
+[17:46:54] 
+[17:46:54] Server Plugins
+[17:46:54] --------------
+[17:46:54]  Loaded 0 plugins.
+
+[17:46:54] [artwork:crc] bfylcpd1.dff CRC = 0x237D059D
+[17:46:54] [artwork:crc] bfylcpd1.txd CRC = 0x7CE23A9D
+[17:46:54] [artwork:crc] bmylcpd1.dff CRC = 0x7CB85D2C
+[17:46:54] [artwork:crc] bmylcpd1.txd CRC = 0x767B1B8C
+[17:46:54] [artwork:crc] hmylcpd1.dff CRC = 0x6484F730
+[17:46:54] [artwork:crc] hmylcpd1.txd CRC = 0x9B8B2D7B
+[17:46:54] [artwork:crc] noose.dff CRC = 0xF3D17C31
+[17:46:54] [artwork:crc] noose.txd CRC = 0x44E06804
+[17:46:54] [artwork:crc] ofylcpd1.dff CRC = 0xB05C29F5
+[17:46:54] [artwork:crc] ofylcpd1.txd CRC = 0x1D590654
+[17:46:54] [artwork:crc] omylcpd1.dff CRC = 0x5FC25DFE
+[17:46:54] [artwork:crc] omylcpd1.txd CRC = 0xE875191F
+[17:46:54] [artwork:crc] wfylcpd1.dff CRC = 0x6E441003
+[17:46:54] [artwork:crc] wfylcpd1.txd CRC = 0x47D3E39B
+[17:46:54] [artwork:crc] wfylcpd2.dff CRC = 0x6E441003
+[17:46:54] [artwork:crc] wfylcpd2.txd CRC = 0x23EA4B8A
+[17:46:54] [artwork:crc] wmylcpd1.dff CRC = 0xCDA0C806
+[17:46:54] [artwork:crc] wmylcpd1.txd CRC = 0x40E1CD0A
+[17:46:54] [artwork:crc] wallzzz.dff CRC = 0x4BC6EDFF
+[17:46:54] [artwork:crc] wallzzz.txd CRC = 0x235E3EEB
+[17:46:54] 
+[17:46:54] Filterscripts
+[17:46:54] ---------------
+[17:46:54]   Loaded 0 filterscripts.
+
+[17:46:54] Script[gamemodes/szkodnik-rp2.amx]: Run time error 19: "File or function is not found"
+[17:46:54] Number of vehicle models: 0
+
+----------
+Loaded log file: "server_log.txt".
+----------
+
+SA-MP Dedicated Server
+----------------------
+v0.3.DL-R1, (C)2005-2018 SA-MP Team
+
+[17:47:07] language = ""  (string)
+[17:47:07] 
+[17:47:07] Server Plugins
+[17:47:07] --------------
+[17:47:07]  Loaded 0 plugins.
+
+[17:47:07] [artwork:crc] bfylcpd1.dff CRC = 0x237D059D
+[17:47:07] [artwork:crc] bfylcpd1.txd CRC = 0x7CE23A9D
+[17:47:07] [artwork:crc] bmylcpd1.dff CRC = 0x7CB85D2C
+[17:47:07] [artwork:crc] bmylcpd1.txd CRC = 0x767B1B8C
+[17:47:07] [artwork:crc] hmylcpd1.dff CRC = 0x6484F730
+[17:47:07] [artwork:crc] hmylcpd1.txd CRC = 0x9B8B2D7B
+[17:47:07] [artwork:crc] noose.dff CRC = 0xF3D17C31
+[17:47:07] [artwork:crc] noose.txd CRC = 0x44E06804
+[17:47:07] [artwork:crc] ofylcpd1.dff CRC = 0xB05C29F5
+[17:47:07] [artwork:crc] ofylcpd1.txd CRC = 0x1D590654
+[17:47:07] [artwork:crc] omylcpd1.dff CRC = 0x5FC25DFE
+[17:47:07] [artwork:crc] omylcpd1.txd CRC = 0xE875191F
+[17:47:07] [artwork:crc] wfylcpd1.dff CRC = 0x6E441003
+[17:47:07] [artwork:crc] wfylcpd1.txd CRC = 0x47D3E39B
+[17:47:07] [artwork:crc] wfylcpd2.dff CRC = 0x6E441003
+[17:47:07] [artwork:crc] wfylcpd2.txd CRC = 0x23EA4B8A
+[17:47:07] [artwork:crc] wmylcpd1.dff CRC = 0xCDA0C806
+[17:47:07] [artwork:crc] wmylcpd1.txd CRC = 0x40E1CD0A
+[17:47:07] [artwork:crc] wallzzz.dff CRC = 0x4BC6EDFF
+[17:47:07] [artwork:crc] wallzzz.txd CRC = 0x235E3EEB
+[17:47:07] 
+[17:47:07] Filterscripts
+[17:47:07] ---------------
+[17:47:07]   Loaded 0 filterscripts.
+
+[17:47:07] Script[gamemodes/szkodnik-rp2.amx]: Run time error 19: "File or function is not found"
+[17:47:07] Number of vehicle models: 0
+[17:48:01] --- Server Shutting Down.
+[17:49:08] --- Server Shutting Down.
+
+----------
+Loaded log file: "server_log.txt".
+----------
+
+SA-MP Dedicated Server
+----------------------
+v0.3.DL-R1, (C)2005-2018 SA-MP Team
+
+[17:49:09] language = ""  (string)
+[17:49:09] 
+[17:49:09] Server Plugins
+[17:49:09] --------------
+[17:49:09]  Loaded 0 plugins.
+
+[17:49:09] [artwork:crc] bfylcpd1.dff CRC = 0x237D059D
+[17:49:09] [artwork:crc] bfylcpd1.txd CRC = 0x7CE23A9D
+[17:49:09] [artwork:crc] bmylcpd1.dff CRC = 0x7CB85D2C
+[17:49:09] [artwork:crc] bmylcpd1.txd CRC = 0x767B1B8C
+[17:49:09] [artwork:crc] hmylcpd1.dff CRC = 0x6484F730
+[17:49:09] [artwork:crc] hmylcpd1.txd CRC = 0x9B8B2D7B
+[17:49:09] [artwork:crc] noose.dff CRC = 0xF3D17C31
+[17:49:09] [artwork:crc] noose.txd CRC = 0x44E06804
+[17:49:09] [artwork:crc] ofylcpd1.dff CRC = 0xB05C29F5
+[17:49:09] [artwork:crc] ofylcpd1.txd CRC = 0x1D590654
+[17:49:09] [artwork:crc] omylcpd1.dff CRC = 0x5FC25DFE
+[17:49:09] [artwork:crc] omylcpd1.txd CRC = 0xE875191F
+[17:49:09] [artwork:crc] wfylcpd1.dff CRC = 0x6E441003
+[17:49:09] [artwork:crc] wfylcpd1.txd CRC = 0x47D3E39B
+[17:49:09] [artwork:crc] wfylcpd2.dff CRC = 0x6E441003
+[17:49:09] [artwork:crc] wfylcpd2.txd CRC = 0x23EA4B8A
+[17:49:09] [artwork:crc] wmylcpd1.dff CRC = 0xCDA0C806
+[17:49:09] [artwork:crc] wmylcpd1.txd CRC = 0x40E1CD0A
+[17:49:09] [artwork:crc] wallzzz.dff CRC = 0x4BC6EDFF
+[17:49:09] [artwork:crc] wallzzz.txd CRC = 0x235E3EEB
+[17:49:09] 
+[17:49:09] Filterscripts
+[17:49:09] ---------------
+[17:49:09]   Loaded 0 filterscripts.
+
+[17:49:09] Script[gamemodes/szkodnik-rp2.amx]: Run time error 19: "File or function is not found"
+[17:49:09] Number of vehicle models: 0
+[17:49:32] --- Server Shutting Down.
+
+----------
+Loaded log file: "server_log.txt".
+----------
+
+SA-MP Dedicated Server
+----------------------
+v0.3.DL-R1, (C)2005-2018 SA-MP Team
+
+[17:50:02] language = ""  (string)
+[17:50:02] 
+[17:50:02] Server Plugins
+[17:50:02] --------------
+[17:50:02]  Loaded 0 plugins.
+
+[17:50:02] [artwork:crc] bfylcpd1.dff CRC = 0x237D059D
+[17:50:02] [artwork:crc] bfylcpd1.txd CRC = 0x7CE23A9D
+[17:50:02] [artwork:crc] bmylcpd1.dff CRC = 0x7CB85D2C
+[17:50:02] [artwork:crc] bmylcpd1.txd CRC = 0x767B1B8C
+[17:50:02] [artwork:crc] hmylcpd1.dff CRC = 0x6484F730
+[17:50:02] [artwork:crc] hmylcpd1.txd CRC = 0x9B8B2D7B
+[17:50:02] [artwork:crc] noose.dff CRC = 0xF3D17C31
+[17:50:02] [artwork:crc] noose.txd CRC = 0x44E06804
+[17:50:02] [artwork:crc] ofylcpd1.dff CRC = 0xB05C29F5
+[17:50:02] [artwork:crc] ofylcpd1.txd CRC = 0x1D590654
+[17:50:02] [artwork:crc] omylcpd1.dff CRC = 0x5FC25DFE
+[17:50:02] [artwork:crc] omylcpd1.txd CRC = 0xE875191F
+[17:50:02] [artwork:crc] wfylcpd1.dff CRC = 0x6E441003
+[17:50:02] [artwork:crc] wfylcpd1.txd CRC = 0x47D3E39B
+[17:50:02] [artwork:crc] wfylcpd2.dff CRC = 0x6E441003
+[17:50:02] [artwork:crc] wfylcpd2.txd CRC = 0x23EA4B8A
+[17:50:02] [artwork:crc] wmylcpd1.dff CRC = 0xCDA0C806
+[17:50:02] [artwork:crc] wmylcpd1.txd CRC = 0x40E1CD0A
+[17:50:02] [artwork:crc] wallzzz.dff CRC = 0x4BC6EDFF
+[17:50:02] [artwork:crc] wallzzz.txd CRC = 0x235E3EEB
+[17:50:02] 
+[17:50:02] Filterscripts
+[17:50:02] ---------------
+[17:50:02]   Loaded 0 filterscripts.
+
+[17:50:02] Script[gamemodes/szkodnik-rp2.amx]: Run time error 19: "File or function is not found"
+[17:50:02] Number of vehicle models: 0
+
+----------
+Loaded log file: "server_log.txt".
+----------
+
+SA-MP Dedicated Server
+----------------------
+v0.3.DL-R1, (C)2005-2018 SA-MP Team
+
+[17:52:20] language = ""  (string)
+[17:52:20] 
+[17:52:20] Server Plugins
+[17:52:20] --------------
+[17:52:20]  Loaded 0 plugins.
+
+[17:52:20] [artwork:crc] bfylcpd1.dff CRC = 0x237D059D
+[17:52:20] [artwork:crc] bfylcpd1.txd CRC = 0x7CE23A9D
+[17:52:20] [artwork:crc] bmylcpd1.dff CRC = 0x7CB85D2C
+[17:52:20] [artwork:crc] bmylcpd1.txd CRC = 0x767B1B8C
+[17:52:20] [artwork:crc] hmylcpd1.dff CRC = 0x6484F730
+[17:52:20] [artwork:crc] hmylcpd1.txd CRC = 0x9B8B2D7B
+[17:52:20] [artwork:crc] noose.dff CRC = 0xF3D17C31
+[17:52:20] [artwork:crc] noose.txd CRC = 0x44E06804
+[17:52:20] [artwork:crc] ofylcpd1.dff CRC = 0xB05C29F5
+[17:52:20] [artwork:crc] ofylcpd1.txd CRC = 0x1D590654
+[17:52:20] [artwork:crc] omylcpd1.dff CRC = 0x5FC25DFE
+[17:52:20] [artwork:crc] omylcpd1.txd CRC = 0xE875191F
+[17:52:20] [artwork:crc] wfylcpd1.dff CRC = 0x6E441003
+[17:52:20] [artwork:crc] wfylcpd1.txd CRC = 0x47D3E39B
+[17:52:20] [artwork:crc] wfylcpd2.dff CRC = 0x6E441003
+[17:52:20] [artwork:crc] wfylcpd2.txd CRC = 0x23EA4B8A
+[17:52:20] [artwork:crc] wmylcpd1.dff CRC = 0xCDA0C806
+[17:52:20] [artwork:crc] wmylcpd1.txd CRC = 0x40E1CD0A
+[17:52:20] [artwork:crc] wallzzz.dff CRC = 0x4BC6EDFF
+[17:52:20] [artwork:crc] wallzzz.txd CRC = 0x235E3EEB
+[17:52:20] 
+[17:52:20] Filterscripts
+[17:52:20] ---------------
+[17:52:20]   Loaded 0 filterscripts.
+
+[17:52:20] Script[gamemodes/szkodnik-rp2.amx]: Run time error 19: "File or function is not found"
+[17:52:20] Number of vehicle models: 0
+[17:52:58] --- Server Shutting Down.
+[17:54:40] --- Server Shutting Down.
+
+----------
+Loaded log file: "server_log.txt".
+----------
+
+SA-MP Dedicated Server
+----------------------
+v0.3.DL-R1, (C)2005-2018 SA-MP Team
+
+[17:54:41] language = ""  (string)
+[17:54:41] 
+[17:54:41] Server Plugins
+[17:54:41] --------------
+[17:54:41]  Loading plugin: mysql.so
+[17:54:41]  >> plugin.mysql: R41-4 successfully loaded.
+[17:54:41]   Loaded.
+[17:54:41]  Loading plugin: pawncmd.cfg
+[17:54:41]   Failed (plugins/pawncmd.cfg: file too short)
+[17:54:41]  Loading plugin: pawncmd.so
+[17:54:41] [Pawn.CMD] plugin v3.3.3 by urShadow loaded
+[17:54:41]   Loaded.
+[17:54:41]  Loading plugin: pawnregex.cfg
+[17:54:41]   Failed (plugins/pawnregex.cfg: file too short)
+[17:54:41]  Loading plugin: pawnregex.so
+[17:54:41] [Pawn.Regex] 
+
+    | Pawn.Regex 1.2.1 | 2016 - 2021
+    |--------------------------------
+    | Author and maintainer: katursis
+
+
+    | Compiled: Jul 18 2021 at 17:46:19
+    |--------------------------------------------------------------
+    | Repository: https://github.com/katursis/Pawn.Regex
+
+[17:54:41]   Loaded.
+[17:54:41]  Loading plugin: samp_bcrypt.so
+[17:54:41] [SampBcrypt] [info]: Version: 0.3.1
+[17:54:41]   Loaded.
+[17:54:41]  Loading plugin: sscanf.so
+[17:54:41] 
+
+[17:54:41]  ===============================
+
+[17:54:41]       sscanf plugin loaded.     
+
+[17:54:41]          Version:  2.8.3        
+
+[17:54:41]   (c) 2018 Alex "Y_Less" Cole  
+
+[17:54:41]  ===============================
+
+[17:54:41]   Loaded.
+[17:54:41]  Loading plugin: streamer.so
+[17:54:41] 
+
+*** Streamer Plugin v2.9.5 by Incognito loaded ***
+
+[17:54:41]   Loaded.
+[17:54:41]  Loaded 6 plugins.
+
+[17:54:41] [artwork:crc] bfylcpd1.dff CRC = 0x237D059D
+[17:54:41] [artwork:crc] bfylcpd1.txd CRC = 0x7CE23A9D
+[17:54:41] [artwork:crc] bmylcpd1.dff CRC = 0x7CB85D2C
+[17:54:41] [artwork:crc] bmylcpd1.txd CRC = 0x767B1B8C
+[17:54:41] [artwork:crc] hmylcpd1.dff CRC = 0x6484F730
+[17:54:41] [artwork:crc] hmylcpd1.txd CRC = 0x9B8B2D7B
+[17:54:41] [artwork:crc] noose.dff CRC = 0xF3D17C31
+[17:54:41] [artwork:crc] noose.txd CRC = 0x44E06804
+[17:54:41] [artwork:crc] ofylcpd1.dff CRC = 0xB05C29F5
+[17:54:41] [artwork:crc] ofylcpd1.txd CRC = 0x1D590654
+[17:54:41] [artwork:crc] omylcpd1.dff CRC = 0x5FC25DFE
+[17:54:41] [artwork:crc] omylcpd1.txd CRC = 0xE875191F
+[17:54:41] [artwork:crc] wfylcpd1.dff CRC = 0x6E441003
+[17:54:41] [artwork:crc] wfylcpd1.txd CRC = 0x47D3E39B
+[17:54:41] [artwork:crc] wfylcpd2.dff CRC = 0x6E441003
+[17:54:41] [artwork:crc] wfylcpd2.txd CRC = 0x23EA4B8A
+[17:54:41] [artwork:crc] wmylcpd1.dff CRC = 0xCDA0C806
+[17:54:41] [artwork:crc] wmylcpd1.txd CRC = 0x40E1CD0A
+[17:54:41] [artwork:crc] wallzzz.dff CRC = 0x4BC6EDFF
+[17:54:41] [artwork:crc] wallzzz.txd CRC = 0x235E3EEB
+[17:54:41] 
+[17:54:41] Filterscripts
+[17:54:41] ---------------
+[17:54:41]   Loaded 0 filterscripts.
+
+[17:54:41] Rozpoczynam ³adowanie Szkodnik-RP
+[17:54:41] >>> Wystapil blad w probie polaczenia z baza danych, kod bledu: 1524
+[17:54:41] Number of vehicle models: 0
+[17:54:43] >>> Wystapil blad w probie polaczenia z baza danych, kod bledu: 1524
+[17:54:45] >>> Wystapil blad w probie polaczenia z baza danych, kod bledu: 1524
+[17:54:47] >>> Wystapil blad w probie polaczenia z baza danych, kod bledu: 1524
+[17:54:49] >>> Wystapil blad w probie polaczenia z baza danych, kod bledu: 1524
+[17:54:51] >>> Wystapil blad w probie polaczenia z baza danych, kod bledu: 1524
+[17:54:53] >>> Wystapil blad w probie polaczenia z baza danych, kod bledu: 1524
+[17:54:55] >>> Wystapil blad w probie polaczenia z baza danych, kod bledu: 1524
+[17:54:58] >>> Wystapil blad w probie polaczenia z baza danych, kod bledu: 1524
+[17:55:00] >>> Wystapil blad w probie polaczenia z baza danych, kod bledu: 1524
+[17:55:02] >>> Wystapil blad w probie polaczenia z baza danych, kod bledu: 1524
+[17:55:04] >>> Wystapil blad w probie polaczenia z baza danych, kod bledu: 1524
+[17:55:06] >>> Wystapil blad w probie polaczenia z baza danych, kod bledu: 1524
+[17:55:08] >>> Wystapil blad w probie polaczenia z baza danych, kod bledu: 1524
+[17:55:10] >>> Wystapil blad w probie polaczenia z baza danych, kod bledu: 1524
+[17:55:12] >>> Wystapil blad w probie polaczenia z baza danych, kod bledu: 1524
+[17:55:14] >>> Wystapil blad w probie polaczenia z baza danych, kod bledu: 1524
+[17:55:16] >>> Wystapil blad w probie polaczenia z baza danych, kod bledu: 1524
+[17:55:18] >>> Wystapil blad w probie polaczenia z baza danych, kod bledu: 1524
+[17:55:20] >>> Wystapil blad w probie polaczenia z baza danych, kod bledu: 1524
+[17:55:22] >>> Wystapil blad w probie polaczenia z baza danych, kod bledu: 1524
