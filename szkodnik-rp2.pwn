@@ -846,7 +846,7 @@ public db_timer(){
 public OnGameModeInit()
 {
 	print("Rozpoczynam �adowanie Szkodnik-RP 2025");
-	DB_HANDLE = mysql_connect(MYSQL_HOST, MYSQL_USER, MYSQL_PASSWORD, MYSQL_DB);
+	DB_HANDLE = mysql_connect(MYSQL_HOST, MYSQL_USER, MYSQL_PASSWORD, MYSQL_DB, 3307);
 	if(mysql_errno() != 0) {
 		SetTimer("db_timer", 2000, false);
 		printf(">>> Wystapil blad w probie polaczenia z baza danych, kod bledu: %d", mysql_errno());
