@@ -1,13 +1,9 @@
-
-
 networks:
   szkodnikrp-net:
 
 services:
   db:
     image: mysql:8
-    ports:
-      - "33060:3306"
     container_name: szkodnikrp-db
     restart: unless-stopped
     environment:
@@ -25,8 +21,6 @@ services:
       - db
     ports:
       - "7777:7777/udp"
-    volumes:
-      - .:/app
     environment:
       DB_HOST: db
       DB_USER: samp
@@ -34,4 +28,3 @@ services:
       DB_NAME: szkodnikrp
     networks:
       - szkodnikrp-net
-

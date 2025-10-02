@@ -1959,3 +1959,335 @@ v0.3.DL-R1, (C)2005-2018 SA-MP Team
 [19:32:31] >>> Wystapil blad w probie polaczenia z baza danych, kod bledu: 2003
 [19:32:33] >>> Wystapil blad w probie polaczenia z baza danych, kod bledu: 2003
 [19:32:35] >>> Wystapil blad w probie polaczenia z baza danych, kod bledu: 2003
+
+----------
+Loaded log file: "server_log.txt".
+----------
+
+SA-MP Dedicated Server
+----------------------
+v0.3.DL-R1, (C)2005-2018 SA-MP Team
+
+[12:18:55] language = ""  (string)
+[12:18:55] 
+[12:18:55] Server Plugins
+[12:18:55] --------------
+[12:18:55]  Loading plugin: streamer.so
+[12:18:55] 
+
+*** Streamer Plugin v2.9.5 by Incognito loaded ***
+
+[12:18:55]   Loaded.
+[12:18:55]  Loading plugin: sscanf.so
+[12:18:55] 
+
+[12:18:55]  ===============================
+
+[12:18:55]       sscanf plugin loaded.     
+
+[12:18:55]          Version:  2.8.3        
+
+[12:18:55]   (c) 2018 Alex "Y_Less" Cole  
+
+[12:18:55]  ===============================
+
+[12:18:55]   Loaded.
+[12:18:55]  Loading plugin: mysql.so
+[12:18:55]  >> plugin.mysql: R41-4 successfully loaded.
+[12:18:55]   Loaded.
+[12:18:55]  Loading plugin: pawncmd.so
+[12:18:55] [Pawn.CMD] plugin v3.3.3 by urShadow loaded
+[12:18:55]   Loaded.
+[12:18:55]  Loading plugin: samp_bcrypt.so
+[12:18:55] [SampBcrypt] [info]: Version: 0.3.1
+[12:18:55]   Loaded.
+[12:18:55]  Loading plugin: pawnregex.so
+[12:18:55] [Pawn.Regex] 
+
+    | Pawn.Regex 1.2.1 | 2016 - 2021
+    |--------------------------------
+    | Author and maintainer: katursis
+
+
+    | Compiled: Jul 18 2021 at 17:46:19
+    |--------------------------------------------------------------
+    | Repository: https://github.com/katursis/Pawn.Regex
+
+[12:18:55]   Loaded.
+[12:18:55]  Loaded 6 plugins.
+
+[12:18:55] [artwork:crc] bfylcpd1.dff CRC = 0x237D059D
+[12:18:55] [artwork:crc] bfylcpd1.txd CRC = 0x7CE23A9D
+[12:18:55] [artwork:crc] bmylcpd1.dff CRC = 0x7CB85D2C
+[12:18:55] [artwork:crc] bmylcpd1.txd CRC = 0x767B1B8C
+[12:18:55] [artwork:crc] hmylcpd1.dff CRC = 0x6484F730
+[12:18:55] [artwork:crc] hmylcpd1.txd CRC = 0x9B8B2D7B
+[12:18:55] [artwork:crc] noose.dff CRC = 0xF3D17C31
+[12:18:55] [artwork:crc] noose.txd CRC = 0x44E06804
+[12:18:55] [artwork:crc] ofylcpd1.dff CRC = 0xB05C29F5
+[12:18:55] [artwork:crc] ofylcpd1.txd CRC = 0x1D590654
+[12:18:55] [artwork:crc] omylcpd1.dff CRC = 0x5FC25DFE
+[12:18:55] [artwork:crc] omylcpd1.txd CRC = 0xE875191F
+[12:18:55] [artwork:crc] wfylcpd1.dff CRC = 0x6E441003
+[12:18:55] [artwork:crc] wfylcpd1.txd CRC = 0x47D3E39B
+[12:18:55] [artwork:crc] wfylcpd2.dff CRC = 0x6E441003
+[12:18:55] [artwork:crc] wfylcpd2.txd CRC = 0x23EA4B8A
+[12:18:55] [artwork:crc] wmylcpd1.dff CRC = 0xCDA0C806
+[12:18:55] [artwork:crc] wmylcpd1.txd CRC = 0x40E1CD0A
+[12:18:55] [artwork:crc] wallzzz.dff CRC = 0x4BC6EDFF
+[12:18:55] [artwork:crc] wallzzz.txd CRC = 0x235E3EEB
+[12:18:55] 
+[12:18:55] Filterscripts
+[12:18:55] ---------------
+[12:18:55]   Loaded 0 filterscripts.
+
+[12:18:55] Rozpoczynam �adowanie Szkodnik-RP 2025
+[12:19:35] >>> Wystapil blad w probie polaczenia z baza danych, kod bledu: 2005
+[12:19:35] Number of vehicle models: 0
+[12:19:37] >>> Wystapil blad w probie polaczenia z baza danych, kod bledu: 2005
+[12:19:39] >>> Wystapil blad w probie polaczenia z baza danych, kod bledu: 2005
+[12:19:41] >>> Wystapil blad w probie polaczenia z baza danych, kod bledu: 2005
+[12:19:43] >>> Wystapil blad w probie polaczenia z baza danych, kod bledu: 2005
+[12:19:45] >>> Wystapil blad w probie polaczenia z baza danych, kod bledu: 2005
+[12:19:47] >>> Wystapil blad w probie polaczenia z baza danych, kod bledu: 2005
+[12:19:49] >>> Wystapil blad w probie polaczenia z baza danych, kod bledu: 2005
+[12:19:51] >>> Wystapil blad w probie polaczenia z baza danych, kod bledu: 2005
+[12:19:53] >>> Wystapil blad w probie polaczenia z baza danych, kod bledu: 2005
+[12:19:55] >>> Wystapil blad w probie polaczenia z baza danych, kod bledu: 2005
+[12:19:57] >>> Wystapil blad w probie polaczenia z baza danych, kod bledu: 2005
+[12:20:00] >>> Wystapil blad w probie polaczenia z baza danych, kod bledu: 2005
+[12:20:02] >>> Wystapil blad w probie polaczenia z baza danych, kod bledu: 2005
+[12:20:04] >>> Wystapil blad w probie polaczenia z baza danych, kod bledu: 2005
+[12:20:06] >>> Wystapil blad w probie polaczenia z baza danych, kod bledu: 2005
+[12:20:08] >>> Wystapil blad w probie polaczenia z baza danych, kod bledu: 2005
+[12:20:10] >>> Wystapil blad w probie polaczenia z baza danych, kod bledu: 2005
+[12:20:12] >>> Wystapil blad w probie polaczenia z baza danych, kod bledu: 2005
+[12:20:14] >>> Wystapil blad w probie polaczenia z baza danych, kod bledu: 2005
+[12:20:16] >>> Wystapil blad w probie polaczenia z baza danych, kod bledu: 2005
+[12:20:18] >>> Wystapil blad w probie polaczenia z baza danych, kod bledu: 2005
+[12:20:20] >>> Wystapil blad w probie polaczenia z baza danych, kod bledu: 2005
+[12:20:22] >>> Wystapil blad w probie polaczenia z baza danych, kod bledu: 2005
+[12:20:24] >>> Wystapil blad w probie polaczenia z baza danych, kod bledu: 2005
+[12:20:26] >>> Wystapil blad w probie polaczenia z baza danych, kod bledu: 2005
+[12:20:28] >>> Wystapil blad w probie polaczenia z baza danych, kod bledu: 2005
+[12:20:30] >>> Wystapil blad w probie polaczenia z baza danych, kod bledu: 2005
+[12:20:32] >>> Wystapil blad w probie polaczenia z baza danych, kod bledu: 2005
+[12:20:34] >>> Wystapil blad w probie polaczenia z baza danych, kod bledu: 2005
+[12:20:36] >>> Wystapil blad w probie polaczenia z baza danych, kod bledu: 2005
+[12:20:38] >>> Wystapil blad w probie polaczenia z baza danych, kod bledu: 2005
+[12:20:40] >>> Wystapil blad w probie polaczenia z baza danych, kod bledu: 2005
+[12:20:42] >>> Wystapil blad w probie polaczenia z baza danych, kod bledu: 2005
+[12:20:44] >>> Wystapil blad w probie polaczenia z baza danych, kod bledu: 2005
+[12:20:46] >>> Wystapil blad w probie polaczenia z baza danych, kod bledu: 2005
+[12:20:48] >>> Wystapil blad w probie polaczenia z baza danych, kod bledu: 2005
+[12:20:51] >>> Wystapil blad w probie polaczenia z baza danych, kod bledu: 2005
+[12:20:53] >>> Wystapil blad w probie polaczenia z baza danych, kod bledu: 2005
+[12:20:55] >>> Wystapil blad w probie polaczenia z baza danych, kod bledu: 2005
+[12:20:57] >>> Wystapil blad w probie polaczenia z baza danych, kod bledu: 2005
+[12:20:59] >>> Wystapil blad w probie polaczenia z baza danych, kod bledu: 2005
+[12:21:01] >>> Wystapil blad w probie polaczenia z baza danych, kod bledu: 2005
+[12:21:03] >>> Wystapil blad w probie polaczenia z baza danych, kod bledu: 2005
+[12:21:05] >>> Wystapil blad w probie polaczenia z baza danych, kod bledu: 2005
+[12:21:07] >>> Wystapil blad w probie polaczenia z baza danych, kod bledu: 2005
+[12:21:09] >>> Wystapil blad w probie polaczenia z baza danych, kod bledu: 2005
+[12:21:11] >>> Wystapil blad w probie polaczenia z baza danych, kod bledu: 2005
+[12:21:13] >>> Wystapil blad w probie polaczenia z baza danych, kod bledu: 2005
+[12:21:15] >>> Wystapil blad w probie polaczenia z baza danych, kod bledu: 2005
+[12:21:17] >>> Wystapil blad w probie polaczenia z baza danych, kod bledu: 2005
+
+----------
+Loaded log file: "server_log.txt".
+----------
+
+SA-MP Dedicated Server
+----------------------
+v0.3.DL-R1, (C)2005-2018 SA-MP Team
+
+[12:21:22] language = ""  (string)
+[12:21:22] 
+[12:21:22] Server Plugins
+[12:21:22] --------------
+[12:21:22]  Loading plugin: streamer.so
+[12:21:22] 
+
+*** Streamer Plugin v2.9.5 by Incognito loaded ***
+
+[12:21:22]   Loaded.
+[12:21:22]  Loading plugin: sscanf.so
+[12:21:22] 
+
+[12:21:22]  ===============================
+
+[12:21:22]       sscanf plugin loaded.     
+
+[12:21:22]          Version:  2.8.3        
+
+[12:21:22]   (c) 2018 Alex "Y_Less" Cole  
+
+[12:21:22]  ===============================
+
+[12:21:22]   Loaded.
+[12:21:22]  Loading plugin: mysql.so
+[12:21:22]  >> plugin.mysql: R41-4 successfully loaded.
+[12:21:22]   Loaded.
+[12:21:22]  Loading plugin: pawncmd.so
+[12:21:22] [Pawn.CMD] plugin v3.3.3 by urShadow loaded
+[12:21:22]   Loaded.
+[12:21:22]  Loading plugin: samp_bcrypt.so
+[12:21:22] [SampBcrypt] [info]: Version: 0.3.1
+[12:21:22]   Loaded.
+[12:21:22]  Loading plugin: pawnregex.so
+[12:21:22] [Pawn.Regex] 
+
+    | Pawn.Regex 1.2.1 | 2016 - 2021
+    |--------------------------------
+    | Author and maintainer: katursis
+
+
+    | Compiled: Jul 18 2021 at 17:46:19
+    |--------------------------------------------------------------
+    | Repository: https://github.com/katursis/Pawn.Regex
+
+[12:21:22]   Loaded.
+[12:21:22]  Loaded 6 plugins.
+
+[12:21:22] [artwork:crc] bfylcpd1.dff CRC = 0x237D059D
+[12:21:22] [artwork:crc] bfylcpd1.txd CRC = 0x7CE23A9D
+[12:21:22] [artwork:crc] bmylcpd1.dff CRC = 0x7CB85D2C
+[12:21:22] [artwork:crc] bmylcpd1.txd CRC = 0x767B1B8C
+[12:21:22] [artwork:crc] hmylcpd1.dff CRC = 0x6484F730
+[12:21:22] [artwork:crc] hmylcpd1.txd CRC = 0x9B8B2D7B
+[12:21:22] [artwork:crc] noose.dff CRC = 0xF3D17C31
+[12:21:22] [artwork:crc] noose.txd CRC = 0x44E06804
+[12:21:22] [artwork:crc] ofylcpd1.dff CRC = 0xB05C29F5
+[12:21:22] [artwork:crc] ofylcpd1.txd CRC = 0x1D590654
+[12:21:22] [artwork:crc] omylcpd1.dff CRC = 0x5FC25DFE
+[12:21:22] [artwork:crc] omylcpd1.txd CRC = 0xE875191F
+[12:21:22] [artwork:crc] wfylcpd1.dff CRC = 0x6E441003
+[12:21:22] [artwork:crc] wfylcpd1.txd CRC = 0x47D3E39B
+[12:21:22] [artwork:crc] wfylcpd2.dff CRC = 0x6E441003
+[12:21:22] [artwork:crc] wfylcpd2.txd CRC = 0x23EA4B8A
+[12:21:22] [artwork:crc] wmylcpd1.dff CRC = 0xCDA0C806
+[12:21:22] [artwork:crc] wmylcpd1.txd CRC = 0x40E1CD0A
+[12:21:22] [artwork:crc] wallzzz.dff CRC = 0x4BC6EDFF
+[12:21:22] [artwork:crc] wallzzz.txd CRC = 0x235E3EEB
+[12:21:22] 
+[12:21:22] Filterscripts
+[12:21:22] ---------------
+[12:21:22]   Loaded 0 filterscripts.
+
+[12:21:22] Rozpoczynam �adowanie Szkodnik-RP 2025
+[12:22:02] >>> Wystapil blad w probie polaczenia z baza danych, kod bledu: 2005
+[12:22:02] Number of vehicle models: 0
+[12:22:04] >>> Wystapil blad w probie polaczenia z baza danych, kod bledu: 2005
+[12:22:06] >>> Wystapil blad w probie polaczenia z baza danych, kod bledu: 2005
+[12:22:08] >>> Wystapil blad w probie polaczenia z baza danych, kod bledu: 2005
+[12:22:10] >>> Wystapil blad w probie polaczenia z baza danych, kod bledu: 2005
+[12:22:12] >>> Wystapil blad w probie polaczenia z baza danych, kod bledu: 2005
+[12:22:14] >>> Wystapil blad w probie polaczenia z baza danych, kod bledu: 2005
+[12:22:16] >>> Wystapil blad w probie polaczenia z baza danych, kod bledu: 2005
+[12:22:18] >>> Wystapil blad w probie polaczenia z baza danych, kod bledu: 2005
+[12:22:20] >>> Wystapil blad w probie polaczenia z baza danych, kod bledu: 2005
+[12:22:22] >>> Wystapil blad w probie polaczenia z baza danych, kod bledu: 2005
+[12:22:25] >>> Wystapil blad w probie polaczenia z baza danych, kod bledu: 2005
+[12:22:27] >>> Wystapil blad w probie polaczenia z baza danych, kod bledu: 2005
+[12:22:29] >>> Wystapil blad w probie polaczenia z baza danych, kod bledu: 2005
+[12:22:31] >>> Wystapil blad w probie polaczenia z baza danych, kod bledu: 2005
+[12:22:33] >>> Wystapil blad w probie polaczenia z baza danych, kod bledu: 2005
+[12:22:35] >>> Wystapil blad w probie polaczenia z baza danych, kod bledu: 2005
+[12:22:37] >>> Wystapil blad w probie polaczenia z baza danych, kod bledu: 2005
+[12:22:39] >>> Wystapil blad w probie polaczenia z baza danych, kod bledu: 2005
+[12:22:41] >>> Wystapil blad w probie polaczenia z baza danych, kod bledu: 2005
+[12:22:43] >>> Wystapil blad w probie polaczenia z baza danych, kod bledu: 2005
+[12:22:45] >>> Wystapil blad w probie polaczenia z baza danych, kod bledu: 2005
+[12:22:47] >>> Wystapil blad w probie polaczenia z baza danych, kod bledu: 2005
+[12:22:49] >>> Wystapil blad w probie polaczenia z baza danych, kod bledu: 2005
+[12:22:51] >>> Wystapil blad w probie polaczenia z baza danych, kod bledu: 2005
+[12:22:53] >>> Wystapil blad w probie polaczenia z baza danych, kod bledu: 2005
+[12:22:55] >>> Wystapil blad w probie polaczenia z baza danych, kod bledu: 2005
+[12:22:57] >>> Wystapil blad w probie polaczenia z baza danych, kod bledu: 2005
+[12:22:59] >>> Wystapil blad w probie polaczenia z baza danych, kod bledu: 2005
+[12:23:01] >>> Wystapil blad w probie polaczenia z baza danych, kod bledu: 2005
+
+----------
+Loaded log file: "server_log.txt".
+----------
+
+SA-MP Dedicated Server
+----------------------
+v0.3.DL-R1, (C)2005-2018 SA-MP Team
+
+[12:23:05] language = ""  (string)
+[12:23:05] 
+[12:23:05] Server Plugins
+[12:23:05] --------------
+[12:23:05]  Loading plugin: streamer.so
+[12:23:05] 
+
+*** Streamer Plugin v2.9.5 by Incognito loaded ***
+
+[12:23:05]   Loaded.
+[12:23:05]  Loading plugin: sscanf.so
+[12:23:05] 
+
+[12:23:05]  ===============================
+
+[12:23:05]       sscanf plugin loaded.     
+
+[12:23:05]          Version:  2.8.3        
+
+[12:23:05]   (c) 2018 Alex "Y_Less" Cole  
+
+[12:23:05]  ===============================
+
+[12:23:05]   Loaded.
+[12:23:05]  Loading plugin: mysql.so
+[12:23:05]  >> plugin.mysql: R41-4 successfully loaded.
+[12:23:05]   Loaded.
+[12:23:05]  Loading plugin: pawncmd.so
+[12:23:05] [Pawn.CMD] plugin v3.3.3 by urShadow loaded
+[12:23:05]   Loaded.
+[12:23:05]  Loading plugin: samp_bcrypt.so
+[12:23:05] [SampBcrypt] [info]: Version: 0.3.1
+[12:23:05]   Loaded.
+[12:23:05]  Loading plugin: pawnregex.so
+[12:23:05] [Pawn.Regex] 
+
+    | Pawn.Regex 1.2.1 | 2016 - 2021
+    |--------------------------------
+    | Author and maintainer: katursis
+
+
+    | Compiled: Jul 18 2021 at 17:46:19
+    |--------------------------------------------------------------
+    | Repository: https://github.com/katursis/Pawn.Regex
+
+[12:23:05]   Loaded.
+[12:23:05]  Loaded 6 plugins.
+
+[12:23:05] [artwork:crc] bfylcpd1.dff CRC = 0x237D059D
+[12:23:05] [artwork:crc] bfylcpd1.txd CRC = 0x7CE23A9D
+[12:23:05] [artwork:crc] bmylcpd1.dff CRC = 0x7CB85D2C
+[12:23:05] [artwork:crc] bmylcpd1.txd CRC = 0x767B1B8C
+[12:23:05] [artwork:crc] hmylcpd1.dff CRC = 0x6484F730
+[12:23:05] [artwork:crc] hmylcpd1.txd CRC = 0x9B8B2D7B
+[12:23:05] [artwork:crc] noose.dff CRC = 0xF3D17C31
+[12:23:05] [artwork:crc] noose.txd CRC = 0x44E06804
+[12:23:05] [artwork:crc] ofylcpd1.dff CRC = 0xB05C29F5
+[12:23:05] [artwork:crc] ofylcpd1.txd CRC = 0x1D590654
+[12:23:05] [artwork:crc] omylcpd1.dff CRC = 0x5FC25DFE
+[12:23:05] [artwork:crc] omylcpd1.txd CRC = 0xE875191F
+[12:23:05] [artwork:crc] wfylcpd1.dff CRC = 0x6E441003
+[12:23:05] [artwork:crc] wfylcpd1.txd CRC = 0x47D3E39B
+[12:23:05] [artwork:crc] wfylcpd2.dff CRC = 0x6E441003
+[12:23:05] [artwork:crc] wfylcpd2.txd CRC = 0x23EA4B8A
+[12:23:05] [artwork:crc] wmylcpd1.dff CRC = 0xCDA0C806
+[12:23:05] [artwork:crc] wmylcpd1.txd CRC = 0x40E1CD0A
+[12:23:05] [artwork:crc] wallzzz.dff CRC = 0x4BC6EDFF
+[12:23:05] [artwork:crc] wallzzz.txd CRC = 0x235E3EEB
+[12:23:05] 
+[12:23:05] Filterscripts
+[12:23:05] ---------------
+[12:23:05]   Loaded 0 filterscripts.
+
+[12:23:05] Rozpoczynam �adowanie Szkodnik-RP 2025
