@@ -7,7 +7,7 @@ services:
   db:
     image: mysql:8
     ports:
-      - "33060:3306"
+      - "3306:33060"
     container_name: szkodnikrp-db
     restart: unless-stopped
     environment:
