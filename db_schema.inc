@@ -1,33 +1,15 @@
-<<<<<<< HEAD
-#include <a_mysql>
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
 
+#include <a_mysql>
+// SA-MP did not support .env files, nor any safe way to fill credentials.
+// This is unsafe and should not ever be in production.
 #define MYSQL_HOST "127.0.0.1"
 #define MYSQL_USER "www"
-#define MYSQL_PASSWORD "123"
+#define MYSQL_PASSWORD "CHANGEME"
 #define MYSQL_DB "szkodnikrp"
-
-=======
->>>>>>> parent of c751a93 (Added groups vars to player cache)
-=======
->>>>>>> parent of c751a93 (Added groups vars to player cache)
-=======
->>>>>>> parent of c751a93 (Added groups vars to player cache)
-=======
->>>>>>> parent of c751a93 (Added groups vars to player cache)
-=======
->>>>>>> parent of c751a93 (Added groups vars to player cache)
-=======
->>>>>>> parent of c751a93 (Added groups vars to player cache)
 new MySQL:DB_HANDLE;
-=======
+
 #include "szkodnik-rp2.pwn"
->>>>>>> parent of 9085ba7 (Gamemode can be compiled now!)
+
 
 stock EnsureCreated(){
 	// db schema
