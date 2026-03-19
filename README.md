@@ -1,6 +1,5 @@
-# szkodnik-rp
-
-[![sampctl](https://img.shields.io/badge/sampctl-szkodnik--rp-2f2f2f.svg?style=for-the-badge)](https://github.com/Hype02/szkodnik-rp)
+# szkodnik-rp 
+[![sampctl](https://img.shields.io/badge/sampctl-szkodnik--rp-2f2f2f.svg?style=for-the-badge)](https://github.com/sklawik/szkodnik-rp)
 
 Multiplayer server written in Pawn scripting language (which is sandboxed like C# and syntax is strongly similiar to C language) for San Andreas: Multiplayer (SA-MP).
 SA-MP used Raknet networking technology.
