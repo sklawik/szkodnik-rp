@@ -5,14 +5,6 @@
 Multiplayer server written in Pawn scripting language (which is sandboxed like C# and syntax is strongly similiar to C language) for San Andreas: Multiplayer (SA-MP).
 SA-MP used Raknet networking technology.
 
-It easly can be set up by using pawnctl tool but since it was written around 2016-2018 by 16 years old me it contains 
-bugs that nowdays can't be even fixed because the platform written the script for is no longer supported (SA-MP).
-
-# Do not expose this app to public internet. SA-MP is no longer suported nor plugins used for database managment for this project.
-# GTA San Andreas is no longer avaliable to buy, this means it is more likely less people will look for vulnerability in good deed to patch them in the game itself.
-Check out secure open.mp alternative if you really want to run the project: https://open.mp
-
-
 ## Retro / Case Study (after 8 years)
 What is this project about, what it does? The gameplay mechanics.
 - If you own GTA San Andreas and want to play with friends, you need a server.
@@ -30,15 +22,19 @@ What is this project about, what it does? The gameplay mechanics.
      7. Animations system. Lots of hours put in reverse-engineering game's animation database so you could use /anim command and start playing an animation. Animations were also applied for various aspects       of the game, if player is drunk, damaged, etc.
      8. Anti-cheat system. While simple it did its work. Server was public and occasionaly cheater/hacker joined the game, he was banned very easly since anti-cheat was written very strictly to the gamemode       logic, this topic deserves a litte more:
       Spawning a weapon using cheat is easy to detect. But some cheaters were smarted enough to not spawn weapon but send special Raknet packets to damage the players. I also detected if player was damaged        by a player who even doesn't have the weapon nor withdrawn it. There are few more wise examples in the script itself, including anti-speed hacks, anti-spam.
+     9. Chat system.
+     The experience taught me that while my chat system was advanced and well protected there were vulnerabilities in regex itself. Text manipulation like JSON bombs, it had to be fixed in script aswell.
 ## What worked really well.
 1. Security & Anti-cheat.
   I never trusted user input, not only input but just any Raknet data sent by a client (player). 
 While normal players couldn't mess with their data before sent to a server, a malicious actor could using Cheat Engine to replace a data that server trusted a client with, or hacker could also send fake Raknet data to make other damages to the server network. I wouldn't mention SQL injections since it is most basic thing to protect a server from.
-2. Stability (few to 20 players active at once). While SA-MP itself was not most stable application, the script didn't crash. All user data was parsed so most known vulnerabilities to crash server using various input text woulnd't work.
+This experience taught me the importance of server-side validation, which is now my default mindset when building any API or backend service.
+
+3. Stability (few to 20 players active at once). While SA-MP itself was not most stable application, the script didn't crash. All user data was parsed so most known vulnerabilities to crash server using various input text woulnd't work.
    At first, everything was stored in Array for maximum performance but then I switched to use Array as a cache from MySql data I fetched.
-3. Used libraries and plugins.
+4. Used libraries and plugins.
   I stick to the KISS rule. It worked, after 8 years, tho codebase is hilariously unprofessionas, by looking at it for 5 minutes I remember the core structures and system designs. No additional libraries to learn, just everything that anyone can know in general - an SQL plugin to use MySQL database (mariaDB worked flawlessly).
-## What I have learned 
+## System Architecture & Scalability
 1. Before doing a project even small, think big. What if codebase gets larger, what if it needs to be contenerized, automated?
   Here would came Docker in help, eventually Kubernates if one server dies for bug other would act as copies so players wouldn't lose any data and need just a simple reconnect.
 2. I would use caching as main approach to fetch data.
@@ -48,6 +44,16 @@ While normal players couldn't mess with their data before sent to a server, a ma
 I would plan the project from ground up first, decided on how many people should work with me (doing it all alone wouldn't make much sense).
 Set up a git server to store the codebase, Docker and Kubernates.
 If target was a multiplayer game in general, I would think twice about which app will last for a next decade.
+
+It easly can be set up by using pawnctl tool but since it was written around 2016-2018 by 16 years old me it contains 
+bugs that nowdays can't be even fixed because the platform written the script for is no longer supported (SA-MP).
+# Do not expose this app to public internet. SA-MP is no longer suported nor plugins used for database managment for this project.
+# GTA San Andreas is no longer avaliable to buy, this means it is more likely less people will look for vulnerability in good deed to patch them in the game itself.
+Check out secure open.mp alternative if you really want to run the project: https://open.mp
+
+# Summary
+The project was key to learn programming without any pressure, having fun friends and got knowledge from it.
+Fundamentals of C++ by Alex Allain were too boring, while I stopped at "loops" article, I switched to code a multiplayer server and then everything made it easy to finish the book itself.
 
     
 ## Installation
