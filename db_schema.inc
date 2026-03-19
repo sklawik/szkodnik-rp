@@ -1,6 +1,7 @@
+// Check out main branch to see a noticy about unsecure passwords in #defines.
 #define MYSQL_HOST "db"
 #define MYSQL_USER "www"
-#define MYSQL_PASSWORD "example"
+#define MYSQL_PASSWORD "CHANGEME"
 #define MYSQL_DB "szkodnikrp"
 
 new MySQL:DB_HANDLE;
