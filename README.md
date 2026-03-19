@@ -58,6 +58,7 @@ If target was a multiplayer game in general, I would think twice about which app
 The project was key to learn programming without any pressure, having fun friends and got knowledge from it.
 Fundamentals of C++ by Alex Allain were too boring, while I stopped at "loops" article, I switched to code a multiplayer server and then everything made it easy to finish the book itself.
 
+Branch Master is most actual one, it contains attempts to revive branch Main, so it runs on new both hardware and software environments.
 
 
 
