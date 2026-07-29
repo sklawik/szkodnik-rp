@@ -100,3 +100,5 @@
 [07/29/2026 08:00:20 PM] [ERROR] error #1146 while executing query "INSERT INTO playerLogs (type, playerUID, message, anyUID) VALUES (0, 1, '[LOG] [JOIN] SAMP_NAME: Richard_Fox, SAMP_ID: 0, UID: 1, SAMP_IP: 127.0.0.1', 0);": Table 'szkodnikrp.playerLogs' doesn't exist
 [07/29/2026 09:09:22 PM] [ERROR] error #1044 while executing query "DROP DATABASE szkodinkrp;": Access denied for user 'www'@'%' to database 'szkodinkrp'
 [07/29/2026 09:09:22 PM] [ERROR] error #1044 while executing query "CREATE DATABASE szkodinkrp;": Access denied for user 'www'@'%' to database 'szkodinkrp'
+[07/29/2026 09:12:36 PM] [ERROR] error #1044 while executing query "DROP DATABASE szkodinkrp;": Access denied for user 'www'@'%' to database 'szkodinkrp'
+[07/29/2026 09:12:36 PM] [ERROR] error #1044 while executing query "CREATE DATABASE szkodinkrp;": Access denied for user 'www'@'%' to database 'szkodinkrp'

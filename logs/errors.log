@@ -1,2 +1,0 @@
-[07/29/2026 09:09:22 PM] [plugins/mysql] error #1044 while executing query "DROP DATABASE szkodinkrp;": Access denied for user 'www'@'%' to database 'szkodinkrp'
-[07/29/2026 09:09:22 PM] [plugins/mysql] error #1044 while executing query "CREATE DATABASE szkodinkrp;": Access denied for user 'www'@'%' to database 'szkodinkrp'
