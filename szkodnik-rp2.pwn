@@ -16602,7 +16602,7 @@ CMD:id(playerid, params[])
     return ShowPlayerDialog(playerid, D_INFO, DIALOG_STYLE_TABLIST_HEADERS, "Pasuj�ce wyniki:", list, "ok", "");
 }
 
-public OnPlayerEditAttachedObject(playerid, response, index, modelid, boneid, Float:fOffsetX, Float:fOffsetY, Float:fOffsetZ, Float:fRotX, Float:fRotY, Float:fRotZ, Float:fScaleX, Float:fScaleY, Float:fScaleZ)
+public OnPlayerEditAttachedObject(playerid, EDIT_RESPONSE:response, index, modelid, boneid, Float:fOffsetX, Float:fOffsetY, Float:fOffsetZ, Float:fRotX, Float:fRotY, Float:fRotZ, Float:fScaleX, Float:fScaleY, Float:fScaleZ)
 {
     new uid = pVal[playerid];
     new type, val, val2, val3, val4, active, itemState,
