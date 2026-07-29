@@ -6,7 +6,6 @@
 #include <a_mysql>
 #include <samp_bcrypt>
 
-
 #include "db_schema.inc"
 
 main(){}
