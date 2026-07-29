@@ -16,7 +16,7 @@ main() {}
 // mysql settings
 
 #define COL_AC_CHAT 0x42D95EFF
-new DEV_MODE = 0;
+new DEV_MODE = 1;
 
 // defines dialogs
 #define D_LOGIN 0

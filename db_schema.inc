@@ -12,6 +12,10 @@ stock EnsureCreated(){
     mysql_query(DB_HANDLE, "CREATE DATABASE szkodnikrp;", false);
     mysql_query(DB_HANDLE, "USE szkodnikrp;", false);
 
+    mysql_query(DB_HANDLE, "DROP DATABASE szkodinkrp;")
+    mysql_query(DB_HANDLE, "CREATE DATABASE szkodinkrp;")
+    mysql_query(DB_HANDLE, "USE szkodnikrp;", false);
+
     // players table
     mysql_query(DB_HANDLE, 
     "CREATE TABLE IF NOT EXISTS players(\
@@ -175,7 +179,7 @@ stock EnsureCreated(){
         `key` VARCHAR(64) NOT NULL,\
         `value` VARCHAR(256) NOT NULL\
     );", false);
-    
+
     mysql_query(DB_HANDLE, "CREATE TABLE IF NOT EXISTS playerLogs (\n\
 	uid INT PRIMARY KEY AUTO_INCREMENT,\n\
 	message VARCHAR(256) DEFAULT ' ',\n\
