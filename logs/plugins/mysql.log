@@ -102,3 +102,5 @@
 [07/29/2026 09:09:22 PM] [ERROR] error #1044 while executing query "CREATE DATABASE szkodinkrp;": Access denied for user 'www'@'%' to database 'szkodinkrp'
 [07/29/2026 09:12:36 PM] [ERROR] error #1044 while executing query "DROP DATABASE szkodinkrp;": Access denied for user 'www'@'%' to database 'szkodinkrp'
 [07/29/2026 09:12:36 PM] [ERROR] error #1044 while executing query "CREATE DATABASE szkodinkrp;": Access denied for user 'www'@'%' to database 'szkodinkrp'
+[07/29/2026 10:14:35 PM] [ERROR] error #1146 while executing query "SELECT uid, yard, priceHouse, priceBusiness, IFNULL(playerUID, 0) as playerUID, IFNULL(groupUID,0) as groupUID FROM gameZones WHERE minX=600.000000 AND minY=-1900.000000 LIMIT 1": Table 'szkodnikrp.gameZones' doesn't exist
+[07/29/2026 10:14:35 PM] [ERROR] cache_get_row_count: no active cache

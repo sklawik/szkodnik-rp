@@ -4662,47 +4662,13 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
                 {
                     return ShowDialogLogin(playerid);
                 }
-                new hash[1024];
+                printf("input: %s", inputtext)
+                new password[128];
+                format(password, sizeof(password), "%s", inputtext);
+                print("hashing...");
+                bcrypt_verify(playerid, "OnPasswordHashLogin", password, PlayerCache[playerid][pHash]);
+                
 
-                //format(hash, sizeof(hash), "%s%s", SHA256::Hash(inputtext), SHA256::Hash(PlayerCache[playerid][pSalt]));
-                //format(hash, sizeof(hash), "%s", SHA256::Hash(hash));
-
-                //printf("hashzloginu: %s", hash);
-                //	printf("hash z bazy: %s", PlayerCache[playerid][pHash]);
-
-                if (!strcmp(hash, PlayerCache[playerid][pHash], false))
-                {
-                    new name[MAX_PLAYER_NAME];
-                    GetPlayerName(playerid, name, sizeof(name));
-                    for (new j = 0; j < strlen(name); j++)
-                    {
-                        name[j] = tolower(name[j]);
-                    }
-                    if (strfind(name, "_", false) != -1)
-                    {
-                        new pos = strfind(name, "_", false);
-                        name[pos + 1] = toupper(name[pos + 1]);
-                    }
-                    name[0] = toupper(name[0]);
-                    new str[MAX_PLAYER_NAME];
-                    format(str, sizeof(str), "%d", playerid);
-
-                    // reloading name
-                    SetPlayerName(playerid, str);
-                    SetPlayerName(playerid, name);
-
-                    return LoginPlayer(playerid);
-                }
-                else
-                {
-                    if (LoginAttempt[playerid] == 3)
-                        return Kick(playerid);
-                    new str[256];
-                    format(str, sizeof(str), ""HEX_RED"Nieprawid�owe dane logowania!\n\n"HEX_WHITE""HEX_PURPLE"Witaj na serwerze Szkodnik RolePlay!"HEX_WHITE"\n\nPosta� "HEX_RED"%s"HEX_WHITE" zosta�a odnaleziona.\n\nZaloguj si� podaj�c poprawne has�o lub wybierz 'Zmie�' je�li chcesz zalogowa� si� na inn� posta�.", ReturnPlayerName(playerid));
-                    ShowPlayerDialog(playerid, D_LOGIN, DIALOG_STYLE_PASSWORD, "Logowanie", str, "Zaloguj", "Zmie�");
-                    LoginAttempt[playerid]++;
-                    return 1;
-                }
             }
             else
             {
@@ -5800,6 +5766,55 @@ Przyk�ad: 10 100", "Zam�w", "Anuluj");
         }
     }
     return 0;
+}
+
+forward OnPasswordHashLogin(playerid, success);
+public OnPasswordHashLogin(playerid, success){
+     if (success)
+    {
+        print("success login");
+        new name[MAX_PLAYER_NAME];
+        GetPlayerName(playerid, name, sizeof(name));
+        for (new j = 0; j < strlen(name); j++)
+        {
+            name[j] = tolower(name[j]);
+        }
+        if (strfind(name, "_", false) != -1)
+        {
+            new pos = strfind(name, "_", false);
+            name[pos + 1] = toupper(name[pos + 1]);
+        }
+        name[0] = toupper(name[0]);
+        new str[MAX_PLAYER_NAME];
+        format(str, sizeof(str), "%d", playerid);
+
+        // reloading name
+        SetPlayerName(playerid, str);
+        SetPlayerName(playerid, name);
+  
+        // SpawnPlayer(playerid);
+        return LoginPlayer(playerid);
+    }
+    else
+    {
+        print("fail login");
+        if (LoginAttempt[playerid] == 3)
+            return Kick(playerid);
+        new str[256];
+        format(str, sizeof(str), ""HEX_RED"Nieprawid�owe dane logowania!\n\n"HEX_WHITE""HEX_PURPLE"Witaj na serwerze Szkodnik RolePlay!"HEX_WHITE"\n\nPosta� "HEX_RED"%s"HEX_WHITE" zosta�a odnaleziona.\n\nZaloguj si� podaj�c poprawne has�o lub wybierz 'Zmie�' je�li chcesz zalogowa� si� na inn� posta�.", ReturnPlayerName(playerid));
+        ShowPlayerDialog(playerid, D_LOGIN, DIALOG_STYLE_PASSWORD, "Logowanie", str, "Zaloguj", "Zmie�");
+        LoginAttempt[playerid]++;
+        return 1;
+    }
+}
+
+forward OnPassswordHashVerify(playerid, success);
+public OnPassswordHashVerify(playerid, success)
+{
+
+    print("callback executed");
+
+   
 }
 
 stock GetPlayersCountOnDuty(groupuid)
