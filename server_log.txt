@@ -796,3 +796,1201 @@ v0.3.DL-R1, (C)2005-2018 SA-MP Team
 [18:03:28] plugin.mysql: Unloading plugin...
 [18:03:28] plugin.mysql: Plugin unloaded.
 [18:03:28] [Pawn.Regex] plugin unloaded
+
+----------
+Loaded log file: "server_log.txt".
+----------
+
+SA-MP Dedicated Server
+----------------------
+v0.3.DL-R1, (C)2005-2018 SA-MP Team
+
+[18:03:49] language = ""  (string)
+[18:03:49] 
+[18:03:49] Server Plugins
+[18:03:49] --------------
+[18:03:49]  Loading plugin: streamer.so
+[18:03:49] 
+
+*** Streamer Plugin v2.9.5 by Incognito loaded ***
+
+[18:03:49]   Loaded.
+[18:03:49]  Loading plugin: sscanf.so
+[18:03:49] 
+
+[18:03:49]  ===============================
+
+[18:03:49]       sscanf plugin loaded.     
+
+[18:03:49]          Version:  2.8.3        
+
+[18:03:49]   (c) 2018 Alex "Y_Less" Cole  
+
+[18:03:49]  ===============================
+
+[18:03:49]   Loaded.
+[18:03:49]  Loading plugin: mysql.so
+[18:03:49]  >> plugin.mysql: R41-4 successfully loaded.
+[18:03:49]   Loaded.
+[18:03:49]  Loading plugin: pawncmd.so
+[18:03:49]   Plugin does not conform to architecture.
+[18:03:49]   Failed.
+[18:03:49]  Loading plugin: samp_bcrypt.so
+[18:03:49] [SampBcrypt] [info]: Version: 0.3.1
+[18:03:49]   Loaded.
+[18:03:49]  Loading plugin: pawnregex.so
+[18:03:49] [Pawn.Regex] plugin v1.2.3 loading...
+[18:03:49] [Pawn.Regex] 
+
+    | Pawn.Regex 1.2.3 | 2016 - 2022
+    |--------------------------------
+    | Author and maintainer: katursis
+
+
+    | Compiled: Apr 24 2022 at 11:42:00
+    |--------------------------------------------------------------
+    | Repository: https://github.com/katursis/Pawn.Regex
+
+[18:03:49]   Loaded.
+[18:03:49]  Loaded 5 plugins.
+
+[18:03:49] [artwork:crc] bfylcpd1.dff CRC = 0x237D059D
+[18:03:49] [artwork:crc] bfylcpd1.txd CRC = 0x7CE23A9D
+[18:03:49] [artwork:crc] bmylcpd1.dff CRC = 0x7CB85D2C
+[18:03:49] [artwork:crc] bmylcpd1.txd CRC = 0x767B1B8C
+[18:03:49] [artwork:crc] hmylcpd1.dff CRC = 0x6484F730
+[18:03:49] [artwork:crc] hmylcpd1.txd CRC = 0x9B8B2D7B
+[18:03:49] [artwork:crc] noose.dff CRC = 0xF3D17C31
+[18:03:49] [artwork:crc] noose.txd CRC = 0x44E06804
+[18:03:49] [artwork:crc] ofylcpd1.dff CRC = 0xB05C29F5
+[18:03:49] [artwork:crc] ofylcpd1.txd CRC = 0x1D590654
+[18:03:49] [artwork:crc] omylcpd1.dff CRC = 0x5FC25DFE
+[18:03:49] [artwork:crc] omylcpd1.txd CRC = 0xE875191F
+[18:03:49] [artwork:crc] wfylcpd1.dff CRC = 0x6E441003
+[18:03:49] [artwork:crc] wfylcpd1.txd CRC = 0x47D3E39B
+[18:03:49] [artwork:crc] wfylcpd2.dff CRC = 0x6E441003
+[18:03:49] [artwork:crc] wfylcpd2.txd CRC = 0x23EA4B8A
+[18:03:49] [artwork:crc] wmylcpd1.dff CRC = 0xCDA0C806
+[18:03:49] [artwork:crc] wmylcpd1.txd CRC = 0x40E1CD0A
+[18:03:49] [artwork:crc] wallzzz.dff CRC = 0x4BC6EDFF
+[18:03:49] [artwork:crc] wallzzz.txd CRC = 0x235E3EEB
+[18:03:49] I couldn't load any gamemode scripts. Please verify your server.cfg
+[18:03:49] It needs a gamemode0 line at the very least.
+
+----------
+Loaded log file: "server_log.txt".
+----------
+
+SA-MP Dedicated Server
+----------------------
+v0.3.DL-R1, (C)2005-2018 SA-MP Team
+
+[18:03:55] language = ""  (string)
+[18:03:55] 
+[18:03:55] Server Plugins
+[18:03:55] --------------
+[18:03:55]  Loading plugin: streamer.so
+[18:03:55] 
+
+*** Streamer Plugin v2.9.5 by Incognito loaded ***
+
+[18:03:55]   Loaded.
+[18:03:55]  Loading plugin: sscanf.so
+[18:03:55] 
+
+[18:03:55]  ===============================
+
+[18:03:55]       sscanf plugin loaded.     
+
+[18:03:55]          Version:  2.8.3        
+
+[18:03:55]   (c) 2018 Alex "Y_Less" Cole  
+
+[18:03:55]  ===============================
+
+[18:03:55]   Loaded.
+[18:03:55]  Loading plugin: mysql.so
+[18:03:55]  >> plugin.mysql: R41-4 successfully loaded.
+[18:03:55]   Loaded.
+[18:03:55]  Loading plugin: pawncmd.so
+[18:03:55]   Plugin does not conform to architecture.
+[18:03:55]   Failed.
+[18:03:55]  Loading plugin: samp_bcrypt.so
+[18:03:55] [SampBcrypt] [info]: Version: 0.3.1
+[18:03:55]   Loaded.
+[18:03:55]  Loading plugin: pawnregex.so
+[18:03:55] [Pawn.Regex] plugin v1.2.3 loading...
+[18:03:55] [Pawn.Regex] 
+
+    | Pawn.Regex 1.2.3 | 2016 - 2022
+    |--------------------------------
+    | Author and maintainer: katursis
+
+
+    | Compiled: Apr 24 2022 at 11:42:00
+    |--------------------------------------------------------------
+    | Repository: https://github.com/katursis/Pawn.Regex
+
+[18:03:55]   Loaded.
+[18:03:55]  Loaded 5 plugins.
+
+[18:03:55] [artwork:crc] bfylcpd1.dff CRC = 0x237D059D
+[18:03:55] [artwork:crc] bfylcpd1.txd CRC = 0x7CE23A9D
+[18:03:55] [artwork:crc] bmylcpd1.dff CRC = 0x7CB85D2C
+[18:03:55] [artwork:crc] bmylcpd1.txd CRC = 0x767B1B8C
+[18:03:55] [artwork:crc] hmylcpd1.dff CRC = 0x6484F730
+[18:03:55] [artwork:crc] hmylcpd1.txd CRC = 0x9B8B2D7B
+[18:03:55] [artwork:crc] noose.dff CRC = 0xF3D17C31
+[18:03:55] [artwork:crc] noose.txd CRC = 0x44E06804
+[18:03:55] [artwork:crc] ofylcpd1.dff CRC = 0xB05C29F5
+[18:03:55] [artwork:crc] ofylcpd1.txd CRC = 0x1D590654
+[18:03:55] [artwork:crc] omylcpd1.dff CRC = 0x5FC25DFE
+[18:03:55] [artwork:crc] omylcpd1.txd CRC = 0xE875191F
+[18:03:56] [artwork:crc] wfylcpd1.dff CRC = 0x6E441003
+[18:03:56] [artwork:crc] wfylcpd1.txd CRC = 0x47D3E39B
+[18:03:56] [artwork:crc] wfylcpd2.dff CRC = 0x6E441003
+[18:03:56] [artwork:crc] wfylcpd2.txd CRC = 0x23EA4B8A
+[18:03:56] [artwork:crc] wmylcpd1.dff CRC = 0xCDA0C806
+[18:03:56] [artwork:crc] wmylcpd1.txd CRC = 0x40E1CD0A
+[18:03:56] [artwork:crc] wallzzz.dff CRC = 0x4BC6EDFF
+[18:03:56] [artwork:crc] wallzzz.txd CRC = 0x235E3EEB
+[18:03:56] 
+[18:03:56] Filterscripts
+[18:03:56] ---------------
+[18:03:56]   Loaded 0 filterscripts.
+
+[18:03:56] Script[gamemodes/szkodnik-rp2.amx]: Run time error 19: "File or function is not found"
+[18:03:56] Number of vehicle models: 0
+[18:03:59] --- Server Shutting Down.
+[18:03:59] 
+
+*** Streamer Plugin v2.9.5 by Incognito unloaded ***
+
+[18:03:59] 
+
+[18:03:59]  ===============================
+
+[18:03:59]      sscanf plugin unloaded.    
+
+[18:03:59]  ===============================
+
+[18:03:59] plugin.mysql: Unloading plugin...
+[18:03:59] plugin.mysql: Plugin unloaded.
+[18:03:59] [Pawn.Regex] plugin unloaded
+
+----------
+Loaded log file: "server_log.txt".
+----------
+
+SA-MP Dedicated Server
+----------------------
+v0.3.DL-R1, (C)2005-2018 SA-MP Team
+
+[18:04:35] language = ""  (string)
+[18:04:35] 
+[18:04:35] Server Plugins
+[18:04:35] --------------
+[18:04:35]  Loading plugin: streamer.so
+[18:04:35] 
+
+*** Streamer Plugin v2.9.5 by Incognito loaded ***
+
+[18:04:35]   Loaded.
+[18:04:35]  Loading plugin: sscanf.so
+[18:04:35] 
+
+[18:04:35]  ===============================
+
+[18:04:35]       sscanf plugin loaded.     
+
+[18:04:35]          Version:  2.8.3        
+
+[18:04:35]   (c) 2018 Alex "Y_Less" Cole  
+
+[18:04:35]  ===============================
+
+[18:04:35]   Loaded.
+[18:04:35]  Loading plugin: mysql.so
+[18:04:35]  >> plugin.mysql: R41-4 successfully loaded.
+[18:04:35]   Loaded.
+[18:04:35]  Loading plugin: pawncmd.so
+[18:04:35]   Plugin does not conform to architecture.
+[18:04:35]   Failed.
+[18:04:35]  Loading plugin: samp_bcrypt.so
+[18:04:35] [SampBcrypt] [info]: Version: 0.3.1
+[18:04:35]   Loaded.
+[18:04:35]  Loading plugin: pawnregex.so
+[18:04:35] [Pawn.Regex] plugin v1.2.3 loading...
+[18:04:35] [Pawn.Regex] 
+
+    | Pawn.Regex 1.2.3 | 2016 - 2022
+    |--------------------------------
+    | Author and maintainer: katursis
+
+
+    | Compiled: Apr 24 2022 at 11:42:00
+    |--------------------------------------------------------------
+    | Repository: https://github.com/katursis/Pawn.Regex
+
+[18:04:35]   Loaded.
+[18:04:35]  Loaded 5 plugins.
+
+[18:04:35] [artwork:crc] bfylcpd1.dff CRC = 0x237D059D
+[18:04:35] [artwork:crc] bfylcpd1.txd CRC = 0x7CE23A9D
+[18:04:35] [artwork:crc] bmylcpd1.dff CRC = 0x7CB85D2C
+[18:04:35] [artwork:crc] bmylcpd1.txd CRC = 0x767B1B8C
+[18:04:35] [artwork:crc] hmylcpd1.dff CRC = 0x6484F730
+[18:04:35] [artwork:crc] hmylcpd1.txd CRC = 0x9B8B2D7B
+[18:04:35] [artwork:crc] noose.dff CRC = 0xF3D17C31
+[18:04:35] [artwork:crc] noose.txd CRC = 0x44E06804
+[18:04:35] [artwork:crc] ofylcpd1.dff CRC = 0xB05C29F5
+[18:04:35] [artwork:crc] ofylcpd1.txd CRC = 0x1D590654
+[18:04:35] [artwork:crc] omylcpd1.dff CRC = 0x5FC25DFE
+[18:04:35] [artwork:crc] omylcpd1.txd CRC = 0xE875191F
+[18:04:35] [artwork:crc] wfylcpd1.dff CRC = 0x6E441003
+[18:04:35] [artwork:crc] wfylcpd1.txd CRC = 0x47D3E39B
+[18:04:35] [artwork:crc] wfylcpd2.dff CRC = 0x6E441003
+[18:04:35] [artwork:crc] wfylcpd2.txd CRC = 0x23EA4B8A
+[18:04:35] [artwork:crc] wmylcpd1.dff CRC = 0xCDA0C806
+[18:04:35] [artwork:crc] wmylcpd1.txd CRC = 0x40E1CD0A
+[18:04:35] [artwork:crc] wallzzz.dff CRC = 0x4BC6EDFF
+[18:04:35] [artwork:crc] wallzzz.txd CRC = 0x235E3EEB
+[18:04:35] 
+[18:04:35] Filterscripts
+[18:04:35] ---------------
+[18:04:35]   Loaded 0 filterscripts.
+
+[18:04:35] Script[gamemodes/szkodnik-rp2.amx]: Run time error 19: "File or function is not found"
+[18:04:35] Number of vehicle models: 0
+[18:04:37] --- Server Shutting Down.
+[18:04:37] 
+
+*** Streamer Plugin v2.9.5 by Incognito unloaded ***
+
+[18:04:37] 
+
+[18:04:37]  ===============================
+
+[18:04:37]      sscanf plugin unloaded.    
+
+[18:04:37]  ===============================
+
+[18:04:37] plugin.mysql: Unloading plugin...
+[18:04:37] plugin.mysql: Plugin unloaded.
+[18:04:37] [Pawn.Regex] plugin unloaded
+
+----------
+Loaded log file: "server_log.txt".
+----------
+
+SA-MP Dedicated Server
+----------------------
+v0.3.DL-R1, (C)2005-2018 SA-MP Team
+
+[18:04:42] language = ""  (string)
+[18:04:42] 
+[18:04:42] Server Plugins
+[18:04:42] --------------
+[18:04:42]  Loading plugin: streamer.so
+[18:04:42] 
+
+*** Streamer Plugin v2.9.5 by Incognito loaded ***
+
+[18:04:42]   Loaded.
+[18:04:42]  Loading plugin: sscanf.so
+[18:04:42] 
+
+[18:04:42]  ===============================
+
+[18:04:42]       sscanf plugin loaded.     
+
+[18:04:42]          Version:  2.8.3        
+
+[18:04:42]   (c) 2018 Alex "Y_Less" Cole  
+
+[18:04:42]  ===============================
+
+[18:04:42]   Loaded.
+[18:04:42]  Loading plugin: mysql.so
+[18:04:42]  >> plugin.mysql: R41-4 successfully loaded.
+[18:04:42]   Loaded.
+[18:04:42]  Loading plugin: pawncmd.so
+[18:04:42]   Plugin does not conform to architecture.
+[18:04:42]   Failed.
+[18:04:42]  Loading plugin: samp_bcrypt.so
+[18:04:42] [SampBcrypt] [info]: Version: 0.3.1
+[18:04:42]   Loaded.
+[18:04:42]  Loading plugin: pawnregex.so
+[18:04:42] [Pawn.Regex] plugin v1.2.3 loading...
+[18:04:42] [Pawn.Regex] 
+
+    | Pawn.Regex 1.2.3 | 2016 - 2022
+    |--------------------------------
+    | Author and maintainer: katursis
+
+
+    | Compiled: Apr 24 2022 at 11:42:00
+    |--------------------------------------------------------------
+    | Repository: https://github.com/katursis/Pawn.Regex
+
+[18:04:42]   Loaded.
+[18:04:42]  Loaded 5 plugins.
+
+[18:04:42] [artwork:crc] bfylcpd1.dff CRC = 0x237D059D
+[18:04:42] [artwork:crc] bfylcpd1.txd CRC = 0x7CE23A9D
+[18:04:42] [artwork:crc] bmylcpd1.dff CRC = 0x7CB85D2C
+[18:04:42] [artwork:crc] bmylcpd1.txd CRC = 0x767B1B8C
+[18:04:42] [artwork:crc] hmylcpd1.dff CRC = 0x6484F730
+[18:04:42] [artwork:crc] hmylcpd1.txd CRC = 0x9B8B2D7B
+[18:04:42] [artwork:crc] noose.dff CRC = 0xF3D17C31
+[18:04:42] [artwork:crc] noose.txd CRC = 0x44E06804
+[18:04:42] [artwork:crc] ofylcpd1.dff CRC = 0xB05C29F5
+[18:04:42] [artwork:crc] ofylcpd1.txd CRC = 0x1D590654
+[18:04:42] [artwork:crc] omylcpd1.dff CRC = 0x5FC25DFE
+[18:04:42] [artwork:crc] omylcpd1.txd CRC = 0xE875191F
+[18:04:42] [artwork:crc] wfylcpd1.dff CRC = 0x6E441003
+[18:04:42] [artwork:crc] wfylcpd1.txd CRC = 0x47D3E39B
+[18:04:42] [artwork:crc] wfylcpd2.dff CRC = 0x6E441003
+[18:04:42] [artwork:crc] wfylcpd2.txd CRC = 0x23EA4B8A
+[18:04:42] [artwork:crc] wmylcpd1.dff CRC = 0xCDA0C806
+[18:04:42] [artwork:crc] wmylcpd1.txd CRC = 0x40E1CD0A
+[18:04:42] [artwork:crc] wallzzz.dff CRC = 0x4BC6EDFF
+[18:04:42] [artwork:crc] wallzzz.txd CRC = 0x235E3EEB
+[18:04:42] 
+[18:04:42] Filterscripts
+[18:04:42] ---------------
+[18:04:42]   Loaded 0 filterscripts.
+
+[18:04:42] 
+----------------------------------
+[18:04:42]  gungame is a gun game mode released as
+[18:04:42]  an example mode for open.mp
+[18:04:42]  
+[18:04:42]  Author: NotUnlikeTheWaves (github)
+[18:04:42] ----------------------------------
+
+[18:04:42] Number of vehicle models: 0
+[18:04:49] --- Server Shutting Down.
+[18:04:49] 
+
+*** Streamer Plugin v2.9.5 by Incognito unloaded ***
+
+[18:04:49] 
+
+[18:04:49]  ===============================
+
+[18:04:49]      sscanf plugin unloaded.    
+
+[18:04:49]  ===============================
+
+[18:04:49] plugin.mysql: Unloading plugin...
+[18:04:49] plugin.mysql: Plugin unloaded.
+[18:04:49] [Pawn.Regex] plugin unloaded
+
+----------
+Loaded log file: "server_log.txt".
+----------
+
+SA-MP Dedicated Server
+----------------------
+v0.3.DL-R1, (C)2005-2018 SA-MP Team
+
+[18:04:58] language = ""  (string)
+[18:04:58] 
+[18:04:58] Server Plugins
+[18:04:58] --------------
+[18:04:58]  Loading plugin: streamer.so
+[18:04:58] 
+
+*** Streamer Plugin v2.9.5 by Incognito loaded ***
+
+[18:04:58]   Loaded.
+[18:04:58]  Loading plugin: sscanf.so
+[18:04:58] 
+
+[18:04:58]  ===============================
+
+[18:04:58]       sscanf plugin loaded.     
+
+[18:04:58]          Version:  2.8.3        
+
+[18:04:58]   (c) 2018 Alex "Y_Less" Cole  
+
+[18:04:58]  ===============================
+
+[18:04:58]   Loaded.
+[18:04:58]  Loading plugin: mysql.so
+[18:04:58]  >> plugin.mysql: R41-4 successfully loaded.
+[18:04:58]   Loaded.
+[18:04:58]  Loading plugin: pawncmd.so
+[18:04:58]   Plugin does not conform to architecture.
+[18:04:58]   Failed.
+[18:04:58]  Loading plugin: samp_bcrypt.so
+[18:04:58] [SampBcrypt] [info]: Version: 0.3.1
+[18:04:58]   Loaded.
+[18:04:58]  Loading plugin: pawnregex.so
+[18:04:58] [Pawn.Regex] plugin v1.2.3 loading...
+[18:04:58] [Pawn.Regex] 
+
+    | Pawn.Regex 1.2.3 | 2016 - 2022
+    |--------------------------------
+    | Author and maintainer: katursis
+
+
+    | Compiled: Apr 24 2022 at 11:42:00
+    |--------------------------------------------------------------
+    | Repository: https://github.com/katursis/Pawn.Regex
+
+[18:04:58]   Loaded.
+[18:04:58]  Loaded 5 plugins.
+
+[18:04:58] [artwork:crc] bfylcpd1.dff CRC = 0x237D059D
+[18:04:58] [artwork:crc] bfylcpd1.txd CRC = 0x7CE23A9D
+[18:04:58] [artwork:crc] bmylcpd1.dff CRC = 0x7CB85D2C
+[18:04:58] [artwork:crc] bmylcpd1.txd CRC = 0x767B1B8C
+[18:04:58] [artwork:crc] hmylcpd1.dff CRC = 0x6484F730
+[18:04:58] [artwork:crc] hmylcpd1.txd CRC = 0x9B8B2D7B
+[18:04:58] [artwork:crc] noose.dff CRC = 0xF3D17C31
+[18:04:58] [artwork:crc] noose.txd CRC = 0x44E06804
+[18:04:58] [artwork:crc] ofylcpd1.dff CRC = 0xB05C29F5
+[18:04:58] [artwork:crc] ofylcpd1.txd CRC = 0x1D590654
+[18:04:58] [artwork:crc] omylcpd1.dff CRC = 0x5FC25DFE
+[18:04:58] [artwork:crc] omylcpd1.txd CRC = 0xE875191F
+[18:04:58] [artwork:crc] wfylcpd1.dff CRC = 0x6E441003
+[18:04:58] [artwork:crc] wfylcpd1.txd CRC = 0x47D3E39B
+[18:04:58] [artwork:crc] wfylcpd2.dff CRC = 0x6E441003
+[18:04:58] [artwork:crc] wfylcpd2.txd CRC = 0x23EA4B8A
+[18:04:58] [artwork:crc] wmylcpd1.dff CRC = 0xCDA0C806
+[18:04:58] [artwork:crc] wmylcpd1.txd CRC = 0x40E1CD0A
+[18:04:58] [artwork:crc] wallzzz.dff CRC = 0x4BC6EDFF
+[18:04:58] [artwork:crc] wallzzz.txd CRC = 0x235E3EEB
+[18:04:58] 
+[18:04:58] Filterscripts
+[18:04:58] ---------------
+[18:04:58]   Loaded 0 filterscripts.
+
+[18:04:58] Script[gamemodes/szkodnik-rp2.amx]: Run time error 19: "File or function is not found"
+[18:04:58] Number of vehicle models: 0
+[18:05:30] --- Server Shutting Down.
+[18:05:30] 
+
+*** Streamer Plugin v2.9.5 by Incognito unloaded ***
+
+[18:05:30] 
+
+[18:05:30]  ===============================
+
+[18:05:30]      sscanf plugin unloaded.    
+
+[18:05:30]  ===============================
+
+[18:05:30] plugin.mysql: Unloading plugin...
+[18:05:30] plugin.mysql: Plugin unloaded.
+[18:05:30] [Pawn.Regex] plugin unloaded
+
+----------
+Loaded log file: "server_log.txt".
+----------
+
+SA-MP Dedicated Server
+----------------------
+v0.3.DL-R1, (C)2005-2018 SA-MP Team
+
+[18:05:31] language = ""  (string)
+[18:05:31] 
+[18:05:31] Server Plugins
+[18:05:31] --------------
+[18:05:31]  Loading plugin: streamer.so
+[18:05:31] 
+
+*** Streamer Plugin v2.9.5 by Incognito loaded ***
+
+[18:05:31]   Loaded.
+[18:05:31]  Loading plugin: sscanf.so
+[18:05:31] 
+
+[18:05:31]  ===============================
+
+[18:05:31]       sscanf plugin loaded.     
+
+[18:05:31]          Version:  2.8.3        
+
+[18:05:31]   (c) 2018 Alex "Y_Less" Cole  
+
+[18:05:31]  ===============================
+
+[18:05:31]   Loaded.
+[18:05:31]  Loading plugin: mysql.so
+[18:05:31]  >> plugin.mysql: R41-4 successfully loaded.
+[18:05:31]   Loaded.
+[18:05:31]  Loading plugin: pawncmd.so
+[18:05:31]   Plugin does not conform to architecture.
+[18:05:31]   Failed.
+[18:05:31]  Loading plugin: samp_bcrypt.so
+[18:05:31] [SampBcrypt] [info]: Version: 0.3.1
+[18:05:31]   Loaded.
+[18:05:31]  Loading plugin: pawnregex.so
+[18:05:31] [Pawn.Regex] plugin v1.2.3 loading...
+[18:05:31] [Pawn.Regex] 
+
+    | Pawn.Regex 1.2.3 | 2016 - 2022
+    |--------------------------------
+    | Author and maintainer: katursis
+
+
+    | Compiled: Apr 24 2022 at 11:42:00
+    |--------------------------------------------------------------
+    | Repository: https://github.com/katursis/Pawn.Regex
+
+[18:05:31]   Loaded.
+[18:05:31]  Loaded 5 plugins.
+
+[18:05:31] [artwork:crc] bfylcpd1.dff CRC = 0x237D059D
+[18:05:31] [artwork:crc] bfylcpd1.txd CRC = 0x7CE23A9D
+[18:05:31] [artwork:crc] bmylcpd1.dff CRC = 0x7CB85D2C
+[18:05:31] [artwork:crc] bmylcpd1.txd CRC = 0x767B1B8C
+[18:05:31] [artwork:crc] hmylcpd1.dff CRC = 0x6484F730
+[18:05:31] [artwork:crc] hmylcpd1.txd CRC = 0x9B8B2D7B
+[18:05:31] [artwork:crc] noose.dff CRC = 0xF3D17C31
+[18:05:31] [artwork:crc] noose.txd CRC = 0x44E06804
+[18:05:31] [artwork:crc] ofylcpd1.dff CRC = 0xB05C29F5
+[18:05:31] [artwork:crc] ofylcpd1.txd CRC = 0x1D590654
+[18:05:31] [artwork:crc] omylcpd1.dff CRC = 0x5FC25DFE
+[18:05:31] [artwork:crc] omylcpd1.txd CRC = 0xE875191F
+[18:05:31] [artwork:crc] wfylcpd1.dff CRC = 0x6E441003
+[18:05:31] [artwork:crc] wfylcpd1.txd CRC = 0x47D3E39B
+[18:05:31] [artwork:crc] wfylcpd2.dff CRC = 0x6E441003
+[18:05:31] [artwork:crc] wfylcpd2.txd CRC = 0x23EA4B8A
+[18:05:31] [artwork:crc] wmylcpd1.dff CRC = 0xCDA0C806
+[18:05:31] [artwork:crc] wmylcpd1.txd CRC = 0x40E1CD0A
+[18:05:31] [artwork:crc] wallzzz.dff CRC = 0x4BC6EDFF
+[18:05:31] [artwork:crc] wallzzz.txd CRC = 0x235E3EEB
+[18:05:31] 
+[18:05:31] Filterscripts
+[18:05:31] ---------------
+[18:05:31]   Loaded 0 filterscripts.
+
+[18:05:31] Script[gamemodes/szkodnik-rp2.amx]: Run time error 19: "File or function is not found"
+[18:05:31] Number of vehicle models: 0
+[18:05:31] --- Server Shutting Down.
+[18:05:31] 
+
+*** Streamer Plugin v2.9.5 by Incognito unloaded ***
+
+[18:05:31] 
+
+[18:05:31]  ===============================
+
+[18:05:31]      sscanf plugin unloaded.    
+
+[18:05:31]  ===============================
+
+[18:05:31] plugin.mysql: Unloading plugin...
+[18:05:31] plugin.mysql: Plugin unloaded.
+[18:05:31] [Pawn.Regex] plugin unloaded
+
+----------
+Loaded log file: "server_log.txt".
+----------
+
+SA-MP Dedicated Server
+----------------------
+v0.3.DL-R1, (C)2005-2018 SA-MP Team
+
+[18:05:44] language = ""  (string)
+[18:05:44] 
+[18:05:44] Server Plugins
+[18:05:44] --------------
+[18:05:44]  Loading plugin: streamer.so
+[18:05:44] 
+
+*** Streamer Plugin v2.9.5 by Incognito loaded ***
+
+[18:05:44]   Loaded.
+[18:05:44]  Loading plugin: sscanf.so
+[18:05:44] 
+
+[18:05:44]  ===============================
+
+[18:05:44]       sscanf plugin loaded.     
+
+[18:05:44]          Version:  2.8.3        
+
+[18:05:44]   (c) 2018 Alex "Y_Less" Cole  
+
+[18:05:44]  ===============================
+
+[18:05:44]   Loaded.
+[18:05:44]  Loading plugin: mysql.so
+[18:05:44]  >> plugin.mysql: R41-4 successfully loaded.
+[18:05:44]   Loaded.
+[18:05:44]  Loading plugin: pawncmd.so
+[18:05:44]   Plugin does not conform to architecture.
+[18:05:44]   Failed.
+[18:05:44]  Loading plugin: samp_bcrypt.so
+[18:05:44] [SampBcrypt] [info]: Version: 0.3.1
+[18:05:44]   Loaded.
+[18:05:44]  Loading plugin: pawnregex.so
+[18:05:44] [Pawn.Regex] plugin v1.2.3 loading...
+[18:05:44] [Pawn.Regex] 
+
+    | Pawn.Regex 1.2.3 | 2016 - 2022
+    |--------------------------------
+    | Author and maintainer: katursis
+
+
+    | Compiled: Apr 24 2022 at 11:42:00
+    |--------------------------------------------------------------
+    | Repository: https://github.com/katursis/Pawn.Regex
+
+[18:05:44]   Loaded.
+[18:05:44]  Loaded 5 plugins.
+
+[18:05:44] [artwork:crc] bfylcpd1.dff CRC = 0x237D059D
+[18:05:44] [artwork:crc] bfylcpd1.txd CRC = 0x7CE23A9D
+[18:05:44] [artwork:crc] bmylcpd1.dff CRC = 0x7CB85D2C
+[18:05:44] [artwork:crc] bmylcpd1.txd CRC = 0x767B1B8C
+[18:05:44] [artwork:crc] hmylcpd1.dff CRC = 0x6484F730
+[18:05:44] [artwork:crc] hmylcpd1.txd CRC = 0x9B8B2D7B
+[18:05:44] [artwork:crc] noose.dff CRC = 0xF3D17C31
+[18:05:44] [artwork:crc] noose.txd CRC = 0x44E06804
+[18:05:44] [artwork:crc] ofylcpd1.dff CRC = 0xB05C29F5
+[18:05:44] [artwork:crc] ofylcpd1.txd CRC = 0x1D590654
+[18:05:44] [artwork:crc] omylcpd1.dff CRC = 0x5FC25DFE
+[18:05:44] [artwork:crc] omylcpd1.txd CRC = 0xE875191F
+[18:05:44] [artwork:crc] wfylcpd1.dff CRC = 0x6E441003
+[18:05:44] [artwork:crc] wfylcpd1.txd CRC = 0x47D3E39B
+[18:05:44] [artwork:crc] wfylcpd2.dff CRC = 0x6E441003
+[18:05:44] [artwork:crc] wfylcpd2.txd CRC = 0x23EA4B8A
+[18:05:44] [artwork:crc] wmylcpd1.dff CRC = 0xCDA0C806
+[18:05:44] [artwork:crc] wmylcpd1.txd CRC = 0x40E1CD0A
+[18:05:44] [artwork:crc] wallzzz.dff CRC = 0x4BC6EDFF
+[18:05:44] [artwork:crc] wallzzz.txd CRC = 0x235E3EEB
+[18:05:44] 
+[18:05:44] Filterscripts
+[18:05:44] ---------------
+[18:05:44]   Loaded 0 filterscripts.
+
+[18:05:44] Script[gamemodes/szkodnik-rp2.amx]: Run time error 19: "File or function is not found"
+[18:05:44] Number of vehicle models: 0
+[18:05:46] --- Server Shutting Down.
+[18:05:46] 
+
+*** Streamer Plugin v2.9.5 by Incognito unloaded ***
+
+[18:05:46] 
+
+[18:05:46]  ===============================
+
+[18:05:46]      sscanf plugin unloaded.    
+
+[18:05:46]  ===============================
+
+[18:05:46] plugin.mysql: Unloading plugin...
+[18:05:46] plugin.mysql: Plugin unloaded.
+[18:05:46] [Pawn.Regex] plugin unloaded
+
+----------
+Loaded log file: "server_log.txt".
+----------
+
+SA-MP Dedicated Server
+----------------------
+v0.3.DL-R1, (C)2005-2018 SA-MP Team
+
+[18:06:00] language = ""  (string)
+[18:06:00] 
+[18:06:00] Server Plugins
+[18:06:00] --------------
+[18:06:00]  Loading plugin: streamer.so
+[18:06:00] 
+
+*** Streamer Plugin v2.9.5 by Incognito loaded ***
+
+[18:06:00]   Loaded.
+[18:06:00]  Loading plugin: sscanf.so
+[18:06:00] 
+
+[18:06:00]  ===============================
+
+[18:06:00]       sscanf plugin loaded.     
+
+[18:06:00]          Version:  2.8.3        
+
+[18:06:00]   (c) 2018 Alex "Y_Less" Cole  
+
+[18:06:00]  ===============================
+
+[18:06:00]   Loaded.
+[18:06:00]  Loading plugin: mysql.so
+[18:06:00]  >> plugin.mysql: R41-4 successfully loaded.
+[18:06:00]   Loaded.
+[18:06:00]  Loading plugin: pawncmd.so
+[18:06:00]   Plugin does not conform to architecture.
+[18:06:00]   Failed.
+[18:06:00]  Loading plugin: samp_bcrypt.so
+[18:06:00] [SampBcrypt] [info]: Version: 0.3.1
+[18:06:00]   Loaded.
+[18:06:00]  Loading plugin: pawnregex.so
+[18:06:00] [Pawn.Regex] plugin v1.2.3 loading...
+[18:06:00] [Pawn.Regex] 
+
+    | Pawn.Regex 1.2.3 | 2016 - 2022
+    |--------------------------------
+    | Author and maintainer: katursis
+
+
+    | Compiled: Apr 24 2022 at 11:42:00
+    |--------------------------------------------------------------
+    | Repository: https://github.com/katursis/Pawn.Regex
+
+[18:06:00]   Loaded.
+[18:06:00]  Loaded 5 plugins.
+
+[18:06:00] [artwork:crc] bfylcpd1.dff CRC = 0x237D059D
+[18:06:00] [artwork:crc] bfylcpd1.txd CRC = 0x7CE23A9D
+[18:06:00] [artwork:crc] bmylcpd1.dff CRC = 0x7CB85D2C
+[18:06:00] [artwork:crc] bmylcpd1.txd CRC = 0x767B1B8C
+[18:06:00] [artwork:crc] hmylcpd1.dff CRC = 0x6484F730
+[18:06:00] [artwork:crc] hmylcpd1.txd CRC = 0x9B8B2D7B
+[18:06:00] [artwork:crc] noose.dff CRC = 0xF3D17C31
+[18:06:00] [artwork:crc] noose.txd CRC = 0x44E06804
+[18:06:00] [artwork:crc] ofylcpd1.dff CRC = 0xB05C29F5
+[18:06:00] [artwork:crc] ofylcpd1.txd CRC = 0x1D590654
+[18:06:00] [artwork:crc] omylcpd1.dff CRC = 0x5FC25DFE
+[18:06:00] [artwork:crc] omylcpd1.txd CRC = 0xE875191F
+[18:06:00] [artwork:crc] wfylcpd1.dff CRC = 0x6E441003
+[18:06:00] [artwork:crc] wfylcpd1.txd CRC = 0x47D3E39B
+[18:06:00] [artwork:crc] wfylcpd2.dff CRC = 0x6E441003
+[18:06:00] [artwork:crc] wfylcpd2.txd CRC = 0x23EA4B8A
+[18:06:00] [artwork:crc] wmylcpd1.dff CRC = 0xCDA0C806
+[18:06:00] [artwork:crc] wmylcpd1.txd CRC = 0x40E1CD0A
+[18:06:00] [artwork:crc] wallzzz.dff CRC = 0x4BC6EDFF
+[18:06:00] [artwork:crc] wallzzz.txd CRC = 0x235E3EEB
+[18:06:00] 
+[18:06:00] Filterscripts
+[18:06:00] ---------------
+[18:06:00]   Loaded 0 filterscripts.
+
+[18:06:00] Script[gamemodes/szkodnik-rp2.amx]: Run time error 19: "File or function is not found"
+[18:06:00] Number of vehicle models: 0
+[18:06:05] --- Server Shutting Down.
+[18:06:05] 
+
+*** Streamer Plugin v2.9.5 by Incognito unloaded ***
+
+[18:06:05] 
+
+[18:06:05]  ===============================
+
+[18:06:05]      sscanf plugin unloaded.    
+
+[18:06:05]  ===============================
+
+[18:06:05] plugin.mysql: Unloading plugin...
+[18:06:05] plugin.mysql: Plugin unloaded.
+[18:06:05] [Pawn.Regex] plugin unloaded
+
+----------
+Loaded log file: "server_log.txt".
+----------
+
+SA-MP Dedicated Server
+----------------------
+v0.3.DL-R1, (C)2005-2018 SA-MP Team
+
+[18:06:25] language = ""  (string)
+[18:06:25] 
+[18:06:25] Server Plugins
+[18:06:25] --------------
+[18:06:25]  Loading plugin: streamer.so
+[18:06:25] 
+
+*** Streamer Plugin v2.9.5 by Incognito loaded ***
+
+[18:06:25]   Loaded.
+[18:06:25]  Loading plugin: sscanf.so
+[18:06:25] 
+
+[18:06:25]  ===============================
+
+[18:06:25]       sscanf plugin loaded.     
+
+[18:06:25]          Version:  2.8.3        
+
+[18:06:25]   (c) 2018 Alex "Y_Less" Cole  
+
+[18:06:25]  ===============================
+
+[18:06:25]   Loaded.
+[18:06:25]  Loading plugin: mysql.so
+[18:06:25]  >> plugin.mysql: R41-4 successfully loaded.
+[18:06:25]   Loaded.
+[18:06:25]  Loading plugin: pawncmd.so
+[18:06:25]   Plugin does not conform to architecture.
+[18:06:25]   Failed.
+[18:06:25]  Loading plugin: samp_bcrypt.so
+[18:06:25] [SampBcrypt] [info]: Version: 0.3.1
+[18:06:25]   Loaded.
+[18:06:25]  Loading plugin: pawnregex.so
+[18:06:25] [Pawn.Regex] plugin v1.2.3 loading...
+[18:06:25] [Pawn.Regex] 
+
+    | Pawn.Regex 1.2.3 | 2016 - 2022
+    |--------------------------------
+    | Author and maintainer: katursis
+
+
+    | Compiled: Apr 24 2022 at 11:42:00
+    |--------------------------------------------------------------
+    | Repository: https://github.com/katursis/Pawn.Regex
+
+[18:06:25]   Loaded.
+[18:06:25]  Loaded 5 plugins.
+
+[18:06:25] [artwork:crc] bfylcpd1.dff CRC = 0x237D059D
+[18:06:25] [artwork:crc] bfylcpd1.txd CRC = 0x7CE23A9D
+[18:06:25] [artwork:crc] bmylcpd1.dff CRC = 0x7CB85D2C
+[18:06:25] [artwork:crc] bmylcpd1.txd CRC = 0x767B1B8C
+[18:06:25] [artwork:crc] hmylcpd1.dff CRC = 0x6484F730
+[18:06:25] [artwork:crc] hmylcpd1.txd CRC = 0x9B8B2D7B
+[18:06:25] [artwork:crc] noose.dff CRC = 0xF3D17C31
+[18:06:25] [artwork:crc] noose.txd CRC = 0x44E06804
+[18:06:25] [artwork:crc] ofylcpd1.dff CRC = 0xB05C29F5
+[18:06:25] [artwork:crc] ofylcpd1.txd CRC = 0x1D590654
+[18:06:25] [artwork:crc] omylcpd1.dff CRC = 0x5FC25DFE
+[18:06:25] [artwork:crc] omylcpd1.txd CRC = 0xE875191F
+[18:06:25] [artwork:crc] wfylcpd1.dff CRC = 0x6E441003
+[18:06:25] [artwork:crc] wfylcpd1.txd CRC = 0x47D3E39B
+[18:06:25] [artwork:crc] wfylcpd2.dff CRC = 0x6E441003
+[18:06:25] [artwork:crc] wfylcpd2.txd CRC = 0x23EA4B8A
+[18:06:25] [artwork:crc] wmylcpd1.dff CRC = 0xCDA0C806
+[18:06:25] [artwork:crc] wmylcpd1.txd CRC = 0x40E1CD0A
+[18:06:25] [artwork:crc] wallzzz.dff CRC = 0x4BC6EDFF
+[18:06:25] [artwork:crc] wallzzz.txd CRC = 0x235E3EEB
+[18:06:25] 
+[18:06:25] Filterscripts
+[18:06:25] ---------------
+[18:06:25]   Loaded 0 filterscripts.
+
+[18:06:25] Script[gamemodes/szkodnik-rp2.amx]: Run time error 19: "File or function is not found"
+[18:06:25] Number of vehicle models: 0
+[18:06:27] --- Server Shutting Down.
+[18:06:27] 
+
+*** Streamer Plugin v2.9.5 by Incognito unloaded ***
+
+[18:06:27] 
+
+[18:06:27]  ===============================
+
+[18:06:27]      sscanf plugin unloaded.    
+
+[18:06:27]  ===============================
+
+[18:06:27] plugin.mysql: Unloading plugin...
+[18:06:27] plugin.mysql: Plugin unloaded.
+[18:06:27] [Pawn.Regex] plugin unloaded
+
+----------
+Loaded log file: "server_log.txt".
+----------
+
+SA-MP Dedicated Server
+----------------------
+v0.3.DL-R1, (C)2005-2018 SA-MP Team
+
+[18:06:27] language = ""  (string)
+[18:06:27] 
+[18:06:27] Server Plugins
+[18:06:27] --------------
+[18:06:27]  Loading plugin: streamer.so
+[18:06:27] 
+
+*** Streamer Plugin v2.9.5 by Incognito loaded ***
+
+[18:06:27]   Loaded.
+[18:06:27]  Loading plugin: sscanf.so
+[18:06:27] 
+
+[18:06:27]  ===============================
+
+[18:06:27]       sscanf plugin loaded.     
+
+[18:06:27]          Version:  2.8.3        
+
+[18:06:27]   (c) 2018 Alex "Y_Less" Cole  
+
+[18:06:27]  ===============================
+
+[18:06:27]   Loaded.
+[18:06:27]  Loading plugin: mysql.so
+[18:06:27]  >> plugin.mysql: R41-4 successfully loaded.
+[18:06:27]   Loaded.
+[18:06:27]  Loading plugin: pawncmd.so
+[18:06:27]   Plugin does not conform to architecture.
+[18:06:27]   Failed.
+[18:06:27]  Loading plugin: samp_bcrypt.so
+[18:06:27] [SampBcrypt] [info]: Version: 0.3.1
+[18:06:27]   Loaded.
+[18:06:27]  Loading plugin: pawnregex.so
+[18:06:27] [Pawn.Regex] plugin v1.2.3 loading...
+[18:06:27] [Pawn.Regex] 
+
+    | Pawn.Regex 1.2.3 | 2016 - 2022
+    |--------------------------------
+    | Author and maintainer: katursis
+
+
+    | Compiled: Apr 24 2022 at 11:42:00
+    |--------------------------------------------------------------
+    | Repository: https://github.com/katursis/Pawn.Regex
+
+[18:06:27]   Loaded.
+[18:06:27]  Loaded 5 plugins.
+
+[18:06:27] [artwork:crc] bfylcpd1.dff CRC = 0x237D059D
+[18:06:27] [artwork:crc] bfylcpd1.txd CRC = 0x7CE23A9D
+[18:06:27] [artwork:crc] bmylcpd1.dff CRC = 0x7CB85D2C
+[18:06:27] [artwork:crc] bmylcpd1.txd CRC = 0x767B1B8C
+[18:06:27] [artwork:crc] hmylcpd1.dff CRC = 0x6484F730
+[18:06:27] [artwork:crc] hmylcpd1.txd CRC = 0x9B8B2D7B
+[18:06:27] [artwork:crc] noose.dff CRC = 0xF3D17C31
+[18:06:27] [artwork:crc] noose.txd CRC = 0x44E06804
+[18:06:27] [artwork:crc] ofylcpd1.dff CRC = 0xB05C29F5
+[18:06:27] [artwork:crc] ofylcpd1.txd CRC = 0x1D590654
+[18:06:27] [artwork:crc] omylcpd1.dff CRC = 0x5FC25DFE
+[18:06:27] [artwork:crc] omylcpd1.txd CRC = 0xE875191F
+[18:06:27] [artwork:crc] wfylcpd1.dff CRC = 0x6E441003
+[18:06:27] [artwork:crc] wfylcpd1.txd CRC = 0x47D3E39B
+[18:06:27] [artwork:crc] wfylcpd2.dff CRC = 0x6E441003
+[18:06:27] [artwork:crc] wfylcpd2.txd CRC = 0x23EA4B8A
+[18:06:27] [artwork:crc] wmylcpd1.dff CRC = 0xCDA0C806
+[18:06:27] [artwork:crc] wmylcpd1.txd CRC = 0x40E1CD0A
+[18:06:27] [artwork:crc] wallzzz.dff CRC = 0x4BC6EDFF
+[18:06:27] [artwork:crc] wallzzz.txd CRC = 0x235E3EEB
+[18:06:27] 
+[18:06:27] Filterscripts
+[18:06:27] ---------------
+[18:06:27]   Loaded 0 filterscripts.
+
+[18:06:27] Script[gamemodes/szkodnik-rp2.amx]: Run time error 19: "File or function is not found"
+[18:06:27] Number of vehicle models: 0
+[18:06:28] --- Server Shutting Down.
+[18:06:28] 
+
+*** Streamer Plugin v2.9.5 by Incognito unloaded ***
+
+[18:06:28] 
+
+[18:06:28]  ===============================
+
+[18:06:28]      sscanf plugin unloaded.    
+
+[18:06:28]  ===============================
+
+[18:06:28] plugin.mysql: Unloading plugin...
+[18:06:28] plugin.mysql: Plugin unloaded.
+[18:06:28] [Pawn.Regex] plugin unloaded
+
+----------
+Loaded log file: "server_log.txt".
+----------
+
+SA-MP Dedicated Server
+----------------------
+v0.3.DL-R1, (C)2005-2018 SA-MP Team
+
+[18:06:37] language = ""  (string)
+[18:06:37] 
+[18:06:37] Server Plugins
+[18:06:37] --------------
+[18:06:37]  Loading plugin: streamer.so
+[18:06:37] 
+
+*** Streamer Plugin v2.9.5 by Incognito loaded ***
+
+[18:06:37]   Loaded.
+[18:06:37]  Loading plugin: sscanf.so
+[18:06:37] 
+
+[18:06:37]  ===============================
+
+[18:06:37]       sscanf plugin loaded.     
+
+[18:06:37]          Version:  2.8.3        
+
+[18:06:37]   (c) 2018 Alex "Y_Less" Cole  
+
+[18:06:37]  ===============================
+
+[18:06:37]   Loaded.
+[18:06:37]  Loading plugin: mysql.so
+[18:06:37]  >> plugin.mysql: R41-4 successfully loaded.
+[18:06:37]   Loaded.
+[18:06:37]  Loading plugin: pawncmd.so
+[18:06:37]   Plugin does not conform to architecture.
+[18:06:37]   Failed.
+[18:06:37]  Loading plugin: samp_bcrypt.so
+[18:06:37] [SampBcrypt] [info]: Version: 0.3.1
+[18:06:37]   Loaded.
+[18:06:37]  Loading plugin: pawnregex.so
+[18:06:37] [Pawn.Regex] plugin v1.2.3 loading...
+[18:06:37] [Pawn.Regex] 
+
+    | Pawn.Regex 1.2.3 | 2016 - 2022
+    |--------------------------------
+    | Author and maintainer: katursis
+
+
+    | Compiled: Apr 24 2022 at 11:42:00
+    |--------------------------------------------------------------
+    | Repository: https://github.com/katursis/Pawn.Regex
+
+[18:06:37]   Loaded.
+[18:06:37]  Loaded 5 plugins.
+
+[18:06:37] [artwork:crc] bfylcpd1.dff CRC = 0x237D059D
+[18:06:37] [artwork:crc] bfylcpd1.txd CRC = 0x7CE23A9D
+[18:06:37] [artwork:crc] bmylcpd1.dff CRC = 0x7CB85D2C
+[18:06:37] [artwork:crc] bmylcpd1.txd CRC = 0x767B1B8C
+[18:06:37] [artwork:crc] hmylcpd1.dff CRC = 0x6484F730
+[18:06:37] [artwork:crc] hmylcpd1.txd CRC = 0x9B8B2D7B
+[18:06:37] [artwork:crc] noose.dff CRC = 0xF3D17C31
+[18:06:37] [artwork:crc] noose.txd CRC = 0x44E06804
+[18:06:37] [artwork:crc] ofylcpd1.dff CRC = 0xB05C29F5
+[18:06:37] [artwork:crc] ofylcpd1.txd CRC = 0x1D590654
+[18:06:37] [artwork:crc] omylcpd1.dff CRC = 0x5FC25DFE
+[18:06:37] [artwork:crc] omylcpd1.txd CRC = 0xE875191F
+[18:06:37] [artwork:crc] wfylcpd1.dff CRC = 0x6E441003
+[18:06:37] [artwork:crc] wfylcpd1.txd CRC = 0x47D3E39B
+[18:06:37] [artwork:crc] wfylcpd2.dff CRC = 0x6E441003
+[18:06:37] [artwork:crc] wfylcpd2.txd CRC = 0x23EA4B8A
+[18:06:37] [artwork:crc] wmylcpd1.dff CRC = 0xCDA0C806
+[18:06:37] [artwork:crc] wmylcpd1.txd CRC = 0x40E1CD0A
+[18:06:37] [artwork:crc] wallzzz.dff CRC = 0x4BC6EDFF
+[18:06:37] [artwork:crc] wallzzz.txd CRC = 0x235E3EEB
+[18:06:37] 
+[18:06:37] Filterscripts
+[18:06:37] ---------------
+[18:06:37]   Loaded 0 filterscripts.
+
+[18:06:37] Script[gamemodes/szkodnik-rp2.amx]: Run time error 19: "File or function is not found"
+[18:06:37] Number of vehicle models: 0
+[18:06:38] --- Server Shutting Down.
+[18:06:38] 
+
+*** Streamer Plugin v2.9.5 by Incognito unloaded ***
+
+[18:06:38] 
+
+[18:06:38]  ===============================
+
+[18:06:38]      sscanf plugin unloaded.    
+
+[18:06:38]  ===============================
+
+[18:06:38] plugin.mysql: Unloading plugin...
+[18:06:38] plugin.mysql: Plugin unloaded.
+[18:06:38] [Pawn.Regex] plugin unloaded
+
+----------
+Loaded log file: "server_log.txt".
+----------
+
+SA-MP Dedicated Server
+----------------------
+v0.3.DL-R1, (C)2005-2018 SA-MP Team
+
+[18:07:06] language = ""  (string)
+[18:07:06] 
+[18:07:06] Server Plugins
+[18:07:06] --------------
+[18:07:06]  Loading plugin: streamer.so
+[18:07:06] 
+
+*** Streamer Plugin v2.9.5 by Incognito loaded ***
+
+[18:07:06]   Loaded.
+[18:07:06]  Loading plugin: sscanf.so
+[18:07:06] 
+
+[18:07:06]  ===============================
+
+[18:07:06]       sscanf plugin loaded.     
+
+[18:07:06]          Version:  2.8.3        
+
+[18:07:06]   (c) 2018 Alex "Y_Less" Cole  
+
+[18:07:06]  ===============================
+
+[18:07:06]   Loaded.
+[18:07:06]  Loading plugin: mysql.so
+[18:07:06]  >> plugin.mysql: R41-4 successfully loaded.
+[18:07:06]   Loaded.
+[18:07:06]  Loading plugin: pawncmd.so
+[18:07:06]   Plugin does not conform to architecture.
+[18:07:06]   Failed.
+[18:07:06]  Loading plugin: samp_bcrypt.so
+[18:07:06] [SampBcrypt] [info]: Version: 0.3.1
+[18:07:06]   Loaded.
+[18:07:06]  Loading plugin: pawnregex.so
+[18:07:06] [Pawn.Regex] plugin v1.2.3 loading...
+[18:07:06] [Pawn.Regex] 
+
+    | Pawn.Regex 1.2.3 | 2016 - 2022
+    |--------------------------------
+    | Author and maintainer: katursis
+
+
+    | Compiled: Apr 24 2022 at 11:42:00
+    |--------------------------------------------------------------
+    | Repository: https://github.com/katursis/Pawn.Regex
+
+[18:07:06]   Loaded.
+[18:07:06]  Loaded 5 plugins.
+
+[18:07:07] [artwork:crc] bfylcpd1.dff CRC = 0x237D059D
+[18:07:07] [artwork:crc] bfylcpd1.txd CRC = 0x7CE23A9D
+[18:07:07] [artwork:crc] bmylcpd1.dff CRC = 0x7CB85D2C
+[18:07:07] [artwork:crc] bmylcpd1.txd CRC = 0x767B1B8C
+[18:07:07] [artwork:crc] hmylcpd1.dff CRC = 0x6484F730
+[18:07:07] [artwork:crc] hmylcpd1.txd CRC = 0x9B8B2D7B
+[18:07:07] [artwork:crc] noose.dff CRC = 0xF3D17C31
+[18:07:07] [artwork:crc] noose.txd CRC = 0x44E06804
+[18:07:07] [artwork:crc] ofylcpd1.dff CRC = 0xB05C29F5
+[18:07:07] [artwork:crc] ofylcpd1.txd CRC = 0x1D590654
+[18:07:07] [artwork:crc] omylcpd1.dff CRC = 0x5FC25DFE
+[18:07:07] [artwork:crc] omylcpd1.txd CRC = 0xE875191F
+[18:07:07] [artwork:crc] wfylcpd1.dff CRC = 0x6E441003
+[18:07:07] [artwork:crc] wfylcpd1.txd CRC = 0x47D3E39B
+[18:07:07] [artwork:crc] wfylcpd2.dff CRC = 0x6E441003
+[18:07:07] [artwork:crc] wfylcpd2.txd CRC = 0x23EA4B8A
+[18:07:07] [artwork:crc] wmylcpd1.dff CRC = 0xCDA0C806
+[18:07:07] [artwork:crc] wmylcpd1.txd CRC = 0x40E1CD0A
+[18:07:07] [artwork:crc] wallzzz.dff CRC = 0x4BC6EDFF
+[18:07:07] [artwork:crc] wallzzz.txd CRC = 0x235E3EEB
+[18:07:07] 
+[18:07:07] Filterscripts
+[18:07:07] ---------------
+[18:07:07]   Loaded 0 filterscripts.
+
+[18:07:07] Script[gamemodes/szkodnik-rp2.amx]: Run time error 19: "File or function is not found"
+[18:07:07] Number of vehicle models: 0
+[18:07:08] --- Server Shutting Down.
+[18:07:08] 
+
+*** Streamer Plugin v2.9.5 by Incognito unloaded ***
+
+[18:07:08] 
+
+[18:07:08]  ===============================
+
+[18:07:08]      sscanf plugin unloaded.    
+
+[18:07:08]  ===============================
+
+[18:07:08] plugin.mysql: Unloading plugin...
+[18:07:08] plugin.mysql: Plugin unloaded.
+[18:07:08] [Pawn.Regex] plugin unloaded
