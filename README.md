@@ -4,10 +4,15 @@
 
 Compile:
 ```bash
-LD_LIBRARY_PATH=. ./pawncc szkodnik-rp2.pwn
+./compile.sh
 ```
 
 Run:
 ```bash
-./samp03svr
+./run.sh
+```
+
+compile & run
+```
+./compile.sh && ./run.sh
 ```

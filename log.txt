@@ -9032,3 +9032,67 @@ Parsing obsolete legacy option output
 [2026-07-29T23:13:33+0200] [Error] SetTimer(Ex): There was a problem in calling min_timer: Array index out of bounds
 [2026-07-29T23:14:33+0200] [Error] SetTimer(Ex): There was a problem in calling min_timer: Array index out of bounds
 [2026-07-29T23:15:33+0200] [Error] SetTimer(Ex): There was a problem in calling min_timer: Array index out of bounds
+[2026-07-29T23:16:33+0200] [Error] SetTimer(Ex): There was a problem in calling min_timer: Array index out of bounds
+[2026-07-29T23:16:55+0200] [Info] [UID: 1] [CMD: p ] [PLAYER: Sam_Clappers ID: 0]
+[2026-07-29T23:16:59+0200] [Info] [UID: 1] [CMD: ai 1 31 500 0 0 0 m4] [PLAYER: Sam_Clappers ID: 0]
+[2026-07-29T23:16:59+0200] [Info] [UID: 1] [CMD: p ] [PLAYER: Sam_Clappers ID: 0]
+[2026-07-29T23:17:00+0200] [Info] uid from input: 1
+[2026-07-29T23:17:00+0200] [Info] the z: 0.000000
+[2026-07-29T23:17:00+0200] [Info] name: 0 m4 0.000000
+[2026-07-29T23:17:00+0200] [Info] itme to be used: 1
+[2026-07-29T23:17:14+0200] [Info] [UID: 1] [CMD: opis cwel] [PLAYER: Sam_Clappers ID: 0]
+[2026-07-29T23:17:33+0200] [Error] SetTimer(Ex): There was a problem in calling min_timer: Array index out of bounds
+[2026-07-29T23:17:46+0200] [Info] [UID: 1] [CMD: opis ] [PLAYER: Sam_Clappers ID: 0]
+[2026-07-29T23:18:05+0200] [Info] [UID: 1] [CMD: opis bluza lc-rp [forum w listopadzie]] [PLAYER: Sam_Clappers ID: 0]
+[2026-07-29T23:18:11+0200] [Info] [UID: 1] [CMD: opis bluza lc-rp (ff0000)[forum w listopadzie]] [PLAYER: Sam_Clappers ID: 0]
+[2026-07-29T23:18:14+0200] [Info] [UID: 1] [CMD: opis bluza lc-rp (ff00bb)[forum w listopadzie]] [PLAYER: Sam_Clappers ID: 0]
+[2026-07-29T23:18:19+0200] [Info] [UID: 1] [CMD: opis (bbbbbb)bluza lc-rp (ff00bb)[forum w listopadzie]] [PLAYER: Sam_Clappers ID: 0]
+[2026-07-29T23:18:25+0200] [Info] [UID: 1] [CMD: opis (ffbbbb)bluza lc-rp (ff00bb)[forum w listopadzie]] [PLAYER: Sam_Clappers ID: 0]
+[2026-07-29T23:18:33+0200] [Error] SetTimer(Ex): There was a problem in calling min_timer: Array index out of bounds
+[2026-07-29T23:19:12+0200] [Info] [UID: 1] [CMD: anim ] [PLAYER: Sam_Clappers ID: 0]
+[2026-07-29T23:19:15+0200] [Info] [UID: 1] [CMD: anim ] [PLAYER: Sam_Clappers ID: 0]
+[2026-07-29T23:19:26+0200] [Info] [UID: 1] [CMD: v ] [PLAYER: Sam_Clappers ID: 0]
+[2026-07-29T23:19:28+0200] [Info] [UID: 1] [CMD: v ] [PLAYER: Sam_Clappers ID: 0]
+[2026-07-29T23:19:31+0200] [Info] [UID: 1] [CMD: v ] [PLAYER: Sam_Clappers ID: 0]
+[2026-07-29T23:19:32+0200] [Info] [UID: 1] [CMD: v ] [PLAYER: Sam_Clappers ID: 0]
+[2026-07-29T23:19:33+0200] [Error] SetTimer(Ex): There was a problem in calling min_timer: Array index out of bounds
+[2026-07-29T23:19:34+0200] [Info] [UID: 1] [CMD: v ] [PLAYER: Sam_Clappers ID: 0]
+[2026-07-29T23:19:38+0200] [Info] [UID: 1] [CMD: ap 596 0 1 0] [PLAYER: Sam_Clappers ID: 0]
+[2026-07-29T23:19:40+0200] [Info] [UID: 1] [CMD: ap 596 0 1 0 lspd] [PLAYER: Sam_Clappers ID: 0]
+[2026-07-29T23:19:49+0200] [Info] [UID: 1] [CMD: ap 420 0 1 0] [PLAYER: Sam_Clappers ID: 0]
+[2026-07-29T23:19:53+0200] [Info] [UID: 1] [CMD: ap lspd 0 1 0 ] [PLAYER: Sam_Clappers ID: 0]
+[2026-07-29T23:19:55+0200] [Info] [UID: 1] [CMD: pasy ] [PLAYER: Sam_Clappers ID: 0]
+[2026-07-29T23:20:04+0200] [Info] [UID: 1] [CMD: skin 280] [PLAYER: Sam_Clappers ID: 0]
+[2026-07-29T23:20:08+0200] [Info] [UID: 1] [CMD: skin 280 0] [PLAYER: Sam_Clappers ID: 0]
+[2026-07-29T23:20:11+0200] [Info] [UID: 1] [CMD: skin 0 280] [PLAYER: Sam_Clappers ID: 0]
+[2026-07-29T23:20:33+0200] [Error] SetTimer(Ex): There was a problem in calling min_timer: Array index out of bounds
+[2026-07-29T23:21:33+0200] [Error] SetTimer(Ex): There was a problem in calling min_timer: Array index out of bounds
+[2026-07-29T23:21:43+0200] [Info] [UID: 1] [CMD: unbw 0] [PLAYER: Sam_Clappers ID: 0]
+[2026-07-29T23:22:27+0200] [Info] [UID: 1] [CMD: drzwi ] [PLAYER: Sam_Clappers ID: 0]
+[2026-07-29T23:22:28+0200] [Info] [UID: 1] [CMD: adrzwi ] [PLAYER: Sam_Clappers ID: 0]
+[2026-07-29T23:22:30+0200] [Info] [UID: 1] [CMD: adrzwi ] [PLAYER: Sam_Clappers ID: 0]
+[2026-07-29T23:22:33+0200] [Error] SetTimer(Ex): There was a problem in calling min_timer: Array index out of bounds
+[2026-07-29T23:22:33+0200] [Info] [UID: 1] [CMD: adrzwi ] [PLAYER: Sam_Clappers ID: 0]
+[2026-07-29T23:22:35+0200] [Info] [UID: 1] [CMD: drzwi ] [PLAYER: Sam_Clappers ID: 0]
+[2026-07-29T23:22:36+0200] [Info] [UID: 1] [CMD: drzwi stworz] [PLAYER: Sam_Clappers ID: 0]
+[2026-07-29T23:22:41+0200] [Info] [UID: 1] [CMD: p ] [PLAYER: Sam_Clappers ID: 0]
+[2026-07-29T23:22:42+0200] [Info] uid from input: 1
+[2026-07-29T23:22:42+0200] [Info] the z: 0.000000
+[2026-07-29T23:22:42+0200] [Info] name: 0 m4 0.000000
+[2026-07-29T23:22:42+0200] [Info] itme to be used: 1
+[2026-07-29T23:22:47+0200] [Info] [UID: 1] [CMD: p podnies] [PLAYER: Sam_Clappers ID: 0]
+[2026-07-29T23:22:48+0200] [Info] [UID: 1] [CMD: a ] [PLAYER: Sam_Clappers ID: 0]
+[2026-07-29T23:22:50+0200] [Info] [UID: 1] [CMD: aduty ] [PLAYER: Sam_Clappers ID: 0]
+[2026-07-29T23:22:50+0200] [Info] [UID: 1] [CMD: a ] [PLAYER: Sam_Clappers ID: 0]
+[2026-07-29T23:22:51+0200] [Info] [UID: 1] [CMD: aduty ] [PLAYER: Sam_Clappers ID: 0]
+[2026-07-29T23:22:52+0200] [Info] [UID: 1] [CMD: g ] [PLAYER: Sam_Clappers ID: 0]
+[2026-07-29T23:22:53+0200] [Info] [UID: 1] [CMD: stats ] [PLAYER: Sam_Clappers ID: 0]
+[2026-07-29T23:23:06+0200] [Info] [UID: 1] [CMD: stats ] [PLAYER: Sam_Clappers ID: 0]
+[2026-07-29T23:23:09+0200] [Info] [UID: 1] [CMD: stats ] [PLAYER: Sam_Clappers ID: 0]
+[2026-07-29T23:23:14+0200] [Info] [UID: 1] [CMD: stats ] [PLAYER: Sam_Clappers ID: 0]
+[2026-07-29T23:23:28+0200] [Info] [UID: 1] [CMD: stats ] [PLAYER: Sam_Clappers ID: 0]
+[2026-07-29T23:23:31+0200] [Info] [UID: 1] [CMD: stats ] [PLAYER: Sam_Clappers ID: 0]
+[2026-07-29T23:23:33+0200] [Error] SetTimer(Ex): There was a problem in calling min_timer: Array index out of bounds
+[2026-07-29T23:24:33+0200] [Error] SetTimer(Ex): There was a problem in calling min_timer: Array index out of bounds
+[2026-07-29T23:25:33+0200] [Error] SetTimer(Ex): There was a problem in calling min_timer: Array index out of bounds
+[2026-07-29T23:26:33+0200] [Error] SetTimer(Ex): There was a problem in calling min_timer: Array index out of bounds
