@@ -15564,7 +15564,7 @@ public ListenForVehicleDamage(playerid, Float:previousHealth)
 
 }
 
-public OnPlayerStateChange(playerid, newstate, oldstate)
+public OnPlayerStateChange(playerid, PLAYER_STATE:newstate, PLAYER_STATE:oldstate)
 {
     switch (newstate)
     {
