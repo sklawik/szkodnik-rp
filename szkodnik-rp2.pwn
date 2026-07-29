@@ -17266,31 +17266,30 @@ stock ReplacePolishSymbols(const str[])
     {
         switch (string[i])
         {
-            case 0xC4: // � � � � � � � � � -> zale�nie od drugiego bajtu
-            {
-                // PAWN nie obs�uguje UTF-8 natywnie w pojedynczych charach,
-                // wi�c najlepiej u�y� mapowania z UTF-8 na ASCII po stronie wej�cia
-            }
-        }
-    }
+            case 0xB9: string[i] = 'a'; // ą
+            case 0xE6: string[i] = 'c'; // ć
+            case 0xEA: string[i] = 'e'; // ę
+            case 0xB3: string[i] = 'l'; // ł
+            case 0xF1: string[i] = 'n'; // ń
+            case 0xF3: string[i] = 'o'; // ó
+            case 0x9C: string[i] = 's'; // ś
+            case 0x9F: string[i] = 'z'; // ź
+            case 0xBF: string[i] = 'z'; // ż
 
-    // Je�li u�ywasz Windows-1250 zamiast UTF-8, proste mapowanie:
-    for (new i = 0; i < strlen(string); i++)
-    {
-        if (string[i] == '�') string[i] = 'a';
-        else if (string[i] == '�') string[i] = 'c';
-        else if (string[i] == '�') string[i] = 'e';
-        else if (string[i] == '�') string[i] = 'l';
-        else if (string[i] == '�') string[i] = 'n';
-        else if (string[i] == '�') string[i] = 'o';
-        else if (string[i] == '�') string[i] = 's';
-        else if (string[i] == '�') string[i] = 'z';
-        else if (string[i] == '�') string[i] = 'z';
+            case 0xA5: string[i] = 'A'; // Ą
+            case 0xC6: string[i] = 'C'; // Ć
+            case 0xCA: string[i] = 'E'; // Ę
+            case 0xA3: string[i] = 'L'; // Ł
+            case 0xD1: string[i] = 'N'; // Ń
+            case 0xD3: string[i] = 'O'; // Ó
+            case 0x8C: string[i] = 'S'; // Ś
+            case 0x8F: string[i] = 'Z'; // Ź
+            case 0xAF: string[i] = 'Z'; // Ż
+        }
     }
 
     return string;
 }
-
 
 CMD:blokuj(playerid, params[])
 {
