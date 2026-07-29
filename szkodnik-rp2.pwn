@@ -7123,7 +7123,7 @@ forward TrainingState0(playerid);
 public TrainingState0(playerid)
 pTrainingState[playerid] = TRAINING_STATE_NONE;
 
-public OnPlayerKeyStateChange(playerid, newkeys, oldkeys)
+public OnPlayerKeyStateChange(playerid, KEY:newkeys, KEY:oldkeys)
 {
     if (PlayerCache[playerid][pBW_Time])
         return 1;
@@ -9396,7 +9396,7 @@ public DisableMsgDM(playerid, issuerid)
     pSawDM[issuerid] = false;
 }
 
-public OnPlayerTakeDamage(playerid, issuerid, Float:amount, weaponid, bodypart)
+public OnPlayerTakeDamage(playerid, issuerid, Float:amount, WEAPON:weaponid, bodypart)
 {
     if (weaponid == 49)
     {
@@ -9596,7 +9596,7 @@ stock ShowDialogInfo(playerid, const info[])
     return 1;
 }
 
-public OnPlayerDeath(playerid, killerid, reason)
+public OnPlayerDeath(playerid, killerid, WEAPON:reason)
 {
     pShowingWeapon[playerid] = true;
     SetTimerEx("ShowingWeapon", 3000, false, "i", playerid);
@@ -12828,7 +12828,7 @@ public TurnOffAlarm(dooruid)
     //DoorCache[dooruid][dPlayingAlarm] = false;
 }
 
-public OnPlayerWeaponShot(playerid, weaponid, hittype, hitid, Float:fX, Float:fY, Float:fZ)
+public OnPlayerWeaponShot(playerid, WEAPON:weaponid, BULLET_HIT_TYPE:hittype, hitid, Float:fX, Float:fY, Float:fZ)
 {
     if (weaponid != WeaponCache[playerid][wcVal])
     {
