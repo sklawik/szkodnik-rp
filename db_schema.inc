@@ -1,7 +1,7 @@
 // Check out main branch to see a noticy about unsecure passwords in #defines.
-#define MYSQL_HOST "db"
+#define MYSQL_HOST "127.0.0.1"
 #define MYSQL_USER "www"
-#define MYSQL_PASSWORD "CHANGEME"
+#define MYSQL_PASSWORD "123"
 #define MYSQL_DB "szkodnikrp"
 
 new MySQL:DB_HANDLE;
@@ -133,7 +133,7 @@ stock EnsureCreated(){
         FOREIGN KEY (playerUID) REFERENCES players(uid)\
     );", false);
 
-    // items table
+    // items toable
     mysql_query(DB_HANDLE,
     "CREATE TABLE IF NOT EXISTS items(\
         uid INT PRIMARY KEY AUTO_INCREMENT,\
@@ -175,5 +175,14 @@ stock EnsureCreated(){
         `key` VARCHAR(64) NOT NULL,\
         `value` VARCHAR(256) NOT NULL\
     );", false);
+    
+    mysql_query(DB_HANDLE, "CREATE TABLE IF NOT EXISTS playerLogs (\n\
+	uid INT PRIMARY KEY AUTO_INCREMENT,\n\
+	message VARCHAR(256) DEFAULT ' ',\n\
+	type TINYINT NOT NULL,\n\
+	playerUID INT, \n\
+	anyUID INT DEFAULT 0,\n\
+	createdAt DATETIME DEFAULT CURRENT_TIMESTAMP\n\
+	);", false);
 }
 

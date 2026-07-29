@@ -24,3 +24,14 @@ EXPOSE 7777/udp
 
 # Start the SA:MP server directly
 CMD ["sampctl", "run"]
+
+
+# docker run -d \
+#   --name db \
+#   -p 3306:3306 \
+#   --default-authentication-plugin=mysql_native_password \
+#   -e MYSQL_ROOT_PASSWORD=rootpassword \
+#   -e MYSQL_DATABASE=szkodnikrp \
+#   -e MYSQL_USER=www \
+#   -e MYSQL_PASSWORD=123 \
+#   mysql:8.0
