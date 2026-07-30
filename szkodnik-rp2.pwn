@@ -16,7 +16,7 @@ main() {}
 // mysql settings
 
 #define COL_AC_CHAT 0x42D95EFF
-new DEV_MODE = 1;
+new DEV_MODE = 0;
 
 // defines dialogs
 #define D_LOGIN 0
@@ -4568,6 +4568,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
             {
                 if (Isnull(inputtext))
                     return ShowDialogCreate(playerid);
+                
 
                 new pname[MAX_PLAYER_NAME], pborndate, sex[2];
                 new text[128];
@@ -4590,7 +4591,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
                 if (sex[0] == 'm' || sex[0] == 'k')
                 {
                     new players_query[64];
-                    format(players_query, sizeof(players_query), "SELECT * FROM players WHERE name = '%s' LIMIT 1", ReturnPlayerName(playerid));
+                    format(players_query, sizeof(players_query), "SELECT * FROM players WHERE name = '%s' LIMIT 1", pname);
                     new Cache:cache = mysql_query(DB_HANDLE, players_query);
                     new rows = 0;
                     cache_get_row_count(rows);
