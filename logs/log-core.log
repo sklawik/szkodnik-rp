@@ -57,3 +57,5 @@
 [07/30/2026 01:54:50 AM] [ERROR] signal 2 (SIGINT) catched; shutting log-core down (errno: 0, signal code: 128, exit status: 0)
 [07/30/2026 01:55:15 AM] [ERROR] signal 2 (SIGINT) catched; shutting log-core down (errno: 0, signal code: 128, exit status: 0)
 [07/30/2026 01:55:32 AM] [ERROR] signal 2 (SIGINT) catched; shutting log-core down (errno: 0, signal code: 128, exit status: 0)
+[07/30/2026 03:11:58 AM] [ERROR] signal 2 (SIGINT) catched; shutting log-core down (errno: 0, signal code: 128, exit status: 0)
+[07/30/2026 03:13:33 AM] [ERROR] signal 2 (SIGINT) catched; shutting log-core down (errno: 0, signal code: 128, exit status: 0)
