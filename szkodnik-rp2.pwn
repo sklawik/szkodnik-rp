@@ -1219,29 +1219,25 @@ stock LoadObjects()
 
     new data[1024], uid, model, Float:X, Float:Y, Float:Z, Float:rX, Float:rY, Float:rZ, VW, id;
 
-    mysql_query(DB_HANDLE, "SELECT uid, model, X, Y, Z, rX, rY, rZ, VW FROM objects");
+    new Cache:cache = mysql_query(DB_HANDLE, "SELECT uid, model, X, Y, Z, rX, rY, rZ, VW FROM objects");
 
-    mysql_store_result();
-
-    while (mysql_fetch_row(data))
+    new rows = cache_num_rows();
+    for (new i = 0; i < rows; i++)
     {
-        sscanf(data, "p<|>iiffffffi",
-               uid,
-               model,
-               X,
-               Y,
-               Z,
-               rX,
-               rY,
-               rZ,
-               VW);
-
-        id = CreateDynamicObject(model, X, Y, Z, rX, rY, rZ, VW, 0, -1);
-
-        SetTimerEx("UpdateTableTextures", 1, false, "ii", id, uid);
+        cache_get_value_name_float(i, "X", X);
+        cache_get_value_name_float(i, "Y", Y);
+        cache_get_value_name_float(i, "Z", Z);
+        cache_get_value_name_float(i, "rX", rX);
+        cache_get_value_name_float(i, "rY", rY);
+        cache_get_value_name_float(i, "rZ", rZ);
+        cache_get_value_name_int(i, "VW", VW);
+        cache_get_value_name_int(i, "model", model);
+        cache_get_value_name_int(i, "uid", uid);
     }
+    id = CreateDynamicObject(model, X, Y, Z, rX, rY, rZ, VW, 0, -1);
+    SetTimerEx("UpdateTableTextures", 1, false, "ii", id, uid);
 
-    printf(">>> Loaded %d objects", mysql_num_rows());
+    printf(">>> Loaded %d objects", rows);
 
     cache_delete(cache);
     AreObjectsLoaded = true;
