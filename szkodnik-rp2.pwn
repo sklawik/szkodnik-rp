@@ -14032,7 +14032,7 @@ CMD:mc(playerid, params[])
     new object_uid;
     new Cache:newCache;
     newCache = mysql_query(DB_HANDLE, "SELECT Max(uid) FROM objects");
-    cache_get_value_name_int(0, "uid", object_uid);
+    cache_get_value_name_int(0, "Max(uid)", object_uid);
 
     SendClientMessage(playerid, COLOR_GRAY, "%d",  object_uid);
 
