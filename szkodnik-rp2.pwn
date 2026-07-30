@@ -1859,7 +1859,7 @@ stock RemoveMapBuildings(playerid)
 public OnPlayerConnect(playerid)
 {
     new broadcastMessage[256];
-    format(broadcastMessage, sizeof(broadcastMessage), "http://discord-bot:8081/samp-broadcast&message=Gracz %s dołączył do gry", RPName(playerid));
+    format(broadcastMessage, sizeof(broadcastMessage), "http://discord-bot:8081/samp-broadcast?message=Gracz %s dołączył do gry", RPName(playerid));
     HTTP(playerid, HTTP_GET, broadcastMessage, "", "MyHttpResponse");
 
     if (!DB_HANDLE)
