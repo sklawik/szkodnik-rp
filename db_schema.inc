@@ -24,9 +24,7 @@ stock EnsureCreated(){
 
     // objects table
     
- mysql_query(DB_HANDLE, 
-	"DROP TABLE objects"
-	, false);
+
 
     mysql_query(DB_HANDLE, 
 	"CREATE TABLE IF NOT EXISTS objects(\n\

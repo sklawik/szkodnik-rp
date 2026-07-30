@@ -921,6 +921,7 @@ public LoadGameMode()
 
     LoadActors();
     LoadApps();
+    LoadObjects();
 
     LoadServerSettings();
     // LoadZones();
