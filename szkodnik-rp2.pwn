@@ -4538,6 +4538,9 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
                 }
                 else
                 {
+                    new not_found_response[256];
+                    format(not_found_response, sizeof(not_found_response), "Nie znaleziono gracza o nazwie: %s", inputtext);
+                    SendClientMessage(playerid, COLOR_WHITE, not_found_response);
                     ShowDialogNotFound(playerid);
                 }
                 cache_delete(cache);
