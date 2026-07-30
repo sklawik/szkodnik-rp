@@ -17,9 +17,10 @@ new MySQL:DB_HANDLE;
 
 stock EnsureCreated(){
     // init database
-    mysql_query(DB_HANDLE, "DROP DATABASE IF EXISTS szkodnikrp;", false);
-    mysql_query(DB_HANDLE, "CREATE DATABASE szkodnikrp;", false);
-    mysql_query(DB_HANDLE, "USE szkodnikrp;", false);
+
+    // mysql_query(DB_HANDLE, "DROP DATABASE IF EXISTS szkodnikrp;", false);
+    // mysql_query(DB_HANDLE, "CREATE DATABASE szkodnikrp;", false);
+    // mysql_query(DB_HANDLE, "USE szkodnikrp;", false);
 
     // players table
     mysql_query(DB_HANDLE, 
