@@ -1289,32 +1289,7 @@ stock GetMapIcon(grouptype)
 stock LoadDoors()
 {
 
-    /*
-    	// Doors table
-    mysql_query(DB_HANDLE,
-    "CREATE TABLE IF NOT EXISTS doors(\n\
-    uid INT PRIMARY KEY AUTO_INCREMENT,\n\
-    outVirtualWorld INT,\n\
-    insVirtualWorld INT,\n\
-    name VARCHAR(32) DEFAULT 'Drzwi',\n\
-    url VARCHAR(256) DEFAULT '',\n\
-    outX FLOAT,\n\
-    outY FLOAT,\n\
-    outZ FLOAT,\n\
-    insX FLOAT,\n\
-    insY FLOAT,\n\
-    insZ FLOAT,\n\
-    playerUID INT DEFAULT NULL,\n\
-    groupUID INT DEFAULT NULL,\n\
-    open INT DEFAULT 0,\n\
-    type INT,\n\
-    vehicle INT DEFAULT 0,\n\
-    alarm INT DEFAULT 0,\n\
-    explodeTime INT DEFAULT 0,\n\
-    expirationDate DATETIME DEFAULT (CURRENT_DATE + INTERVAL 1 MONTH),\n\
-    facingAngle FLOAT,\n\
-    gameId INT DEFAULT 0);"
-    ,false);
+    
 
     new Cache:cache = mysql_query(DB_HANDLE, "SELECT doors.uid as uid, groups.type as groupType, outX, outY, outZ, outVirtualWorld, doors.type, COALESCE(groupUID, 0) FROM doors LEFT OUTER JOIN groups ON groups.uid=doors.groupUID;");
 
@@ -1361,7 +1336,12 @@ stock LoadDoors()
 
     cache_delete(cache);
 
-    printf(">>> Loaded %d doors.", rows);*/
+    printf(">>> Loaded %d doors.", rows);
+
+    new broadcastMessage[256];
+    format(broadcastMessage, sizeof(broadcastMessage), "http://discord-bot:8081/samp-broadcast?message=Załadowano %d drzwi(ów).", rows);
+    HTTP(0, HTTP_GET, broadcastMessage, "", "MyHttpResponse");
+
 }
 
 stock ShowDialogMemberPayDay(playerid)
@@ -15421,31 +15401,31 @@ public OnVehicleDeath(vehicleid, killerid)
 
 CMD:adrzwi(playerid, params[])
 {
-    /*if(PlayerCache[playerid][pLevel] < ADMINISTRATION)
-    return 1;
-    new pvw = GetPlayerVirtualWorld(playerid);
-    for(new i; i<LastdUID; i++)
-    {
-    	if(!DoorCache[i][dDestroyed])
-    	{
-    		if(pvw == DoorCache[i][dInsVW])
-    		{
-    			if(IsPlayerInRangeOfPoint(playerid, 1.5, DoorCache[i][dInsX], DoorCache[i][dInsY], DoorCache[i][dInsZ]))
-    			{
-    				pVal[playerid] = i;
-    				return ShowPlayerDialog(playerid, D_ADMIN_DOOR, DIALOG_STYLE_LIST, "Zarządzaj drzwiami", "1\tUsuń drzwi\n2\tZmień wyjciowy VW\n3\tZmień nazwę drzwi", "Wybierz", "Anuluj");
-    			}
-    		}
-    		else if(pvw == DoorCache[i][dOutVW])
-    		{
-    			if(IsPlayerInRangeOfPoint(playerid, 1.5, DoorCache[i][dOutX], DoorCache[i][dOutY], DoorCache[i][dOutZ]))
-    			{
-    				pVal[playerid] = i;
-    				return ShowPlayerDialog(playerid, D_ADMIN_DOOR, DIALOG_STYLE_LIST, "Zarządzaj drzwiami", "1\tUsuń drzwi\n2\tZmień wyjciowy VW\n3\tZmień nazwę drzwi", "Wybierz", "Anuluj");
-    			}
-    		}
-    	}
-    }*/
+    // if(PlayerCache[playerid][pLevel] < ADMINISTRATION)
+    // return 1;
+    // new pvw = GetPlayerVirtualWorld(playerid);
+    // for(new i; i<LastdUID; i++)
+    // {
+    // 	if(!DoorCache[i][dDestroyed])
+    // 	{
+    // 		if(pvw == DoorCache[i][dInsVW])
+    // 		{
+    // 			if(IsPlayerInRangeOfPoint(playerid, 1.5, DoorCache[i][dInsX], DoorCache[i][dInsY], DoorCache[i][dInsZ]))
+    // 			{
+    // 				pVal[playerid] = i;
+    // 				return ShowPlayerDialog(playerid, D_ADMIN_DOOR, DIALOG_STYLE_LIST, "Zarządzaj drzwiami", "1\tUsuń drzwi\n2\tZmień wyjciowy VW\n3\tZmień nazwę drzwi", "Wybierz", "Anuluj");
+    // 			}
+    // 		}
+    // 		else if(pvw == DoorCache[i][dOutVW])
+    // 		{
+    // 			if(IsPlayerInRangeOfPoint(playerid, 1.5, DoorCache[i][dOutX], DoorCache[i][dOutY], DoorCache[i][dOutZ]))
+    // 			{
+    // 				pVal[playerid] = i;
+    // 				return ShowPlayerDialog(playerid, D_ADMIN_DOOR, DIALOG_STYLE_LIST, "Zarządzaj drzwiami", "1\tUsuń drzwi\n2\tZmień wyjciowy VW\n3\tZmień nazwę drzwi", "Wybierz", "Anuluj");
+    // 			}
+    // 		}
+    // 	}
+    // }
     return ShowDialogInfo(playerid, "Nie znajdujesz się przy adnych drzwiach.");
 }
 

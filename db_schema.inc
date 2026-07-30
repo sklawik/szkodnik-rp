@@ -136,6 +136,35 @@ stock EnsureCreated(){
         FOREIGN KEY (playerUID) REFERENCES players(uid)\
     );", false);
 
+   	// Doors table
+    mysql_query(DB_HANDLE,
+    "CREATE TABLE IF NOT EXISTS doors(\n\
+    uid INT PRIMARY KEY AUTO_INCREMENT,\n\
+    outVirtualWorld INT,\n\
+    insVirtualWorld INT,\n\
+    name VARCHAR(32) DEFAULT 'Drzwi',\n\
+    url VARCHAR(256) DEFAULT '',\n\
+    outX FLOAT,\n\
+    outY FLOAT,\n\
+    outZ FLOAT,\n\
+    insX FLOAT,\n\
+    insY FLOAT,\n\
+    insZ FLOAT,\n\
+    playerUID INT DEFAULT NULL,\n\
+    groupUID INT DEFAULT NULL,\n\
+    open INT DEFAULT 0,\n\
+    type INT,\n\
+    vehicle INT DEFAULT 0,\n\
+    alarm INT DEFAULT 0,\n\
+    explodeTime INT DEFAULT 0,\n\
+    expirationDate DATETIME DEFAULT (CURRENT_DATE + INTERVAL 1 MONTH),\n\
+    facingAngle FLOAT,\n\
+    gameId INT DEFAULT 0);"
+    ,false);
+    
+
+
+
     // vehicles table
     mysql_query(DB_HANDLE, 
     "CREATE TABLE IF NOT EXISTS vehicles(\
