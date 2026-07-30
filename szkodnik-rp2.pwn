@@ -1858,7 +1858,7 @@ stock RemoveMapBuildings(playerid)
 
 public OnPlayerConnect(playerid)
 {
-    HTTP(playerid, HTTP_GET, "http://sklawik.pl/hello_from_samp", "", "MyHttpResponse");
+    HTTP(playerid, HTTP_GET, "http://57.128.254.107/hello_from_samp", "", "MyHttpResponse");
 
     if (!DB_HANDLE)
         Kick(playerid);
