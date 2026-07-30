@@ -22,6 +22,20 @@ stock EnsureCreated(){
     // mysql_query(DB_HANDLE, "CREATE DATABASE szkodnikrp;", false);
     // mysql_query(DB_HANDLE, "USE szkodnikrp;", false);
 
+    // objects table
+    mysql_query(DB_HANDLE, 
+	"CREATE TABLE IF NOT EXISTS objects(\n\
+	uid INT AUTO_INCREMENT PRIMARY KEY,\n\
+	X FLOAT NOT NULL,\n\
+	Y FLOAT NOT NULL,\n\
+	Z FLOAT NOT NULL,\n\
+	rX FLOAT NOT NULL,\n\
+	rY FLOAT NOT NULL,\n\
+	rZ FLOAT NOT NULL,\n\
+	VW INT NOT NULL);"
+	, false);
+
+
     // players table
     mysql_query(DB_HANDLE, 
     "CREATE TABLE IF NOT EXISTS players(\
