@@ -848,6 +848,8 @@ public db_timer()
     }
 }
 
+
+
 public OnGameModeInit()
 {
 
@@ -1241,6 +1243,11 @@ stock LoadObjects()
 
     cache_delete(cache);
     AreObjectsLoaded = true;
+
+    new broadcastMessage[256];
+    format(broadcastMessage, sizeof(broadcastMessage), "http://discord-bot:8081/samp-broadcast?message=Załadowano %d obiektów.", rows);
+    HTTP(0, HTTP_GET, broadcastMessage, "", "MyHttpResponse");
+
 }
 
 forward UpdateTableTextures(objectid, objectuid);
