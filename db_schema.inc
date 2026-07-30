@@ -21,11 +21,6 @@ stock EnsureCreated(){
     mysql_query(DB_HANDLE, "CREATE DATABASE szkodnikrp;", false);
     mysql_query(DB_HANDLE, "USE szkodnikrp;", false);
 
-    mysql_query(DB_HANDLE, "DROP DATABASE szkodnikrp;")
-    mysql_query(DB_HANDLE, "CREATE DATABASE szkodnikrp;")
-    mysql_query(DB_HANDLE, "USE szkodnikrp;", false);
-
-
     // players table
     mysql_query(DB_HANDLE, 
     "CREATE TABLE IF NOT EXISTS players(\
