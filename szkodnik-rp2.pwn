@@ -4571,7 +4571,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
             {
                 if (Isnull(inputtext))
                     return ShowDialogCreate(playerid);
-                
+
 
                 new pname[MAX_PLAYER_NAME], pborndate, sex[2];
                 new text[128];
@@ -4704,7 +4704,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
                 format(password, sizeof(password), "%s", inputtext);
                 print("hashing...");
                 bcrypt_verify(playerid, "OnPasswordHashLogin", password, PlayerCache[playerid][pHash]);
-                
+
 
             }
             else
@@ -5806,8 +5806,9 @@ Przykład: 10 100", "Zamów", "Anuluj");
 }
 
 forward OnPasswordHashLogin(playerid, success);
-public OnPasswordHashLogin(playerid, success){
-     if (success)
+public OnPasswordHashLogin(playerid, success)
+{
+    if (success)
     {
         print("success login");
         new name[MAX_PLAYER_NAME];
@@ -5828,7 +5829,7 @@ public OnPasswordHashLogin(playerid, success){
         // reloading name
         SetPlayerName(playerid, str);
         SetPlayerName(playerid, name);
-  
+
         // SpawnPlayer(playerid);
         return LoginPlayer(playerid);
     }
@@ -5851,7 +5852,7 @@ public OnPassswordHashVerify(playerid, success)
 
     print("callback executed");
 
-   
+
 }
 
 stock GetPlayersCountOnDuty(groupuid)
@@ -13945,11 +13946,12 @@ public ObjectMoving(playerid)
 
 CMD:mc(playerid, params[])
 {
-    /*if(GetPlayerVirtualWorld(playerid) == 0)
+    if (GetPlayerVirtualWorld(playerid) == 0)
     {
-    	if(!PlayerCache[playerid][pLevel])
-    	return GameTextForPlayer(playerid, "~r~~h~brak uprawnien", 3000, 4);
+        if (!PlayerCache[playerid][pLevel])
+            return GameTextForPlayer(playerid, "~r~~h~brak uprawnien", 3000, 4);
     }
+
     new str[1024];
     format(str, sizeof(str), "SELECT playerUID, groupUID FROM doors WHERE uid = '%d' LIMIT 1", pPickupUID[playerid]);
     new Cache:cache = mysql_query(DB_HANDLE, str);
@@ -13959,48 +13961,48 @@ CMD:mc(playerid, params[])
     cache_get_value_name_int(0, "groupUID", groupUID);
     cache_delete(cache);
 
-    if(playerUID)
-    	{
-    		if(PlayerCache[playerid][pUID] != playerUID)
-    		return TextDrawForPlayerEx(playerid, 1, "Brak uprawnien.", 3000);
-    	}
-    if(groupUID)
-    	{
-    		if(PlayerCache[playerid][pGroup] == groupUID)
-    		{
-    			if(!PlayerCache[playerid][pGroupMapper])
-    			{
-    				return TextDrawForPlayerEx(playerid, 1, "Nie posiadasz uprawnien do edycji wnetrz.", 3000);
-    			}
-    		}
-    		else if(PlayerCache[playerid][pGroup2] == groupUID)
-    		{
-    			if(!PlayerCache[playerid][pGroupMapper2])
-    			{
-    				return TextDrawForPlayerEx(playerid, 1, "Nie posiadasz uprawnien do edycji wnetrz.", 3000);
-    			}
-    		}
-    		else if(PlayerCache[playerid][pGroup3] == groupUID)
-    		{
-    			if(!PlayerCache[playerid][pGroupMapper3])
-    			{
-    				return TextDrawForPlayerEx(playerid, 1, "Nie posiadasz uprawnien do edycji wnetrz.", 3000);
-    			}
-    		}
-    		else
-    		return TextDrawForPlayerEx(playerid, 1, "Brak uprawnien.", 3000);
-    	}
+    // if(playerUID)
+    // 	{
+    // 		if(PlayerCache[playerid][pUID] != playerUID)
+    // 		return TextDrawForPlayerEx(playerid, 1, "Brak uprawnien.", 3000);
+    // 	}
+    // if(groupUID)
+    // 	{
+    // 		if(PlayerCache[playerid][pGroup] == groupUID)
+    // 		{
+    // 			if(!PlayerCache[playerid][pGroupMapper])
+    // 			{
+    // 				return TextDrawForPlayerEx(playerid, 1, "Nie posiadasz uprawnien do edycji wnetrz.", 3000);
+    // 			}
+    // 		}
+    // 		else if(PlayerCache[playerid][pGroup2] == groupUID)
+    // 		{
+    // 			if(!PlayerCache[playerid][pGroupMapper2])
+    // 			{
+    // 				return TextDrawForPlayerEx(playerid, 1, "Nie posiadasz uprawnien do edycji wnetrz.", 3000);
+    // 			}
+    // 		}
+    // 		else if(PlayerCache[playerid][pGroup3] == groupUID)
+    // 		{
+    // 			if(!PlayerCache[playerid][pGroupMapper3])
+    // 			{
+    // 				return TextDrawForPlayerEx(playerid, 1, "Nie posiadasz uprawnien do edycji wnetrz.", 3000);
+    // 			}
+    // 		}
+    // 		else
+    // 		return TextDrawForPlayerEx(playerid, 1, "Brak uprawnien.", 3000);
+    // 	}
 
 
-    new modelid;
+    new modelid
 
-    if(sscanf(params, "i", modelid))
-    return SendClientMessage(playerid, COLOR_GRAY, "Poprawne użycie: /mc [ID obiektu]");
+    if (sscanf(params, "i", modelid))
+        return SendClientMessage(playerid, COLOR_GRAY, "Poprawne użycie: /mc [ID obiektu]");
 
     GetPlayerPos(playerid, PlayerCache[playerid][pPosX], PlayerCache[playerid][pPosY], PlayerCache[playerid][pPosZ]);
 
-    new objectid = CreateDynamicObject(modelid, PlayerCache[playerid][pPosX], PlayerCache[playerid][pPosY]+0.5, PlayerCache[playerid][pPosZ],
-    0, 0, 0, GetPlayerVirtualWorld(playerid), -1,-1);
+    new objectid = CreateDynamicObject(modelid, PlayerCache[playerid][pPosX], PlayerCache[playerid][pPosY] + 0.5, PlayerCache[playerid][pPosZ],
+                                       0, 0, 0, GetPlayerVirtualWorld(playerid), -1, -1);
 
     Streamer_Update(playerid);
 
@@ -14008,17 +14010,17 @@ CMD:mc(playerid, params[])
 
 
     format(str, sizeof(str),
-    "INSERT INTO objects (ID, X, Y, Z, rX, rY, rZ, VW, model, timer) VALUES ('%d', '%f', '%f', '%f', '%f', '%f', '%f', '%d', '%d', '%d')",
-    objectid,
-    PlayerCache[playerid][pPosX],
-    PlayerCache[playerid][pPosY]+0.5,
-    PlayerCache[playerid][pPosZ],
-    0,
-    0,
-    0,
-    GetPlayerVirtualWorld(playerid),
-    modelid,
-    0);
+           "INSERT INTO objects (ID, X, Y, Z, rX, rY, rZ, VW, model, timer) VALUES ('%d', '%f', '%f', '%f', '%f', '%f', '%f', '%d', '%d', '%d')",
+           objectid,
+           PlayerCache[playerid][pPosX],
+           PlayerCache[playerid][pPosY] + 0.5,
+           PlayerCache[playerid][pPosZ],
+           0,
+           0,
+           0,
+           GetPlayerVirtualWorld(playerid),
+           modelid,
+           0);
 
     mysql_query(DB_HANDLE, str);
 
@@ -14035,7 +14037,7 @@ CMD:mc(playerid, params[])
     format(str, sizeof(str), "UPDATE objects SET timer = '%d' WHERE id = '%d' LIMIT 1", SetTimerEx("ObjectMoving", 125, true, "i", playerid), objectid);
     cache = mysql_query(DB_HANDLE, str);
     cache_delete(cache);
-    */
+
     return 1;
 }
 
