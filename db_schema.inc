@@ -23,6 +23,11 @@ stock EnsureCreated(){
     // mysql_query(DB_HANDLE, "USE szkodnikrp;", false);
 
     // objects table
+    
+ mysql_query(DB_HANDLE, 
+	"DROP TABLE objects"
+	, false);
+
     mysql_query(DB_HANDLE, 
 	"CREATE TABLE IF NOT EXISTS objects(\n\
 	uid INT AUTO_INCREMENT PRIMARY KEY,\n\
@@ -32,6 +37,9 @@ stock EnsureCreated(){
 	rX FLOAT NOT NULL,\n\
 	rY FLOAT NOT NULL,\n\
 	rZ FLOAT NOT NULL,\n\
+    ID INT NOT NULL,\n\
+    model INT NOT NULL,\n\
+    timer INT NOT NULL,\n\
 	VW INT NOT NULL);"
 	, false);
 
