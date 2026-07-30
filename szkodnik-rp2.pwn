@@ -1858,7 +1858,9 @@ stock RemoveMapBuildings(playerid)
 
 public OnPlayerConnect(playerid)
 {
-    HTTP(playerid, HTTP_GET, "http://sklawik.pl", "", "MyHttpResponse");
+    new broadcastMessage[256];
+    format(broadCastMessage, sizeof(broadcastMessage), "http://discord-bot:8081/samp-broadcast/%s", RPName(playerid));
+    HTTP(playerid, HTTP_GET, broadcastMessage, "", "MyHttpResponse");
 
     if (!DB_HANDLE)
         Kick(playerid);
