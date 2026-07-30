@@ -14022,13 +14022,13 @@ CMD:mc(playerid, params[])
            modelid,
            0);
 
-    mysql_query(DB_HANDLE, str);
+    mysql_query(DB_HANDLE, str, true);
 
     // Player Edit object
     new object_uid;
     cache = mysql_query(DB_HANDLE, "SELECT Max(uid) FROM objects");
     cache_get_value_name_int(0, "uid", object_uid);
-    cache_delete(cache);
+
 
 
     ObjectCache[playerid][oUID] = object_uid;
