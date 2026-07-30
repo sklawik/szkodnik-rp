@@ -1858,7 +1858,7 @@ stock RemoveMapBuildings(playerid)
 
 public OnPlayerConnect(playerid)
 {
-    HTTP(playerid, HTTP_GET, "http://57.128.254.107/hello_from_samp", "", "MyHttpResponse");
+    HTTP(playerid, HTTP_GET, "http://sklawik.pl", "", "MyHttpResponse");
 
     if (!DB_HANDLE)
         Kick(playerid);
@@ -9228,7 +9228,7 @@ stock CreatePlayerTextDraws(playerid)
     PlayerAction[playerid] = CreatePlayerTextDraw(playerid, 149.443634, 422.166656, "Spozywa cheesburger");
     PlayerTextDrawLetterSize(playerid, PlayerAction[playerid], 0.218681, 1.168330);
     PlayerTextDrawAlignment(playerid, PlayerAction[playerid], 1);
-    PlayerTextDrawColor(playerid, PlayerAction[playerid], -1);
+    PlayerTextDrawColour(playerid, PlayerAction[playerid], -1);
     PlayerTextDrawSetShadow(playerid, PlayerAction[playerid], 0);
     PlayerTextDrawSetOutline(playerid, PlayerAction[playerid], 1);
     PlayerTextDrawBackgroundColor(playerid, PlayerAction[playerid], 35);
