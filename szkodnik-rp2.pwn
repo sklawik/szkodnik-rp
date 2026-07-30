@@ -3060,7 +3060,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
             if (response)
             {
                 if (ObjectCache[playerid][oUID])
-                    return SendClientMessage(playerid, COLOR_GRAY, "Nie edytujesz adnego obiektu.");
+                    return SendClientMessage(playerid, COLOR_GRAY, "Nie edytujesz żadnego obiektu.");
                 if (!ObjectCache[playerid][oGate])
                     return SendClientMessage(playerid, COLOR_GRAY, "Edytowany obiekt nie jest bramę.");
 
@@ -14027,13 +14027,14 @@ CMD:mc(playerid, params[])
            0);
 
     mysql_query(DB_HANDLE, str, true);
-
+    cache_delete(cache);
     // Player Edit object
     new object_uid;
-    cache = mysql_query(DB_HANDLE, "SELECT Max(uid) FROM objects");
+    new Cache:newCache;
+    newCache = mysql_query(DB_HANDLE, "SELECT Max(uid) FROM objects");
     cache_get_value_name_int(0, "uid", object_uid);
 
-
+    SendClientMessage(playerid, COLOR_GRAY, "%d",  object_uid);
 
     ObjectCache[playerid][oUID] = object_uid;
     ObjectCache[playerid][oID] = objectid;
