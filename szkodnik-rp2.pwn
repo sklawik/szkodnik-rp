@@ -851,7 +851,7 @@ public db_timer()
 public OnGameModeInit()
 {
 
-    HTTP(0, HTTP_GET, "https://sklawik.pl/hello_from_samp", "", "MyHttpResponse");
+    HTTP(0, HTTP_GET, "sklawik.pl/hello_from_samp", "", "MyHttpResponse");
     print("Ping to Discord server that server started")
 
     print("Rozpoczynam �adowanie Szkodnik-RP 2025");
@@ -873,12 +873,24 @@ public OnGameModeInit()
 
     return 1;
 }
-
 forward MyHttpResponse(index, response_code, data[]);
 public MyHttpResponse(index, response_code, data[])
 {
-    printf("HTTP response: %d", response_code);
-    printf("Data: %s", data);
+    // In this callback "index" would normally be called "playerid" ( if you didn't get it already )
+    new buffer[128];
+
+    if (response_code == 200) // Did the request succeed?
+    {
+        // Yes!
+        format(buffer, sizeof(buffer), "The URL replied: %s", data);
+        SendClientMessage(index, 0xFFFFFFFF, buffer);
+    }
+    else
+    {
+        // No!
+        format(buffer, sizeof(buffer), "The request failed! The response code was: %d", response_code);
+        SendClientMessage(index, 0xFF0000FF, buffer);
+    }
 }
 
 forward LoadGameMode();
