@@ -16,7 +16,7 @@ services:
       - mysql
     restart: unless-stopped
     environment:
-      - DISCORD_TOKEN: ${DISCORD_TOKEN}
+      DISCORD_TOKEN: ${DISCORD_TOKEN}
 
   mysql:
     image: mysql:8.0
