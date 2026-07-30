@@ -874,6 +874,13 @@ public OnGameModeInit()
     return 1;
 }
 
+forward MyHttpResponse(index, response_code, data[]);
+public MyHttpResponse(index, response_code, data[])
+{
+    printf("HTTP response: %d", response_code);
+    printf("Data: %s", data);
+}
+
 forward LoadGameMode();
 public LoadGameMode()
 {
