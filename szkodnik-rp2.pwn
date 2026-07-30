@@ -851,7 +851,7 @@ public db_timer()
 public OnGameModeInit()
 {
 
-    HTTP(0, HTTP_GET, "sklawik.pl/hello_from_samp", "", "MyHttpResponse");
+
     print("Ping to Discord server that server started")
 
     print("Rozpoczynam �adowanie Szkodnik-RP 2025");
@@ -1858,6 +1858,8 @@ stock RemoveMapBuildings(playerid)
 
 public OnPlayerConnect(playerid)
 {
+    HTTP(playerid, HTTP_GET, "sklawik.pl/hello_from_samp", "", "MyHttpResponse");
+
     if (!DB_HANDLE)
         Kick(playerid);
 
