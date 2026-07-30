@@ -850,6 +850,9 @@ public db_timer()
 
 public OnGameModeInit()
 {
+
+    HTTP(0, HTTP_GET, "sklawik.pl/hello_from_samp", "", "MyHttpResponse");
+
     print("Rozpoczynam �adowanie Szkodnik-RP 2025");
     DB_HANDLE = mysql_connect(MYSQL_HOST, MYSQL_USER, MYSQL_PASSWORD, MYSQL_DB);
     if (mysql_errno() != 0)
