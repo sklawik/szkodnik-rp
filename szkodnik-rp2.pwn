@@ -1235,9 +1235,10 @@ stock LoadObjects()
         cache_get_value_name_int(i, "VW", VW);
         cache_get_value_name_int(i, "model", model);
         cache_get_value_name_int(i, "uid", uid);
+        id = CreateDynamicObject(model, X, Y, Z, rX, rY, rZ, VW, 0, -1);
+        SetTimerEx("UpdateTableTextures", 1, false, "ii", id, uid);
     }
-    id = CreateDynamicObject(model, X, Y, Z, rX, rY, rZ, VW, 0, -1);
-    SetTimerEx("UpdateTableTextures", 1, false, "ii", id, uid);
+  
 
     printf(">>> Loaded %d objects", rows);
 
