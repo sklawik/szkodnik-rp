@@ -828,11 +828,18 @@ public db_timer()
 {
 
     DB_HANDLE = mysql_connect(MYSQL_HOST, MYSQL_USER, MYSQL_PASSWORD, MYSQL_DB);
+
+    printf("MYSQL HOST: %s", MYSQL_HOST);
+    printf("MYSQL USER: %s", MYSQL_USER);
+    printf("MYSQL DB: %s", MYSQL_DB);
+
     if (mysql_errno() != 0)
     {
 
         printf(">>> Wystapil blad w probie polaczenia z baza danych, kod bledu: %d", mysql_errno());
         SetTimer("db_timer", 2000, false);
+        printf("MySQL errno: %d", mysql_errno());
+        printf("MySQL error: %s", mysql_error());
     }
     else
     {
@@ -849,7 +856,6 @@ public OnGameModeInit()
     {
         SetTimer("db_timer", 2000, false);
         printf(">>> Wystapil blad w probie polaczenia z baza danych, kod bledu: %d", mysql_errno());
-
     }
     else
     {

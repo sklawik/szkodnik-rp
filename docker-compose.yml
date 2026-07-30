@@ -1,15 +1,23 @@
-
-
 services:
-  db:
+  samp:
+    build: .
+    container_name: samp-server
+    ports:
+      - "7777:7777/udp"
+    depends_on:
+      - mysql
+    restart: unless-stopped
+
+  mysql:
     image: mysql:8.0
-    container_name: szkodnik-db
+    container_name: samp-mysql
     restart: unless-stopped
     environment:
       MYSQL_ROOT_PASSWORD: 123
       MYSQL_DATABASE: szkodnikrp
       MYSQL_USER: www
       MYSQL_PASSWORD: 123
+    command: --default-authentication-plugin=mysql_native_password
     ports:
       - "3306:3306"
     volumes:

@@ -1,8 +1,17 @@
 // Check out main branch to see a noticy about unsecure passwords in #defines.
-#define MYSQL_HOST "127.0.0.1"
+
+
+
+// ---- > use this host for local development // #define MYSQL_HOST "127.0.0.1"
+
+
+// ---> this host for production
+// #define MYSQL_HOST "mysql"
 #define MYSQL_USER "www"
 #define MYSQL_PASSWORD "123"
 #define MYSQL_DB "szkodnikrp"
+#define MYSQL_HOST "mysql"
+
 
 new MySQL:DB_HANDLE;
 
@@ -15,6 +24,7 @@ stock EnsureCreated(){
     mysql_query(DB_HANDLE, "DROP DATABASE szkodnikrp;")
     mysql_query(DB_HANDLE, "CREATE DATABASE szkodnikrp;")
     mysql_query(DB_HANDLE, "USE szkodnikrp;", false);
+
 
     // players table
     mysql_query(DB_HANDLE, 
