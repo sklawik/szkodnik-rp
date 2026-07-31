@@ -4767,9 +4767,10 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
             
             if(response)
             {
+                print("test")
             	new zone = GetPlayerZone(playerid);
                 new testText[256];
-                format(testText, sizeof(testText), "%d", playerid,ZoneData[zone][zYard])
+                format(testText, sizeof(testText), "%d", ZoneData[zone][zYard])
                 SendClientMessage(playerid, -1, testText);
             	if(!strlen(inputtext))
             	{
@@ -4813,7 +4814,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
             		{
             			ShowDialogDoorCreate(playerid, ZoneData[zone][zYard]);
             			new msg[64];
-            			format(msg, sizeof(msg), "~g~nie posiadasz %d$ na stworzenie drzwi", price);
+            			format(msg, sizeof(msg), "~g~nie posiadasz $%d na stworzenie drzwi", price);
             			GameTextForPlayer(playerid, msg, 5000, 4);
             			return 1;
             		}
