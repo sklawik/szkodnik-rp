@@ -11149,7 +11149,6 @@ CMD:gname(playerid, params[])
 
 CMD:drzwi(playerid, params[])
 {
-    SendClientMessage(playerid, 0xFF0000, "Cmd executed 1")
     // new uid = GetPlayerDoorUID(playerid);
     // pVal[playerid] = uid;
     // if(uid != 0)
@@ -11204,7 +11203,6 @@ CMD:drzwi(playerid, params[])
     		}
     	}
     }
-    SendClientMessage(playerid, 0xFF0000, "Cmd executed")
     ShowDialogZone(playerid);
   
     return 1;
@@ -15480,7 +15478,7 @@ CMD:adrzwi(playerid, params[])
     		}
     	}
     }
-    return ShowDialogInfo(playerid, "Nie znajdujesz się przy adnych drzwiach.");
+    return ShowDialogDoorCreate(playerid, 150)
 }
 
 public OnPlayerEnterVehicle(playerid, vehicleid, ispassenger)
