@@ -482,6 +482,9 @@ enum E_DOOR
 
 
 
+
+
+
 new bool:AreObjectsLoaded;
 
 
@@ -1238,7 +1241,7 @@ stock LoadObjects()
         id = CreateDynamicObject(model, X, Y, Z, rX, rY, rZ, VW, 0, -1);
         SetTimerEx("UpdateTableTextures", 1, false, "ii", id, uid);
     }
-  
+
 
     printf(">>> Loaded %d objects", rows);
 
@@ -1286,50 +1289,101 @@ stock GetMapIcon(grouptype)
 
 //new dPickupID2[MAX_DOORS];
 
+
+new DoorCache[MAX_DOORS][E_DOOR];
+
 stock LoadDoors()
 {
 
-    
+
+
+
+
+
+
+
 
     new Cache:cache = mysql_query(DB_HANDLE, "SELECT doors.uid as uid, groups.type as groupType, outX, outY, outZ, outVirtualWorld, doors.type, COALESCE(groupUID, 0) FROM doors LEFT OUTER JOIN groups ON groups.uid=doors.groupUID;");
 
     new rows = cache_num_rows();
 
-    new Float:outX, Float:outY, Float:outZ, outVirtualWorld, type, groupUID, groupType, uid;
 
 
-    for(new i=0; i<rows; i++){
-    	cache_get_value_name_float(i, "outX", outX);
-    	cache_get_value_name_float(i, "outY", outY);
-    	cache_get_value_name_float(i, "outZ", outZ);
-    	cache_get_value_name_int(i, "type", type);
-    	cache_get_value_name_int(i, "outVirtualWorld", outVirtualWorld);
-    	cache_get_value_name_int(i, "groupUID", groupUID);
-    	cache_get_value_name_int(i, "groupType", groupType);
-    	cache_get_value_name_int(i, "uid", uid);
+
+    for (new i = 0; i < rows; i++)
+    {
+        new Float:outX, Float:outY, Float:outZ, outVirtualWorld, type, groupUID, groupType, uid,
+            Float:insX, Float:insY, Float:insZ, insVirtualWorld, url[256], playerUID, name[32];
+        cache_get_value_name_float(i, "outX", outX);
+        cache_get_value_name_float(i, "outY", outY);
+        cache_get_value_name_float(i, "outZ", outZ);
+        cache_get_value_name_float(i, "insX", insX);
+        cache_get_value_name_float(i, "insY", insY);
+        cache_get_value_name_float(i, "insZ", insZ);
+        cache_get_value_name_float(i, "insVirtualWorld", insVirtualWorld);
+        cache_get_value_name(i, "url", url, sizeof(url));
+        cache_get_value_name(i, "name", name, sizeof(name));
+        cache_get_value_name_int(i, "type", type);
+        cache_get_value_name_int(i, "outVirtualWorld", outVirtualWorld);
+        cache_get_value_name_int(i, "groupUID", groupUID);
+        cache_get_value_name_int(i, "groupType", groupType);
+        cache_get_value_name_int(i, "uid", uid);
+        cache_get_value_name_int(i, "playerUID", playerUID);
 
 
-    	new pickupId = 0;
 
-    	switch(type){
-    		case DOOR_TYPE_HOUSE:{
-    			pickupId = CreateDynamicPickup(1273, 2, outX, outY, outZ, outVirtualWorld, 0, -1);
-    		}
-    		case DOOR_TYPE_BUSINESS:{
-    			if(groupUID){
-    				pickupId = CreateDynamicPickup(1273, 2, outX, outY, outZ, outVirtualWorld, 0, -1);
-    				CreateDynamicPickup(GetPickupModelFromGroupType(groupType), 2,  outX, outY, outZ, outVirtualWorld, 0, -1);
-    			}
-    			else
-    			{
-    				pickupId = CreateDynamicPickup(1239, 2, outX, outY, outZ, outVirtualWorld, 0, -1);
-    			}
-    		}
-    	}
+        new pickupId = 0;
 
-    	new query[64];
-    	format(query, sizeof(query), "UPDATE doors SET outPickupId=%d WHERE uid=%d;", pickupId, uid);
-    	mysql_query(DB_HANDLE, query, false);
+        switch (type)
+        {
+            case DOOR_TYPE_HOUSE:
+            {
+                pickupId = CreateDynamicPickup(1273, 2, outX, outY, outZ, outVirtualWorld, 0, -1);
+            }
+            case DOOR_TYPE_BUSINESS:
+            {
+                if (groupUID)
+                {
+                    pickupId = CreateDynamicPickup(1273, 2, outX, outY, outZ, outVirtualWorld, 0, -1);
+                    CreateDynamicPickup(GetPickupModelFromGroupType(groupType), 2,  outX, outY, outZ, outVirtualWorld, 0, -1);
+                }
+                else
+                {
+                    pickupId = CreateDynamicPickup(1239, 2, outX, outY, outZ, outVirtualWorld, 0, -1);
+                }
+            }
+        }
+
+        new query[64];
+        format(query, sizeof(query), "UPDATE doors SET outPickupId=%d WHERE uid=%d;", pickupId, uid);
+        mysql_query(DB_HANDLE, query, false);
+
+        DoorCache[i][dUID] = uid;
+        DoorCache[i][dType] = type;
+        DoorCache[i][dOutX] = outX;
+        DoorCache[i][dOutY] = outY;
+        DoorCache[i][dOutZ] = outZ;
+        DoorCache[i][dOutVW] = outVirtualWorld;
+        DoorCache[i][dInsVW] = insVirtualWorld;
+        DoorCache[i][dGroupUID] = groupUID;
+        DoorCache[i][dOpen] = 0;
+        DoorCache[i][dAlarm] = 0;
+        DoorCache[i][dPlayingAlarm] = 0;
+        DoorCache[i][dExplodeTime] = 0;
+        DoorCache[i][dFacingAngle] = 0;
+        DoorCache[i][dUrl] = url;
+        DoorCache[i][dEnterCost] = 0;
+        DoorCache[i][dVehicle] = 0;
+        DoorCache[i][dName] = name;
+        DoorCache[i][dInsX] = insX;
+        DoorCache[i][dInsY] = insY;
+        DoorCache[i][dInsZ] = insZ;
+        DoorCache[i][dPlayerUID] = playerUID;
+
+
+
+
+
 
     }
 
