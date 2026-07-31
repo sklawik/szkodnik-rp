@@ -4768,8 +4768,9 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
             if(response)
             {
                 
-                   
-            	new zone = GetPlayerZone(playerid);
+                new uid, yard, priceHouse, priceBusiness, playerUID, groupUID;
+
+            	new zone = GetPlayerZone(playerid, yard, priceHouse, priceBusiness, playerUID, groupUID);
                 printf("zone=%d", zone);
                 new testText[256];
                 format(testText, sizeof(testText), "%d", ZoneData[zone][zYard])
@@ -5649,8 +5650,8 @@ Przykład: 10 100", "Zamów", "Anuluj");
         {
             if (response)
             {
-                //new zoneid = GetPlayerZone(playerid);
-                //	ShowDialogDoorCreate(playerid, ZoneData[zoneid][zYard]);
+                new zoneid = GetPlayerZone(playerid);
+                ShowDialogDoorCreate(playerid, ZoneData[zoneid][zYard]);
                 return 1;
             }
             else
