@@ -11368,18 +11368,17 @@ CMD:astrefa(playerid, params[])
     {
         if (uid)
         {
-
-            /*new query[258];
-            format(query, sizeof(query), "SELECT "
-
             new header[128];
-            format(header, sizeof(header), "Zarządzaj stref %s (%d)", )
+            format(header, sizeof(header), "Zarządzaj stref %s (%d)", zname, uid)
 
-            ShowPlayerDialog(playerid, D_PLAYER_ZONE_MANAGEMENT, DIALOG_STYLE_LIST, "Zarządzaj stref")*/
+            ShowPlayerDialog(playerid, D_PLAYER_ZONE_MANAGEMENT, DIALOG_STYLE_LIST, "Zarządzaj strefą")
             return 1;
         }
         SendClientMessage(playerid, COLOR_GRAY, "Poprawne użycie: /astrefa [min. metrów] [cena za min. metrów dla domu] [cena za min. metrów dla biznesu] [nazwa strefy]");
         return 1;
+    }
+    else{
+        SendClientMessage(playerid, -1, "sscanf failed")
     }
 
 
@@ -11408,7 +11407,7 @@ CMD:astrefa(playerid, params[])
         return 1;
     }
 
-    SendClientMessage(playerid, COLOR_GRAY, "Ta strefa została jużpodpisana przez jednego z Administratorów.");
+    SendClientMessage(playerid, COLOR_GRAY, "Ta strefa została już podpisana przez jednego z Administratorów.");
 
 
 

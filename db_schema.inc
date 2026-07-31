@@ -249,6 +249,9 @@ stock EnsureCreated(){
 	FOREIGN KEY (groupUID) REFERENCES groups(uid)\n\
 	);", false);
 
+
+       
+
     mysql_query(DB_HANDLE, "CREATE TABLE IF NOT EXISTS playerLogs (\
 	uid INT PRIMARY KEY AUTO_INCREMENT,\
 	message VARCHAR(256) DEFAULT ' ',\
