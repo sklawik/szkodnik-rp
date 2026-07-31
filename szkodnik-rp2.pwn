@@ -4769,6 +4769,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
             {
                 print("test")
             	new zone = GetPlayerZone(playerid);
+                printf("zone=%d", zone);
                 new testText[256];
                 format(testText, sizeof(testText), "%d", ZoneData[zone][zYard])
                 SendClientMessage(playerid, -1, testText);
