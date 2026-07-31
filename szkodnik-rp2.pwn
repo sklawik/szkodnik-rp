@@ -4782,7 +4782,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
             	}
             	new input[128];
             	format(input, sizeof(input), " %s", inputtext);
-            	new type[2], yard;
+            	new type[2];
             	if(sscanf(input, "s[2]i", type, yard))
             	{
             		ShowDialogDoorCreate(playerid, ZoneData[zone][zYard]);
