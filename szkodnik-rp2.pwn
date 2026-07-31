@@ -4767,7 +4767,8 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
             
             if(response)
             {
-                print("test")
+                
+                   
             	new zone = GetPlayerZone(playerid);
                 printf("zone=%d", zone);
                 new testText[256];
@@ -11303,11 +11304,12 @@ public GetPlayerZone(playerid,  &uid, &yard, &priceHouse, &priceBusiness, &playe
     new query[512];
     format(query, sizeof(query), "SELECT uid, yard, priceHouse, priceBusiness, IFNULL(playerUID, 0) as playerUID, IFNULL(groupUID,0) as groupUID FROM gameZones WHERE minX=%f AND minY=%f LIMIT 1",
            minX, minY);
-
+    
     new Cache:cache = mysql_query(DB_HANDLE, query);
 
     new rows = cache_num_rows();
-
+    printf("%s", query);
+    printf("rows=%d", rows)
 
     new temp_uid, temp_yard, temp_priceHouse, temp_priceBusiness, temp_playerUID, temp_groupUID;
 
@@ -11344,7 +11346,7 @@ public GetPlayerZone(playerid,  &uid, &yard, &priceHouse, &priceBusiness, &playe
         groupUID = 0;
     }
 
-    return 0;
+    return temp_uid;
 
 }
 
