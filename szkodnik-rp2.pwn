@@ -929,7 +929,7 @@ public LoadGameMode()
     LoadObjects();
 
     LoadServerSettings();
-    // LoadZones();
+    LoadZones();
     print("Zakończono ładowanie serwera");
 
     SetTimer("min_timer", 1000 * 60, true);

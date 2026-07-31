@@ -235,6 +235,20 @@ stock EnsureCreated(){
         `value` VARCHAR(256) NOT NULL\
     );", false);
 
+    mysql_query(DB_HANDLE, "CREATE TABLE IF NOT EXISTS gameZones(\n\
+	uid INT PRIMARY KEY AUTO_INCREMENT,\n\
+	minX FLOAT,\n\
+	minY FLOAT,\n\
+	playerUID INT DEFAULT NULL,\n\
+	groupUID INT DEFAULT NULL,\n\
+	priceBusiness INT,\n\
+	yard INT,\n\
+	priceHouse INT,\n\
+	name VARCHAR(256),\n\
+	FOREIGN KEY (playerUID) REFERENCES players(uid),\n\
+	FOREIGN KEY (groupUID) REFERENCES groups(uid)\n\
+	);", false);
+
     mysql_query(DB_HANDLE, "CREATE TABLE IF NOT EXISTS playerLogs (\
 	uid INT PRIMARY KEY AUTO_INCREMENT,\
 	message VARCHAR(256) DEFAULT ' ',\
