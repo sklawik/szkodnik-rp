@@ -4768,9 +4768,9 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
             if(response)
             {
                 
-                new uid, yard, priceHouse, priceBusiness, playerUID, groupUID;
+                new zone, yard, priceHouse, priceBusiness, playerUID, groupUID;
 
-            	new zone = GetPlayerZone(playerid, yard, priceHouse, priceBusiness, playerUID, groupUID);
+            	GetPlayerZone(playerid, zone, yard, priceHouse, priceBusiness, playerUID, groupUID);
                 printf("zone=%d", zone);
                 new testText[256];
                 format(testText, sizeof(testText), "%d", ZoneData[zone][zYard])
