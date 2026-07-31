@@ -1303,7 +1303,7 @@ stock LoadDoors()
 
 
 
-    new Cache:cache = mysql_query(DB_HANDLE, "SELECT doors.uid as uid, server_groups.type as groupType, outX, outY, outZ, outVirtualWorld, doors.type, COALESCE(groupUID, 0) FROM doors LEFT OUTER JOIN groups ON server_groups.uid=doors.groupUID;");
+    new Cache:cache = mysql_query(DB_HANDLE, "SELECT doors.uid as uid, server_groups.type as groupType, outX, outY, outZ, outVirtualWorld, doors.type, COALESCE(groupUID, 0) FROM doors LEFT OUTER JOIN server_groups ON server_groups.uid=doors.groupUID;");
 
     new rows = cache_num_rows();
 
