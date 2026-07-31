@@ -11149,45 +11149,45 @@ CMD:gname(playerid, params[])
 
 cmd:drzwi(playerid, params[])
 {
-    /*new uid = GetPlayerDoorUID(playerid);
-    pVal[playerid] = uid;
-    if(uid != 0)
-    {
-    	if(DoorCache[uid][dPlayerUID] == PlayerCache[playerid][pUID])
-    	{
-    		return ShowDialogDoorSettings(playerid);
-    	}
-    	new guid = DoorCache[uid][dGroupUID];
-    	if(PlayerCache[playerid][pGroup] == guid)
-    	{
-    		if(PlayerCache[playerid][pGroupAdmin])
-    		{
-    			return ShowDialogDoorSettings(playerid);
-    		}
-    	}
-    	else if(PlayerCache[playerid][pGroup2] == guid)
-    	{
-    		if(PlayerCache[playerid][pGroupAdmin2])
-    		{
-    			return ShowDialogDoorSettings(playerid);
-    		}
-    	}
-    	else if(PlayerCache[playerid][pGroup3] == guid)
-    	{
-    		if(PlayerCache[playerid][pGroupAdmin3])
-    		{
-    			return ShowDialogDoorSettings(playerid);
-    		}
-    	}
-    	return ShowDialogInfo(playerid, "Brak uprawnie.");
-    }
-    new zone[1];
-    GetPlayerDynamicAreas(playerid, zone, sizeof(zone));
-    if(ZoneData[zone[0]][zYard] == 0)
-    {
-    	ShowDialogInfo(playerid, "Ta strefa nie została wyceniona przez Administracja.\nPopro o wycenę strefy kogo z ekipy znajdujcej się pod "HEX_RED"/a"HEX_WHITE".");
-    	return 1;
-    }
+    // new uid = GetPlayerDoorUID(playerid);
+    // pVal[playerid] = uid;
+    // if(uid != 0)
+    // {
+    // 	if(DoorCache[uid][dPlayerUID] == PlayerCache[playerid][pUID])
+    // 	{
+    // 		return ShowDialogDoorSettings(playerid);
+    // 	}
+    // 	new guid = DoorCache[uid][dGroupUID];
+    // 	if(PlayerCache[playerid][pGroup] == guid)
+    // 	{
+    // 		if(PlayerCache[playerid][pGroupAdmin])
+    // 		{
+    // 			return ShowDialogDoorSettings(playerid);
+    // 		}
+    // 	}
+    // 	else if(PlayerCache[playerid][pGroup2] == guid)
+    // 	{
+    // 		if(PlayerCache[playerid][pGroupAdmin2])
+    // 		{
+    // 			return ShowDialogDoorSettings(playerid);
+    // 		}
+    // 	}
+    // 	else if(PlayerCache[playerid][pGroup3] == guid)
+    // 	{
+    // 		if(PlayerCache[playerid][pGroupAdmin3])
+    // 		{
+    // 			return ShowDialogDoorSettings(playerid);
+    // 		}
+    // 	}
+    // 	return ShowDialogInfo(playerid, "Brak uprawnie.");
+    // }
+    // new zone[1];
+    // GetPlayerDynamicAreas(playerid, zone, sizeof(zone));
+    // if(ZoneData[zone[0]][zYard] == 0)
+    // {
+    // 	ShowDialogInfo(playerid, "Ta strefa nie została wyceniona przez Administracja.\nPopro o wycenę strefy kogo z ekipy znajdujcej się pod "HEX_RED"/a"HEX_WHITE".");
+    // 	return 1;
+    // }
     new vw = GetPlayerVirtualWorld(playerid);
     for(new i; i<LastdUID;i++)
     {
@@ -11205,7 +11205,7 @@ cmd:drzwi(playerid, params[])
     }
     ShowDialogZone(playerid);
     return 1;
-    */
+    
 }
 
 stock GetQuitReason(reasonid)
