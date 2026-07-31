@@ -3892,32 +3892,32 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
         {
             if (response)
             {
-                /*new option = strval(inputtext);
+                new option = strval(inputtext);
                 new dooruid = pVal[playerid];
                 switch(option)
                 {
                 	case 1:
                 	{
-                		for(new i; i<MAX_OBJECTS; i++)
-                		{
-                			if(DoorCache[dooruid][dInsVW] == 0 || DoorCache[dooruid][dOutVW] == 0)
-                			continue;
-                			if(ObjectCache[i][oState] == 0)
-                			{
-                				if(ObjectCache[i][oVW] == DoorCache[dooruid][dInsVW])
-                				{
-                					ObjectCache[i][oState]=1;
-                					DestroyDynamicObject(ObjectCache[i][oID]);
-                					if(ObjectCache[i][oPlayer] != -1)
-                					{
-                						ObjectCache[i][oPlayer] = -1;
-                						new editorid = ObjectCache[i][oPlayer];
-                						ClearAnimations(editorid);
-                						TextDrawForPlayerEx(editorid, 1, "Anulowano edycję obiektu.", 3000);
-                					}
-                				}
-                			}
-                		}
+                		// for(new i; i<MAX_OBJECTS; i++)
+                		// {
+                		// 	if(DoorCache[dooruid][dInsVW] == 0 || DoorCache[dooruid][dOutVW] == 0)
+                		// 	continue;
+                		// 	if(ObjectCache[i][oState] == 0)
+                		// 	{
+                		// 		if(ObjectCache[i][oVW] == DoorCache[dooruid][dInsVW])
+                		// 		{
+                		// 			ObjectCache[i][oState]=1;
+                		// 			DestroyDynamicObject(ObjectCache[i][oID]);
+                		// 			if(ObjectCache[i][oPlayer] != -1)
+                		// 			{
+                		// 				ObjectCache[i][oPlayer] = -1;
+                		// 				new editorid = ObjectCache[i][oPlayer];
+                		// 				ClearAnimations(editorid);
+                		// 				TextDrawForPlayerEx(editorid, 1, "Anulowano edycję obiektu.", 3000);
+                		// 			}
+                		// 		}
+                		// 	}
+                		// }
                 		for(new i; i<=GetPlayerPoolSize(); i++)
                 		{
                 			if(DoorCache[dooruid][dInsVW] == 0 || DoorCache[dooruid][dOutVW] == 0)
@@ -3935,7 +3935,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
                 				}
                 			}
                 		}
-                		DestroyDynamicPickup(dPickupID[dooruid]);
+                		// DestroyDynamicPickup(dPickupID[dooruid]);
                 		DoorCache[dooruid][dDestroyed]=1;
 
                 		new query[128];
@@ -3947,7 +3947,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
                 		return ShowPlayerDialog(playerid, D_DOOR_VW, DIALOG_STYLE_INPUT, "Zmień Virtual World drzwi", "Wpisz poniżej warto:\n", "Zmień", "Anuluj");
                 	}
                 	case 3: return ShowPlayerDialog(playerid, D_ADOOR_CHANGE_NAME, DIALOG_STYLE_INPUT, ""HEX_RED"Zmień nazwę drzwi", ""HEX_WHITE"Wpisz poniżej nową nazwę:\n", "Zmień", "Anuluj");
-                }*/
+                }
             }
             return 1;
         }
