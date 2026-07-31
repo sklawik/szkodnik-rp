@@ -1303,7 +1303,7 @@ stock LoadDoors()
 
 
 
-    new Cache:cache = mysql_query(DB_HANDLE, "SELECT doors.uid as uid, groups.type as groupType, outX, outY, outZ, outVirtualWorld, doors.type, COALESCE(groupUID, 0) FROM doors LEFT OUTER JOIN groups ON groups.uid=doors.groupUID;");
+    new Cache:cache = mysql_query(DB_HANDLE, "SELECT doors.uid as uid, server_groups.type as groupType, outX, outY, outZ, outVirtualWorld, doors.type, COALESCE(groupUID, 0) FROM doors LEFT OUTER JOIN groups ON server_groups.uid=doors.groupUID;");
 
     new rows = cache_num_rows();
 
@@ -16928,7 +16928,7 @@ CMD:mowner(playerid, params[])
 stock DestroyGroup(groupuid)
 {
     printf("%d", groupuid);
-    /*new query[256];
+    new query[256];
 
     for(new i; i<LastdUID; i++)
     {
@@ -16947,35 +16947,15 @@ stock DestroyGroup(groupuid)
     {
     	if(IsPlayerConnected(i))
     	{
-    		if(PlayerCache[i][pGroup] == groupuid)
-    		{
-    			PlayerCache[i][pGroup] = 0;
-    			SendClientMessage(i, COLOR_GRAY, str);
-    			query = "UPDATE players SET pgroup = '0'";
-    			mysql_query(DB_HANDLE, query);
-    		}
-    		else if(PlayerCache[i][pGroup2] == groupuid)
-    		{
-    			PlayerCache[i][pGroup] = 0;
-    			SendClientMessage(i, COLOR_GRAY, str);
-    			query = "UPDATE players SET pgroup2 = '0'";
-    			mysql_query(DB_HANDLE, query);
-    		}
-    		else if(PlayerCache[i][pGroup3] == groupuid)
-    		{
-    			PlayerCache[i][pGroup] = 0;
-    			SendClientMessage(i, COLOR_GRAY, str);
-    			query = "UPDATE players SET pgroup3 = '0'";
-    			mysql_query(DB_HANDLE, query);
-    		}
+
     	}
     }
 
     GroupCache[groupuid][gState] = 1;
-    format(query, sizeof(query), "DELETE FROM groups WHERE groups.uid = '%d' LIMIT 1", groupuid);
+    format(query, sizeof(query), "DELETE FROM server_groups WHERE server_groups.uid = '%d' LIMIT 1", groupuid);
     mysql_query(DB_HANDLE, query);
 
-    return 1;*/
+    return 1;
 }
 
 stock SendMessageToAdmins(const message[])
