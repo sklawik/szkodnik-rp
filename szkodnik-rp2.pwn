@@ -4768,6 +4768,9 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
             if(response)
             {
             	new zone = GetPlayerZone(playerid);
+                new testText[256];
+                format(testText, sizeof(testText), "%d", playerid,ZoneData[zone][zYard])
+                SendClientMessage(playerid, -1, testText);
             	if(!strlen(inputtext))
             	{
             		ShowDialogDoorCreate(playerid,ZoneData[zone][zYard]);
