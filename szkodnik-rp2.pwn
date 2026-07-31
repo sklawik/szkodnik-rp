@@ -11204,6 +11204,7 @@ cmd:drzwi(playerid, params[])
     	}
     }
     ShowDialogZone(playerid);
+    SendClientMessage(playerid, 0xFF0000, "Cmd executed")
     return 1;
     
 }
