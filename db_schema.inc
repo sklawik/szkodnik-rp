@@ -246,7 +246,7 @@ stock EnsureCreated(){
 	priceHouse INT,\n\
 	name VARCHAR(256),\n\
 	FOREIGN KEY (playerUID) REFERENCES players(uid),\n\
-	FOREIGN KEY (groupUID) REFERENCES groups(uid)\n\
+	FOREIGN KEY (groupUID) REFERENCES server_groups(uid)\n\
 	);", false);
 
 

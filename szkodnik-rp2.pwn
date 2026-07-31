@@ -11377,9 +11377,7 @@ CMD:astrefa(playerid, params[])
         SendClientMessage(playerid, COLOR_GRAY, "Poprawne użycie: /astrefa [min. metrów] [cena za min. metrów dla domu] [cena za min. metrów dla biznesu] [nazwa strefy]");
         return 1;
     }
-    else{
-        SendClientMessage(playerid, -1, "sscanf failed")
-    }
+
 
 
 
