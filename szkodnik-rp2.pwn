@@ -11147,8 +11147,9 @@ CMD:gname(playerid, params[])
     return SendClientMessage(playerid, -1, "Done.");
 }
 
-cmd:drzwi(playerid, params[])
+CMD:drzwi(playerid, params[])
 {
+    SendClientMessage(playerid, 0xFF0000, "Cmd executed 1")
     // new uid = GetPlayerDoorUID(playerid);
     // pVal[playerid] = uid;
     // if(uid != 0)
@@ -11203,10 +11204,10 @@ cmd:drzwi(playerid, params[])
     		}
     	}
     }
-    ShowDialogZone(playerid);
     SendClientMessage(playerid, 0xFF0000, "Cmd executed")
+    ShowDialogZone(playerid);
+  
     return 1;
-    
 }
 
 stock GetQuitReason(reasonid)
@@ -11351,8 +11352,9 @@ CMD:strefa(playerid, params[])
 
 
 
-cmd:astrefa(playerid, params[])
+CMD:astrefa(playerid, params[])
 {
+    SendClientMessage(playerid, -1, "Executed cmd astrefa")
     if (PlayerCache[playerid][pLevel] < 7)
     {
         return 1;
