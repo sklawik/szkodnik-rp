@@ -4764,7 +4764,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
         }
         case D_CREATEDOOR:
         {
-            /*
+            
             if(response)
             {
             	new zone = GetPlayerZone(playerid);
@@ -4827,7 +4827,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
             else
             {
             	return 1;
-            }*/
+            }
         }
         case D_ITEMS:
         {
@@ -15478,7 +15478,7 @@ CMD:adrzwi(playerid, params[])
     		}
     	}
     }
-    return ShowDialogDoorCreate(playerid, 150)
+    return ShowDialogDoorCreate(playerid, 50)
 }
 
 public OnPlayerEnterVehicle(playerid, vehicleid, ispassenger)
