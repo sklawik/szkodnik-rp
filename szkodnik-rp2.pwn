@@ -540,7 +540,7 @@ new LastdUID;
 
 
 
-//new dPickupID[MAX_PICKUPS];
+new dPickupID[MAX_PICKUPS];
 
 new PlayerMessageUID[MAX_PLAYERS];
 
@@ -6286,7 +6286,7 @@ stock SetPlayerCash(playerid, cash)
 
 stock CreateDoor(ownerid, outVW, type, Float:X, Float:Y, Float:Z)
 {
-    /*new VW=1, name[32];
+    new VW=1, name[32];
     for(new i; i<LastdUID; i++)
     {
     	if(VW == DoorCache[i][dInsVW])
@@ -6335,7 +6335,7 @@ stock CreateDoor(ownerid, outVW, type, Float:X, Float:Y, Float:Z)
     new url[256];
     url = "";
     DoorCache[LastdUID][dUrl] = url;
-    LastdUID++;*/
+    LastdUID++;
 }
 
 stock IsListItemGroup(itemuid, groupuid)
