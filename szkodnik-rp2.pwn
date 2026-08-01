@@ -6424,48 +6424,6 @@ stock BackToMenu(playerid)
         ShowDialogNotFound(playerid);
 
 }
-
-
-
-stock LoadUIDs()
-{
-    /*if(dfile_FileExists(UID_FILE))
-    {
-    	dfile_Open(UID_FILE);
-    	LastUID = dfile_ReadInt("UID");
-    	LastdUID = dfile_ReadInt("dUID");
-    	MAX_ITEMS = dfile_ReadInt("iUID");
-    	LastMsgUID = dfile_ReadInt("MsgUID");
-    	LastContactUID = dfile_ReadInt("ContactUID");
-    	LastgUID = dfile_ReadInt("gUID");
-    	MAX_OBJECTS = dfile_ReadInt("oUID");
-    	LasttUID = dfile_ReadInt("tUID");
-    	LastvUID = dfile_ReadInt("vUID");
-    	LastaUID = dfile_ReadInt("aUID");
-    	dfile_CloseFile();
-    }*/
-}
-
-stock SaveUIDs()
-{
-    /*if(dfile_FileExists(UID_FILE))
-    {
-    	dfile_Open(UID_FILE);
-    	dfile_WriteInt("UID", LastUID);
-    	dfile_WriteInt("dUID", LastdUID);
-    	dfile_WriteInt("iUID", MAX_ITEMS);
-    	dfile_WriteInt("MsgUID", LastMsgUID);
-    	dfile_WriteInt("ContactUID", LastContactUID);
-    	dfile_WriteInt("gUID", LastgUID);
-    	dfile_WriteInt("oUID", MAX_OBJECTS);
-    	dfile_WriteInt("tUID", LasttUID);
-    	dfile_WriteInt("vUID", LastvUID);
-    	dfile_WriteInt("aUID", LastaUID);
-    	dfile_SaveFile();
-    	dfile_CloseFile();
-    }*/
-}
-
 stock ShowDialogLogin(playerid)
 {
     new str[256];
