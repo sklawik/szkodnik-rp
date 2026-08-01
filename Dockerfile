@@ -14,8 +14,9 @@ RUN dpkg --add-architecture i386 && \
     && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app
-RUN bash compile.sh
+
 COPY . .
+RUN bash compile.sh
 RUN chmod +x omp-server
 
 CMD ["./omp-server"]
