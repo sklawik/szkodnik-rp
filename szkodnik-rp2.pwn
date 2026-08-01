@@ -951,6 +951,7 @@ public LoadServerSettings()
     }
 
     print(">>> Zakończono ładowanie ustawień serwerowych");
+    cache_delete(cache);
 }
 
 #define DOC_TYPE_ID 0
