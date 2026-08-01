@@ -922,10 +922,10 @@ public LoadGameMode()
     LoadGroups();
     LoadDoors();
 
-    LoadTextures();
+    // LoadTextures();
 
     LoadActors();
-    LoadApps();
+    // LoadApps();
     LoadObjects();
 
     LoadServerSettings();
@@ -1076,131 +1076,6 @@ stock TexturePath(textureid)
     new path[64];
     format(path, sizeof(path), FOLDER_TEXTURES"%d.ini", textureid);
     return path;
-}
-
-stock LoadTextures()
-{
-    /*Cache:result = mysql_query(MySQL, "SELECT * FROM textures");
-    cache_get_value_int(0, 0, registered_players);
-    printf("There are %d players in the database.", registered_players);
-    cache_delete(result);
-    cache_get_value_name_int(0, const column_name[], destination)
-    mysql_query(DB_HANDLE, );
-
-    mysql_store_result();
-
-    new data[1024],
-    texturename[128],
-    txdname[128],
-    objectUID,
-    modelid,
-    color,
-    index,
-    type,
-    fontsize,
-    bold,
-    backcolor,
-    alignment,
-    materialsize,
-    objectid;
-
-    while(mysql_fetch_row(data))
-    {
-    	sscanf(data, "p<|>s[128]s[128]iiiiiiiiiii",
-    	texturename,
-    	txdname,
-    	objectUID,
-    	modelid,
-    	color,
-    	index,
-    	type,
-    	fontsize,
-    	bold,
-    	backcolor,
-    	alignment,
-    	materialsize,
-    	objectid);
-
-    	switch(type)
-    	{
-    		case 0: SetDynamicObjectMaterial(objectid, index, modelid, txdname, texturename,color);
-    		case 1: SetDynamicObjectMaterialText(objectid, index, texturename, materialsize, txdname, fontsize, bold, color, backcolor, alignment);
-    	}
-    }
-
-    printf(">>> Loaded %d textures.", mysql_num_rows());
-
-    cache_delete(cache);*/
-}
-
-stock SaveTextures()
-{
-    /*new count;
-    for(new i; i<LasttUID; i++)
-    {
-    	if(TextureCache[i][tObjectUID] == 0 && ObjectCache[TextureCache[i][tObjectUID]][oState] == 0)
-    	{
-    		continue;
-    	}
-    	if(!dfile_FileExists(TexturePath(i)))
-    	dfile_Create(TexturePath(i));
-    	dfile_Open(TexturePath(i));
-    	dfile_WriteInt("Color", TextureCache[i][tColor]);
-    	dfile_WriteInt("Modelid", TextureCache[i][tModelid]);
-    	dfile_WriteInt("ObjectUID", TextureCache[i][tObjectUID]);
-    	dfile_WriteString("Txdname", TextureCache[i][tTxdname]);
-    	dfile_WriteString("Texturename", TextureCache[i][tTexturename]);
-    	dfile_WriteInt("Index", TextureCache[i][tIndex]);
-    	dfile_WriteInt("Materialsize", TextureCache[i][tMaterialsize]);
-    	dfile_WriteInt("Fontsize", TextureCache[i][tFontsize]);
-    	dfile_WriteInt("Type", TextureCache[i][tType]);
-    	dfile_WriteInt("Backcolor", TextureCache[i][tBackcolor]);
-    	dfile_WriteInt("Alignment", TextureCache[i][tAlignment]);
-    	dfile_SaveFile();
-    	dfile_CloseFile();
-    	count++;
-    }
-    printf(">>> Saved %d textures.", count);*/
-    return 1;
-}
-
-stock SaveObjects()
-{
-    /*new count;
-    for(new i; i<MAX_OBJECTS; i++)
-    {
-    	if(ObjectCache[i][oUID] == 0)
-    	return printf("ERROR: Invalid saving object UID. Saving canceled.");
-    	if(!dfile_FileExists(ObjPath(i)))
-    	dfile_Create(ObjPath(i));
-    	dfile_Open(ObjPath(i));
-    	dfile_WriteInt("UID", ObjectCache[i][oUID]);
-    	dfile_WriteInt("State", ObjectCache[i][oState]);
-    	dfile_WriteFloat("X", ObjectCache[i][oX]);
-    	dfile_WriteFloat("Y", ObjectCache[i][oY]);
-    	dfile_WriteFloat("Z", ObjectCache[i][oZ]);
-    	dfile_WriteFloat("rX", ObjectCache[i][orX]);
-    	dfile_WriteFloat("rY", ObjectCache[i][orY]);
-    	dfile_WriteFloat("rZ", ObjectCache[i][orZ]);
-    	dfile_WriteInt("Model", ObjectCache[i][oModel]);
-    	dfile_WriteInt("VW", ObjectCache[i][oVW]);
-    	dfile_WriteInt("Gate", ObjectCache[i][oGate]);
-    	dfile_WriteFloat("GateX", ObjectCache[i][oGateX]);
-    	dfile_WriteFloat("GateY", ObjectCache[i][oGateY]);
-    	dfile_WriteFloat("GateZ", ObjectCache[i][oGateZ]);
-    	dfile_WriteFloat("GaterX", ObjectCache[i][oGaterX]);
-    	dfile_WriteFloat("GaterY", ObjectCache[i][oGaterY]);
-    	dfile_WriteFloat("GaterZ", ObjectCache[i][oGaterZ]);
-    	dfile_WriteInt("Owner", ObjectCache[i][oOwner]);
-    	dfile_WriteInt("OwnerType", ObjectCache[i][oOwnerType]);
-    	dfile_WriteString("Name", ObjectCache[i][oName]);
-    	dfile_SaveFile();
-    	dfile_CloseFile();
-    	if(ObjectCache[i][oState] == 0)
-    	count++;
-    }
-    printf(">>> Saved %d objects.", count);*/
-    return 1;
 }
 
 forward CheckObjectsLoaded();
@@ -1462,64 +1337,9 @@ stock AppPath(i)
     return path;
 }
 
-stock SaveApps()
-{
-    /*new count;
-    for(new i; i<MAX_APPS; i++)
-    {
-    	if(AppCache[i][appOwner])
-    	{
-    		if(!dfile_FileExists(AppPath(i)))
-    		dfile_Create(AppPath(i));
-    		dfile_Open(AppPath(i));
-    		dfile_WriteInt("ID", i);
-    		dfile_WriteInt("Owner", AppCache[i][appOwner]);
-    		dfile_WriteInt("VW", AppCache[i][appVW]);
-    		dfile_WriteFloat("X", AppCache[i][appX]);
-    		dfile_WriteFloat("Y", AppCache[i][appY]);
-    		dfile_WriteFloat("Z", AppCache[i][appZ]);
-    		dfile_WriteString("Text", AppCache[i][appText]);
-    		dfile_WriteInt("State", AppCache[i][appState]);
-    		dfile_WriteInt("PlayerUID", AppCache[i][appPlayerUID]);
-    		dfile_WriteInt("Phone", AppCache[i][appPhone]);
-    		dfile_SaveFile(); dfile_CloseFile();
-    		count++;
-    	}
-    	else
-    	break;
-    }
-    printf(">>> Saved %d group applications.", count);*/
-}
 
-stock LoadApps()
-{
-    /*new query[64] = "SELECT * FROM apps";
-    mysql_query(DB_HANDLE, query);
 
-    mysql_store_result();
 
-    new data[524], i;
-    while(mysql_fetch_row(data))
-    {
-    	sscanf(data, "p<|>ds[128]dfffdddd",
-    	AppCache[i][appOwner],
-    	AppCache[i][appText],
-    	AppCache[i][appID],
-    	AppCache[i][appX],
-    	AppCache[i][appY],
-    	AppCache[i][appZ],
-    	AppCache[i][appVW],
-    	AppCache[i][appPlayerUID],
-    	AppCache[i][appState],
-    	AppCache[i][appPhone]);
-
-    	i++;
-    }
-
-    cache_delete(cache);
-
-    printf(">>> Loaded %d group apps.", i);*/
-}
 
 stock ContactPath(contactid)
 {
@@ -1582,23 +1402,7 @@ stock DoorPath(doorid)
     return path;
 }
 
-stock SaveZones()
-{
-    /*for(new i; i<MAX_ZONES; i++)
-    {
-    	dfile_Open(ZonePath(i));
-    	dfile_WriteFloat("MinX", ZoneData[i][zMinX]);
-    	dfile_WriteFloat("MinY", ZoneData[i][zMinY]);
-    	dfile_WriteFloat("MaxY", ZoneData[i][zMaxX]);
-    	dfile_WriteFloat("MaxZ", ZoneData[i][zMaxY]);
-    	dfile_WriteInt("Yard", ZoneData[i][zYard]);
-    	dfile_WriteInt("CostH", ZoneData[i][zCostH]);
-    	dfile_WriteInt("CostB", ZoneData[i][zCostB]);
-    	dfile_WriteString("Name", ZoneData[i][zName]);
-    	dfile_SaveFile();
-    	dfile_CloseFile();
-    }*/
-}
+
 
 forward RandomAgain(playerid);
 public RandomAgain(playerid)
