@@ -3699,59 +3699,59 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
             {
                 new option = strval(inputtext);
                 new dooruid = pVal[playerid];
-                switch(option)
+                switch (option)
                 {
-                	case 1:
-                	{
-                		// for(new i; i<MAX_OBJECTS; i++)
-                		// {
-                		// 	if(DoorCache[dooruid][dInsVW] == 0 || DoorCache[dooruid][dOutVW] == 0)
-                		// 	continue;
-                		// 	if(ObjectCache[i][oState] == 0)
-                		// 	{
-                		// 		if(ObjectCache[i][oVW] == DoorCache[dooruid][dInsVW])
-                		// 		{
-                		// 			ObjectCache[i][oState]=1;
-                		// 			DestroyDynamicObject(ObjectCache[i][oID]);
-                		// 			if(ObjectCache[i][oPlayer] != -1)
-                		// 			{
-                		// 				ObjectCache[i][oPlayer] = -1;
-                		// 				new editorid = ObjectCache[i][oPlayer];
-                		// 				ClearAnimations(editorid);
-                		// 				TextDrawForPlayerEx(editorid, 1, "Anulowano edycję obiektu.", 3000);
-                		// 			}
-                		// 		}
-                		// 	}
-                		// }
-                		for(new i; i<=GetPlayerPoolSize(); i++)
-                		{
-                			if(DoorCache[dooruid][dInsVW] == 0 || DoorCache[dooruid][dOutVW] == 0)
-                			continue;
-                			if(IsPlayerConnected(i))
-                			{
-                				if(PlayerCache[i][pUID])
-                				{
-                					if(GetPlayerVirtualWorld(i == DoorCache[dooruid][dInsVW]))
-                					{
-                						SetPlayerPos(i, DoorCache[dooruid][dOutX], DoorCache[dooruid][dOutY], DoorCache[dooruid][dOutZ]);
-                						SetPlayerVirtualWorld(i, DoorCache[dooruid][dOutVW]);
-                						TextDrawForPlayerEx(i, 1, "Drzwi zostaly usuniete.~n~Przywrocono do pozycji wyjsciowej.", 5000);
-                					}
-                				}
-                			}
-                		}
-                		// DestroyDynamicPickup(dPickupID[dooruid]);
-                		DoorCache[dooruid][dDestroyed]=1;
+                    case 1:
+                    {
+                        // for(new i; i<MAX_OBJECTS; i++)
+                        // {
+                        // 	if(DoorCache[dooruid][dInsVW] == 0 || DoorCache[dooruid][dOutVW] == 0)
+                        // 	continue;
+                        // 	if(ObjectCache[i][oState] == 0)
+                        // 	{
+                        // 		if(ObjectCache[i][oVW] == DoorCache[dooruid][dInsVW])
+                        // 		{
+                        // 			ObjectCache[i][oState]=1;
+                        // 			DestroyDynamicObject(ObjectCache[i][oID]);
+                        // 			if(ObjectCache[i][oPlayer] != -1)
+                        // 			{
+                        // 				ObjectCache[i][oPlayer] = -1;
+                        // 				new editorid = ObjectCache[i][oPlayer];
+                        // 				ClearAnimations(editorid);
+                        // 				TextDrawForPlayerEx(editorid, 1, "Anulowano edycję obiektu.", 3000);
+                        // 			}
+                        // 		}
+                        // 	}
+                        // }
+                        for (new i; i <= GetPlayerPoolSize(); i++)
+                        {
+                            if (DoorCache[dooruid][dInsVW] == 0 || DoorCache[dooruid][dOutVW] == 0)
+                                continue;
+                            if (IsPlayerConnected(i))
+                            {
+                                if (PlayerCache[i][pUID])
+                                {
+                                    if (GetPlayerVirtualWorld(i == DoorCache[dooruid][dInsVW]))
+                                    {
+                                        SetPlayerPos(i, DoorCache[dooruid][dOutX], DoorCache[dooruid][dOutY], DoorCache[dooruid][dOutZ]);
+                                        SetPlayerVirtualWorld(i, DoorCache[dooruid][dOutVW]);
+                                        TextDrawForPlayerEx(i, 1, "Drzwi zostaly usuniete.~n~Przywrocono do pozycji wyjsciowej.", 5000);
+                                    }
+                                }
+                            }
+                        }
+                        // DestroyDynamicPickup(dPickupID[dooruid]);
+                        DoorCache[dooruid][dDestroyed] = 1;
 
-                		new query[128];
-                		format(query, sizeof(query), "UPDATE players SET HouseSpawn = '0' WHERE HouseSpawn = '%d'", dooruid);
-                		mysql_query(DB_HANDLE, query);
-                	}
-                	case 2:
-                	{
-                		return ShowPlayerDialog(playerid, D_DOOR_VW, DIALOG_STYLE_INPUT, "Zmień Virtual World drzwi", "Wpisz poniżej warto:\n", "Zmień", "Anuluj");
-                	}
-                	case 3: return ShowPlayerDialog(playerid, D_ADOOR_CHANGE_NAME, DIALOG_STYLE_INPUT, ""HEX_RED"Zmień nazwę drzwi", ""HEX_WHITE"Wpisz poniżej nową nazwę:\n", "Zmień", "Anuluj");
+                        new query[128];
+                        format(query, sizeof(query), "UPDATE players SET HouseSpawn = '0' WHERE HouseSpawn = '%d'", dooruid);
+                        mysql_query(DB_HANDLE, query);
+                    }
+                    case 2:
+                    {
+                        return ShowPlayerDialog(playerid, D_DOOR_VW, DIALOG_STYLE_INPUT, "Zmień Virtual World drzwi", "Wpisz poniżej warto:\n", "Zmień", "Anuluj");
+                    }
+                    case 3: return ShowPlayerDialog(playerid, D_ADOOR_CHANGE_NAME, DIALOG_STYLE_INPUT, ""HEX_RED"Zmień nazwę drzwi", ""HEX_WHITE"Wpisz poniżej nową nazwę:\n", "Zmień", "Anuluj");
                 }
             }
             return 1;
@@ -4569,76 +4569,76 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
         }
         case D_CREATEDOOR:
         {
-            
-            if(response)
+
+            if (response)
             {
-                
+
                 new zone, yard, priceHouse, priceBusiness, playerUID, groupUID;
 
-            	GetPlayerZone(playerid, zone, yard, priceHouse, priceBusiness, playerUID, groupUID);
+                GetPlayerZone(playerid, zone, yard, priceHouse, priceBusiness, playerUID, groupUID);
                 printf("zone=%d", zone);
                 new testText[256];
                 format(testText, sizeof(testText), "%d", ZoneData[zone][zYard])
                 SendClientMessage(playerid, -1, testText);
-            	if(!strlen(inputtext))
-            	{
-            		ShowDialogDoorCreate(playerid,ZoneData[zone][zYard]);
-            		return 1;
-            	}
-            	new input[128];
-            	format(input, sizeof(input), " %s", inputtext);
-            	new type[2];
-            	if(sscanf(input, "s[2]i", type, yard))
-            	{
-            		ShowDialogDoorCreate(playerid, ZoneData[zone][zYard]);
-            		return 1;
-            	}
-            	if(yard < ZoneData[zone][zYard])
-            	{
-            		ShowDialogDoorCreate(playerid,ZoneData[zone][zYard]);
-            		return 1;
-            	}
-            	new Float:X, Float:Y, Float:Z;
-            	GetPlayerPos(playerid, X, Y, Z);
-            	if(!strcmp(type, "d", true))
-            	{
-            		new price = ZoneData[zone][zCostH] * yard;
-            		if(PlayerCache[playerid][pCash] < price)
-            		{
-            			ShowDialogDoorCreate(playerid, ZoneData[zone][zYard]);
-            			new msg[64];
-            			format(msg, sizeof(msg), "~g~nie posiadasz %d$ na stworzenie drzwi", price);
-            			GameTextForPlayer(playerid, msg, 5000, 4);
-            			return 1;
-            		}
-            		CreateDoor(playerid, GetPlayerVirtualWorld(playerid), 0, X, Y, Z);
-            		SetPlayerCash(playerid, -price);
-            		return 1;
-            	}
-            	else if(!strcmp(type, "b", true))
-            	{
-            		new price = ZoneData[zone][zCostB] * yard;
-            		if(PlayerCache[playerid][pCash] < price)
-            		{
-            			ShowDialogDoorCreate(playerid, ZoneData[zone][zYard]);
-            			new msg[64];
-            			format(msg, sizeof(msg), "~g~nie posiadasz $%d na stworzenie drzwi", price);
-            			GameTextForPlayer(playerid, msg, 5000, 4);
-            			return 1;
-            		}
-            		CreateDoor(playerid, GetPlayerVirtualWorld(playerid), 1, X, Y, Z);
-            		SetPlayerCash(playerid, -price);
-            		return 1;
-            	}
-            	else
-            	{
-            		ShowDialogDoorCreate(playerid, ZoneData[zone][zYard]);
-            		return 1;
-            	}
+                if (!strlen(inputtext))
+                {
+                    ShowDialogDoorCreate(playerid, ZoneData[zone][zYard]);
+                    return 1;
+                }
+                new input[128];
+                format(input, sizeof(input), " %s", inputtext);
+                new type[2];
+                if (sscanf(input, "s[2]i", type, yard))
+                {
+                    ShowDialogDoorCreate(playerid, ZoneData[zone][zYard]);
+                    return 1;
+                }
+                if (yard < ZoneData[zone][zYard])
+                {
+                    ShowDialogDoorCreate(playerid, ZoneData[zone][zYard]);
+                    return 1;
+                }
+                new Float:X, Float:Y, Float:Z;
+                GetPlayerPos(playerid, X, Y, Z);
+                if (!strcmp(type, "d", true))
+                {
+                    new price = ZoneData[zone][zCostH] * yard;
+                    if (PlayerCache[playerid][pCash] < price)
+                    {
+                        ShowDialogDoorCreate(playerid, ZoneData[zone][zYard]);
+                        new msg[64];
+                        format(msg, sizeof(msg), "~g~nie posiadasz %d$ na stworzenie drzwi", price);
+                        GameTextForPlayer(playerid, msg, 5000, 4);
+                        return 1;
+                    }
+                    CreateDoor(playerid, GetPlayerVirtualWorld(playerid), 0, X, Y, Z);
+                    SetPlayerCash(playerid, -price);
+                    return 1;
+                }
+                else if (!strcmp(type, "b", true))
+                {
+                    new price = ZoneData[zone][zCostB] * yard;
+                    if (PlayerCache[playerid][pCash] < price)
+                    {
+                        ShowDialogDoorCreate(playerid, ZoneData[zone][zYard]);
+                        new msg[64];
+                        format(msg, sizeof(msg), "~g~nie posiadasz $%d na stworzenie drzwi", price);
+                        GameTextForPlayer(playerid, msg, 5000, 4);
+                        return 1;
+                    }
+                    CreateDoor(playerid, GetPlayerVirtualWorld(playerid), 1, X, Y, Z);
+                    SetPlayerCash(playerid, -price);
+                    return 1;
+                }
+                else
+                {
+                    ShowDialogDoorCreate(playerid, ZoneData[zone][zYard]);
+                    return 1;
+                }
             }
             else
             {
-            	return 1;
+                return 1;
             }
         }
         case D_ITEMS:
@@ -6095,34 +6095,34 @@ stock SetPlayerCash(playerid, cash)
 
 stock CreateDoor(ownerid, outVW, type, Float:X, Float:Y, Float:Z)
 {
-    new VW=1, name[32];
-    for(new i; i<LastdUID; i++)
+    new VW = 1, name[32];
+    for (new i; i < LastdUID; i++)
     {
-    	if(VW == DoorCache[i][dInsVW])
-    	{
-    		VW++;
-    	}
+        if (VW == DoorCache[i][dInsVW])
+        {
+            VW++;
+        }
     }
     DoorCache[LastdUID][dUID] = LastdUID;
     DoorCache[LastdUID][dType] = type;
-    if(type)
+    if (type)
     {
-    	name = "Biznes";
-    	DoorCache[LastdUID][dName] = name;
+        name = "Biznes";
+        DoorCache[LastdUID][dName] = name;
     }
     else
     {
-    	name = "Dom";
-    	DoorCache[LastdUID][dName] = name;
-    	if(PlayerCache[ownerid][pHouseSpawn] == 0)
-    	{
-    		PlayerCache[ownerid][pHouseSpawn] = LastdUID;
-    		SendClientMessage(ownerid, COLOR_GRAY, "Od teraz będziesz spawnowa się w tym budynku.");
-    	}
-    	else
-    	{
-    		SendClientMessage(ownerid, COLOR_GRAY, "Jesteś zameldowany w jakimś innym budynku, nie będziesz spawnowa się w tym.");
-    	}
+        name = "Dom";
+        DoorCache[LastdUID][dName] = name;
+        if (PlayerCache[ownerid][pHouseSpawn] == 0)
+        {
+            PlayerCache[ownerid][pHouseSpawn] = LastdUID;
+            SendClientMessage(ownerid, COLOR_GRAY, "Od teraz będziesz spawnowa się w tym budynku.");
+        }
+        else
+        {
+            SendClientMessage(ownerid, COLOR_GRAY, "Jesteś zameldowany w jakimś innym budynku, nie będziesz spawnowa się w tym.");
+        }
     }
     DoorCache[LastdUID][dPlayerUID] = ownerid;
     DoorCache[LastdUID][dGroupUID] = 0;
@@ -6137,10 +6137,10 @@ stock CreateDoor(ownerid, outVW, type, Float:X, Float:Y, Float:Z)
     DoorCache[LastdUID][dDestroyed] = 0;
     DoorCache[LastdUID][dOpen] = 1;
     DoorCache[LastdUID][dVehicle] = 0;
-    if(DoorCache[LastdUID][dType])
-    dPickupID[LastdUID] = CreateDynamicPickup(1239, 2, X,Y, Z, DoorCache[LastdUID][dOutVW], 0, -1);
+    if (DoorCache[LastdUID][dType])
+        dPickupID[LastdUID] = CreateDynamicPickup(1239, 2, X, Y, Z, DoorCache[LastdUID][dOutVW], 0, -1);
     else
-    dPickupID[LastdUID] = CreateDynamicPickup(1273, 2, X, Y, Z, DoorCache[LastdUID][dOutVW], 0, -1);
+        dPickupID[LastdUID] = CreateDynamicPickup(1273, 2, X, Y, Z, DoorCache[LastdUID][dOutVW], 0, -1);
     new url[256];
     url = "";
     DoorCache[LastdUID][dUrl] = url;
@@ -10875,22 +10875,22 @@ CMD:drzwi(playerid, params[])
     // 	return 1;
     // }
     new vw = GetPlayerVirtualWorld(playerid);
-    for(new i; i<LastdUID;i++)
+    for (new i; i < LastdUID; i++)
     {
-    	if(!DoorCache[i][dDestroyed])
-    	{
-    		if(IsPlayerInRangeOfPoint(playerid, 2.0, DoorCache[i][dOutX], DoorCache[i][dOutY], DoorCache[i][dOutZ]))
-    		{
-    			if(vw == DoorCache[i][dOutVW])
-    			{
-    				SendClientMessage(playerid, COLOR_GRAY, "Musisz stan troch dalej od innych drzwi.");
-    				return 1;
-    			}
-    		}
-    	}
+        if (!DoorCache[i][dDestroyed])
+        {
+            if (IsPlayerInRangeOfPoint(playerid, 2.0, DoorCache[i][dOutX], DoorCache[i][dOutY], DoorCache[i][dOutZ]))
+            {
+                if (vw == DoorCache[i][dOutVW])
+                {
+                    SendClientMessage(playerid, COLOR_GRAY, "Musisz stan troch dalej od innych drzwi.");
+                    return 1;
+                }
+            }
+        }
     }
     ShowDialogZone(playerid);
-  
+
     return 1;
 }
 
@@ -10984,7 +10984,7 @@ public GetPlayerZone(playerid,  &uid, &yard, &priceHouse, &priceBusiness, &playe
     new query[512];
     format(query, sizeof(query), "SELECT uid, yard, priceHouse, priceBusiness, IFNULL(playerUID, 0) as playerUID, IFNULL(groupUID,0) as groupUID FROM gameZones WHERE minX=%f AND minY=%f LIMIT 1",
            minX, minY);
-    
+
     new Cache:cache = mysql_query(DB_HANDLE, query);
 
     new rows = cache_num_rows();
@@ -12398,19 +12398,23 @@ stock BWPlayer(playerid, bwtime, reason)
     {
         ClearAnimations(playerid);
         ApplyAnimation(playerid, "crack", "crckdeth1", 4.1, 0, 0, 0, 1, 0, 0);
-    }else{
-        if(GetPlayerVehicleID(playerid) != INVALID_VEHICLE_ID)
+    }
+    else
+    {
+        if (GetPlayerVehicleID(playerid) != INVALID_VEHICLE_ID)
         {
             new model = GetVehicleModel(GetPlayerVehicleID(playerid));
-            if(model == 509 || model == 481 || model == 471 || model == 522 || model == 523 || model == 510 || model == 448 || model == 462 || model == 521 || model == 461 || model == 586)
+            if (model == 509 || model == 481 || model == 471 || model == 522 || model == 523 || model == 510 || model == 448 || model == 462 || model == 521 || model == 461 || model == 586)
             {
-                
+
                 RemovePlayerFromVehicle(playerid);
                 ClearAnimations(playerid);
-                ApplyAnimation(playerid, "crack", "crckdeth1", 4.1, 0, 0, 0, 1, 0, 0);
+                ApplyAnimation(playerid, "ped", "FLOOR_hit", 4.1, 0, 0, 0, 1, 0, 0);
+                ApplyAnimation(playerid, "ped", "FLOOR_hit", 4.1, 0, 0, 0, 1, 0, 0);
+                ApplyAnimation(playerid, "ped", "FLOOR_hit", 4.1, 0, 0, 0, 1, 0, 0);
             }
-      
-    }
+
+        }
     }
 
 
@@ -15153,30 +15157,30 @@ public OnVehicleDeath(vehicleid, killerid)
 
 CMD:adrzwi(playerid, params[])
 {
-    if(PlayerCache[playerid][pLevel] < ADMINISTRATION)
-    return 1;
+    if (PlayerCache[playerid][pLevel] < ADMINISTRATION)
+        return 1;
     new pvw = GetPlayerVirtualWorld(playerid);
-    for(new i; i<LastdUID; i++)
+    for (new i; i < LastdUID; i++)
     {
-    	if(!DoorCache[i][dDestroyed])
-    	{
-    		if(pvw == DoorCache[i][dInsVW])
-    		{
-    			if(IsPlayerInRangeOfPoint(playerid, 1.5, DoorCache[i][dInsX], DoorCache[i][dInsY], DoorCache[i][dInsZ]))
-    			{
-    				pVal[playerid] = i;
-    				return ShowPlayerDialog(playerid, D_ADMIN_DOOR, DIALOG_STYLE_LIST, "Zarządzaj drzwiami", "1\tUsuń drzwi\n2\tZmień wyjciowy VW\n3\tZmień nazwę drzwi", "Wybierz", "Anuluj");
-    			}
-    		}
-    		else if(pvw == DoorCache[i][dOutVW])
-    		{
-    			if(IsPlayerInRangeOfPoint(playerid, 1.5, DoorCache[i][dOutX], DoorCache[i][dOutY], DoorCache[i][dOutZ]))
-    			{
-    				pVal[playerid] = i;
-    				return ShowPlayerDialog(playerid, D_ADMIN_DOOR, DIALOG_STYLE_LIST, "Zarządzaj drzwiami", "1\tUsuń drzwi\n2\tZmień wyjciowy VW\n3\tZmień nazwę drzwi", "Wybierz", "Anuluj");
-    			}
-    		}
-    	}
+        if (!DoorCache[i][dDestroyed])
+        {
+            if (pvw == DoorCache[i][dInsVW])
+            {
+                if (IsPlayerInRangeOfPoint(playerid, 1.5, DoorCache[i][dInsX], DoorCache[i][dInsY], DoorCache[i][dInsZ]))
+                {
+                    pVal[playerid] = i;
+                    return ShowPlayerDialog(playerid, D_ADMIN_DOOR, DIALOG_STYLE_LIST, "Zarządzaj drzwiami", "1\tUsuń drzwi\n2\tZmień wyjciowy VW\n3\tZmień nazwę drzwi", "Wybierz", "Anuluj");
+                }
+            }
+            else if (pvw == DoorCache[i][dOutVW])
+            {
+                if (IsPlayerInRangeOfPoint(playerid, 1.5, DoorCache[i][dOutX], DoorCache[i][dOutY], DoorCache[i][dOutZ]))
+                {
+                    pVal[playerid] = i;
+                    return ShowPlayerDialog(playerid, D_ADMIN_DOOR, DIALOG_STYLE_LIST, "Zarządzaj drzwiami", "1\tUsuń drzwi\n2\tZmień wyjciowy VW\n3\tZmień nazwę drzwi", "Wybierz", "Anuluj");
+                }
+            }
+        }
     }
     return ShowDialogDoorCreate(playerid, 50)
 }
@@ -16310,7 +16314,7 @@ public OnPlayerUpdate(playerid)
                 }
                 else
                 {
-                   
+
                     if (GetPlayerSurfingVehicleID(playerid) != INVALID_VEHICLE_ID)
                     {
                         //GetPlayerPos(playerid, gX, gY, gZ);
@@ -16629,25 +16633,25 @@ stock DestroyGroup(groupuid)
     printf("%d", groupuid);
     new query[256];
 
-    for(new i; i<LastdUID; i++)
+    for (new i; i < LastdUID; i++)
     {
-    	if(DoorCache[i][dGroupUID] == groupuid)
-    	{
-    		DoorCache[i][dGroupUID] = 0;
-    		format(query, sizeof(query), "UPDATE doors SET groupUID = '0' WHERE UID = '%d'", i);
-    		mysql_query(DB_HANDLE, query);
-    	}
+        if (DoorCache[i][dGroupUID] == groupuid)
+        {
+            DoorCache[i][dGroupUID] = 0;
+            format(query, sizeof(query), "UPDATE doors SET groupUID = '0' WHERE UID = '%d'", i);
+            mysql_query(DB_HANDLE, query);
+        }
     }
 
     new str[128];
     format(str, sizeof(str), "Grupa %s została usunita.", GroupCache[groupuid][gName]);
 
-    for(new i; i<=GetPlayerPoolSize(); i++)
+    for (new i; i <= GetPlayerPoolSize(); i++)
     {
-    	if(IsPlayerConnected(i))
-    	{
+        if (IsPlayerConnected(i))
+        {
 
-    	}
+        }
     }
 
     GroupCache[groupuid][gState] = 1;
