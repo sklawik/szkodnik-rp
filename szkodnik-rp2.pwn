@@ -12412,6 +12412,9 @@ stock BWPlayer(playerid, bwtime, reason)
                 ApplyAnimation(playerid, "ped", "FLOOR_hit", 4.1, 0, 0, 0, 1, 0, 0);
                 ApplyAnimation(playerid, "ped", "FLOOR_hit", 4.1, 0, 0, 0, 1, 0, 0);
                 ApplyAnimation(playerid, "ped", "FLOOR_hit", 4.1, 0, 0, 0, 1, 0, 0);
+                ApplyAnimation(playerid, "ped", "FLOOR_hit", 4.1, 0, 0, 0, 1, 0, 0);
+                ApplyAnimation(playerid, "ped", "FLOOR_hit", 4.1, 0, 0, 0, 1, 0, 0);
+                ApplyAnimation(playerid, "ped", "FLOOR_hit", 4.1, 0, 0, 0, 1, 0, 0);
             }
 
         }
