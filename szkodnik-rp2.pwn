@@ -12398,6 +12398,17 @@ stock BWPlayer(playerid, bwtime, reason)
     {
         ClearAnimations(playerid);
         ApplyAnimation(playerid, "crack", "crckdeth1", 4.1, 0, 0, 0, 1, 0, 0);
+    }else{
+        if(GetPlayerVehicleID(playerid) != INVALID_VEHICLE_ID)
+        {
+            new model = GetVehicleModel(GetPlayerVehicleID(playerid));
+            if(model == 509 || model == 481 || model == 471 || model == 522 || model == 523 || model == 510 || model == 448 || model == 462 || model == 521 || model == 461 || model == 586)
+            {
+                RemovePlayerFromVehicle(playerid);
+                ClearAnimations(playerid);
+                ApplyAnimation(playerid, "crack", "crckdeth1", 4.1, 0, 0, 0, 1, 0, 0);
+            }
+      
     }
 
 
@@ -16297,6 +16308,7 @@ public OnPlayerUpdate(playerid)
                 }
                 else
                 {
+                   
                     if (GetPlayerSurfingVehicleID(playerid) != INVALID_VEHICLE_ID)
                     {
                         //GetPlayerPos(playerid, gX, gY, gZ);
