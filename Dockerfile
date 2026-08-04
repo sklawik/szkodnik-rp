@@ -17,7 +17,6 @@ WORKDIR /app
 
 COPY . .
 RUN bash compile.sh
-RUN mv ./szkodnik-rp2.amx ./gamemodes/
 RUN chmod +x omp-server
 
 CMD ["./omp-server"]
