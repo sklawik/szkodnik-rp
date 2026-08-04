@@ -1,7 +1,7 @@
 .env
 discord-bot/node_modules
-logs
-gamemodes
+logs/*
+gamemodes/*
 #
 # Package only files
 #
