@@ -697,7 +697,7 @@ enum E_PLAYER
 };
 
 
-//pGroups[MAX_PLAYER_GROUPS][E_PLAYER_GROUP],
+new pGroups[MAX_PLAYER_GROUPS][E_PLAYER_GROUP];
 
 new PlayerCache[MAX_PLAYERS][E_PLAYER];
 
