@@ -9205,6 +9205,7 @@ public OnPlayerTakeDamage(playerid, issuerid, Float:amount, WEAPON:weaponid, bod
             ClearNicknameColorTimer[playerid] = SetTimerEx("ClearNicknameColor", 2500, false, "i", playerid);
         }
         new Float:damage =  2.0;
+        
         switch (weaponid)
         {
             case 0:
@@ -9232,6 +9233,13 @@ public OnPlayerTakeDamage(playerid, issuerid, Float:amount, WEAPON:weaponid, bod
             case 41: damage = 0.5;
             case 42: damage = 0.5;
 
+        }
+        if(weaponid == 49){
+            damage = 10
+            Freeze(playerid, 5000)
+            ApplyAnimation(playerid, "CRACK", "crckdeth2", 4.1, 1, 0, 0, 1, 0);
+            ApplyAnimation(playerid, "CRACK", "crckdeth2", 4.1, 1, 0, 0, 1, 0);
+            ApplyAnimation(playerid, "CRACK", "crckdeth2", 4.1, 1, 0, 0, 1, 0);
         }
         if (weaponid == 23)
         {
