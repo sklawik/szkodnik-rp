@@ -9237,6 +9237,7 @@ public OnPlayerTakeDamage(playerid, issuerid, Float:amount, WEAPON:weaponid, bod
         if(weaponid == 49){
             damage = 10
             Freeze(playerid, 5000)
+            SendPlayerMe(playerid, "upada na ziemie")
             ApplyAnimation(playerid, "CRACK", "crckdeth2", 4.1, 1, 0, 0, 1, 0);
             ApplyAnimation(playerid, "CRACK", "crckdeth2", 4.1, 1, 0, 0, 1, 0);
             ApplyAnimation(playerid, "CRACK", "crckdeth2", 4.1, 1, 0, 0, 1, 0);
